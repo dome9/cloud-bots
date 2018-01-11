@@ -4,7 +4,7 @@ import os
 from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroup ###
-def run_action(message,event_log):
+def run_action(message):
 	region = message['Entity']['Region']
 	region = region.replace("_","-")
 
@@ -13,14 +13,14 @@ def run_action(message,event_log):
 
 	try:
 		delete_sg = ec2.SecurityGroup(sg_id).delete()
-		event_log.append("Security Group " + sg_id + " successfully deleted\n")
+		text_output = ("Security Group " + sg_id + " successfully deleted\n")
 		
 	except (ClientError, AttributeError) as e:
 		error = e.response['Error']['Code']
 		if error == 'DependencyViolation':
-			event_log.append("Security group (id: " + sg_id + ") Still has assets attahced to it. Can't delete / Skipping.\n")
+			text_output = ("Security group (id: " + sg_id + ") Still has assets attahced to it. Can't delete / Skipping.\n")
 		else:	
-			event_log.append("Unexpected error: %s" % e + "\n")
+			text_output = ("Unexpected error: %s" % e + "\n")
 		#Add in "SG is in use error. Dump current attachments"
 
-	return(event_log)
+	return text_output 

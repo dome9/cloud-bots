@@ -6,25 +6,7 @@ from importlib import util
 from botocore.exceptions import ClientError
 
 
-def filter_events(message,event_log):
-
-	### Dynamically load all remediations in actions.py
-	# Get file paths of all modules.
-	modules = glob.glob('actions/*.py')
-
-	# Dynamically load those modules here.
-	for file_name in modules:
-		#rename main functions to "main"
-		spec = util.spec_from_file_location("main", file_name)
-
-		#Strip off the file names to give us just the action names we want to run
-		action_name = file_name.replace("actions/","")
-		action_name = action_name.replace(".py","")
-
-		action = importlib.util.module_from_spec(spec)
-		spec.loader.exec_module(action)
-		globals()[action_name] = action
-
+def filter_events(message,text_output_array):
 
 	#Break out the values from the JSON payload from Dome9
 	rule_name = message['Rule']['Name']
@@ -39,45 +21,62 @@ def filter_events(message,event_log):
 		sts = boto3.client("sts")
 		account_id = sts.get_caller_identity()["Account"]
 	except (ClientError, AttributeError) as e:
-		event_log.append("Unexpected STS error: %s" % e + "\n")
+		text_output_array.append("Unexpected STS error: %s" % e + "\n")
 
 	if account_id != compliance_account_id:
-		event_log.append("Error: This rule was found for account id %s. This function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (account_id, compliance_account_id))
-		return(event_log)
+		text_output_array.append("Error: This rule was found for account id %s. This function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (account_id, compliance_account_id))
+		return text_output_array
 	else:
 		print("Account IDs match - continuing to check for remediations to do")
+
 
 	#All of the remediation values are coming in on the compliance tags and they're pipe delimited
 	compliance_tags = message['Rule']['ComplianceTags'].split("|")
 
 	#evaluate the event and tags and decide is there's something to do with them. 
 	if status == "Passed":
-		event_log.append("Previously failing rule has been resolved: %s \n ID: %s \nName: %s \n" % (rule_name, entity_id, entity_name)) 
+		text_output_array.append("Previously failing rule has been resolved: %s \n ID: %s \nName: %s \n" % (rule_name, entity_id, entity_name)) 
 	else:
 		for tag in compliance_tags:
 			tag = tag.strip() #Sometimes the tags come through with trailing or leading spaces. 
 
-			#check the tag to see if we have AUTO: in it
+			#Check the tag to see if we have AUTO: in it
 			pattern = re.compile("^AUTO:\s.+")
 			if pattern.match(tag):
+				text_output_array.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Action: %s \n" % (rule_name, entity_id, entity_name, tag))
+
 				#Pull out only the action verb to run as a function
-				m = re.match(r'AUTO:\s(?P<action>\w+)', tag)
-				action = m.group(1)
-				#run the method
-				possibles = globals().copy()
-				possibles.update(locals())
-				method = possibles.get(action)
-				event_log.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Action: %s \n" % (rule_name, entity_id, entity_name, action))
-				
-				if method:
-					event_log = method.run_action(message,event_log)	
-				#Getting blank messages if auto matches. Clean up this else to stop sending things if nothing to do
+				action_regex_match = re.match(r'AUTO:\s(?P<action>\w+)', tag)
+				action = action_regex_match.group(1)
+
+				#Check if the action we're trying to do, is a file in actions/. 
+				#This needs to match the filename for the action in actions/
+				#We could try to run this every time and catch the error, but it fails hard and the import isn't fast. This should be more efficient. 
+				file_name = "actions/" + action + ".py"
+				modules = glob.glob('actions/*.py')
+
+				if file_name in modules:
+					#from Importlib. Dynamically import the file/module
+
+					##########
+					### In the below line - "" can be replaced with "<anything>" and it works but it can't be removed. Probably needs to be cleaned up.
+					##########
+					spec = util.spec_from_file_location("", file_name) #ModuleSpec(name='run_action', loader=<_frozen_importlib_external.SourceFileLoader object at 0x101383f28>, origin='actions/sg_delete.py')
+					action_file = importlib.util.module_from_spec(spec) #<module 'run_action' from 'actions/sg_delete.py'>
+					spec.loader.exec_module(action_file) #load the module
+
+					try: 
+						action_output = action_file.run_action(message) #This is where we leave filtering and end up in the actual actions
+						text_output_array.append(action_output)
+
+					except AttributeError as e: # Probably need to clean this up for a different/better error handling
+						text_output_array.append("Unexpected error: Can't find run_action module in %s \n" % (file_name))	
 				else:
-					event_log.append("Action: " + action + " is not a known action. Skipping.\n")
+					text_output_array.append("Action: " + action + " is not a known action. Skipping.\n")
 
 			else:
 				print("Tag detected: " + tag + " Doesn't say AUTO. Skipping.")  
 
 
 	#After the remediation functions finish, send the notification out. 
-	return(event_log)
+	return text_output_array

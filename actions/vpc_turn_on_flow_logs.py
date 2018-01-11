@@ -18,7 +18,6 @@ from botocore.exceptions import ClientError
 vpc_id = "vpc-a7fb7fc0"
 account_id = "621958466464"
 compliance_tags = ["a", "b", "vpc-a7fb7fc0", "AUTO: vpc_turn_on_flow_logs (All)"]
-event_log = []
 
 
 
@@ -32,7 +31,7 @@ event_log = []
 ####################################################################################
 
 #This will make the quarantining IAM policy that'll be applied to the users or roles that need to be locked down.
-def create_log_delivery_policy(event_log):
+def create_log_delivery_policy():
 	# Create IAM client
 	iam = boto3.client('iam')
 
@@ -68,10 +67,10 @@ def create_log_delivery_policy(event_log):
 	except (ClientError) as e:
 		print("Unexpected error: %s \n" % (e))
 
-	return(event_log)
+	return text_output
 
 #Poll the account and check if the quarantine_deny_all policy exists. If not - make it
-def check_for_log_delivery_policy(policy_arn,event_log):
+def check_for_log_delivery_policy(policy_arn):
 	# Create IAM client
 	iam = boto3.client('iam')
 
@@ -90,11 +89,11 @@ def check_for_log_delivery_policy(policy_arn,event_log):
 		else:
 			print("Unexpected error: %s \n" % (e))
 
-	return(event_log)
+	return text_output
 
 
 ### NEED TO CHECK FOR ROLE
-def create_role(policy_arn,event_log):
+def create_role(policy_arn):
 	iam = boto3.client('iam')
 
 	trust_policy = {
@@ -126,9 +125,9 @@ def create_role(policy_arn,event_log):
 	else:
 		print("vpcFlowLogDelivery role successfully created.\n")	
 
-	return(event_log)
+	return text_output
 
-def add_policy_to_role(policy_arn,event_log):		
+def add_policy_to_role(policy_arn):		
 	# Create IAM client
 	iam = boto3.client('iam')
 	
@@ -142,11 +141,11 @@ def add_policy_to_role(policy_arn,event_log):
 	except (ClientError) as e:
 		print("Unexpected error: %s \n" % (e))
 
-	return(event_log)
+	return text_output
 
 
 
-def run_action(compliance_tags,vpc,event_log):
+def run_action(compliance_tags,vpc):
 
 	account_id = message['Entity']['AccountNumber']
 
@@ -166,14 +165,14 @@ def run_action(compliance_tags,vpc,event_log):
 
 		policy_arn = "arn:aws:iam::" + account_id + ":policy/FlowLogsDelivery"
 
-		output = check_for_log_delivery_policy(policy_arn,event_log) #Check for the policy to deliver logs from VPC to CloudWatch
+		output = check_for_log_delivery_policy(policy_arn) #Check for the policy to deliver logs from VPC to CloudWatch
 		print(output)
 
-		create_role(policy_arn,event_log)
+		create_role(policy_arn)
 
 		#check for role
 
-		add_policy_to_role(policy_arn,event_log)
+		add_policy_to_role(policy_arn)
 
 		# do we want to set the loggroup name to something different for each vpc?
 		role_id = "arn:aws:iam::" + account_id + ":role/vpcFlowLogDelivery"
@@ -190,4 +189,4 @@ def run_action(compliance_tags,vpc,event_log):
 		except (ClientError) as e:
 			print("Unexpected error: %s \n" % (e))
 
-	print(event_log)
+	print (text_output)

@@ -27,7 +27,7 @@ Sample tag: AUTO: iam_turn_on_password_policy (MinimumPasswordLength:5,RequireSy
 iam = boto3.client('iam')
 
 
-def run_action(message,event_log):
+def run_action(message):
 	compliance_tags = message['Rule']['ComplianceTags'].split("|")
 
 	#pull the tags and make sure to just take action on the one that matches the action we want
@@ -72,16 +72,15 @@ def run_action(message,event_log):
 					responseCode = response['ResponseMetadata']['HTTPStatusCode']
 
 					if responseCode >= 400:
-					 	event_log.append("Unexpected error:" + str(response) + "\n")
+					 	text_output = "Unexpected error:" + str(response) + "\n"
 					else:
-					 	event_log.append("Account Password Policy updated successfully \n")		
+					 	text_output = "Account Password Policy updated successfully \n"	
 
 
-				except (ClientError) as e:
-					event_log.append("Unexpected error: %s" % e + "\n")
+				except ClientError as e:
+					text_output = "Unexpected error: %s" % e + "\n"
 			
 			else:
-				event_log.append("Array length is less than 8. Are you sure ALL passwort policy properties were set?\n")
-				event_log.append("MinimumPasswordLength=int, \nRequireSymbols=True|False, \nRequireNumbers=True|False, \nRequireUppercaseCharacters=True|False, \nRequireLowercaseCharacters=True|False, \nAllowUsersToChangePassword=True|False, \nMaxPasswordAge=int, \nPasswordReusePrevention=int, \nHardExpiry=True|False \n")
+				text_output = "Array length is less than 8. Are you sure ALL passwort policy properties were set?\n MinimumPasswordLength=int, \nRequireSymbols=True|False, \nRequireNumbers=True|False, \nRequireUppercaseCharacters=True|False, \nRequireLowercaseCharacters=True|False, \nAllowUsersToChangePassword=True|False, \nMaxPasswordAge=int, \nPasswordReusePrevention=int, \nHardExpiry=True|False \n"
 
-	return(event_log)
+	return text_output

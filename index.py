@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import boto3
 import json
 import os
@@ -15,16 +13,16 @@ SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
 #Bring the data in and parse the SNS message
 def lambda_handler(event, context):
 
-	event_log = ["-------------------------\n"]
+	text_output_array = ["-------------------------\n"]
 
 	raw_message = event['Records'][0]['Sns']['Message']
 	message = json.loads(raw_message)
 
 	timestamp = "ReportTime: " + message['ReportTime'] + "\n"
-	event_log.append(timestamp)
+	text_output_array.append(timestamp)
 
-	full_event_to_send = filter_events(message,event_log)
-	sendEvent(full_event_to_send,SNS_TOPIC_ARN)
+	text_output_array = filter_events(message,text_output_array)
+	sendEvent(text_output_array,SNS_TOPIC_ARN)
 	return
 
 

@@ -4,7 +4,7 @@ import os
 from botocore.exceptions import ClientError
 
 ### DeleteS3Bucket ###
-def run_action(message,event_log):
+def run_action(message):
 	# Create an S3 client
 	s3 = boto3.client('s3')
 
@@ -13,13 +13,13 @@ def run_action(message,event_log):
 	try:
 		# Call S3 to delete the given bucket
 		output = s3.delete_bucket(Bucket=bucket)
-		event_log.append("Bucket successfully deleted" + bucket + "\n")
+		text_output = ("Bucket successfully deleted" + bucket + "\n")
 
 	except (ClientError, AttributeError) as e:
 		error = e.response['Error']['Code']
 		if error == 'NoSuchBucket':
-	 		event_log.append("Bucket " + bucket + " doesn't exist. Skipping")
+	 		text_output = ("Bucket " + bucket + " doesn't exist. Skipping")
 	 	else:
-			event_log.append("Unexpected error: %s" % e + "\n")
+			text_output = ("Unexpected error: %s" % e + "\n")
 
-	return(event_log)
+	return text_output
