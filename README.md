@@ -1,7 +1,9 @@
 # Cloud-Supervisor v2
 Auto remediation actions
 
+# ******************
 # Ignore the rest of this doc until the repo is public. This needs to be rewritten
+# ******************
 
 This is meant to be used in conjunction with Dome9's Continuous Compliance to remediate issues that are uncovered. 
 
