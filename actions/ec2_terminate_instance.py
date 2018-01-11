@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 
 ### Kill EC2 Instance ###
 # def ec2_terminate_instance(instance,tags,event_log):
-def main(message,event_log):
+def run_action(message,event_log):
 	#House keeping - set up variables	
 	instance = message['Entity']['Id']
 	region = message['Entity']['Region']

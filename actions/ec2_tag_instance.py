@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 
 ### Add Tags to EC2 ###
 #Tag format: AUTO: EC2_tag_instance (key:value)"
-def main(message,event_log):
+def run_action(message,event_log):
 	#House keeping - set up variables	
 	instance = message['Entity']['Id']
 	region = message['Entity']['Region']

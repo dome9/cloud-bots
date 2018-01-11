@@ -27,12 +27,12 @@ def create_deny_policy(event_log):
 
 		responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
 		if responseCode >= 400:
-			event_log.append("Unexpected error: %s" % create_policy_response + "\n")
+			event_log.append("Unexpected error: %s \n" % (create_policy_response))
 		else:
 			event_log.append("IAM deny-all policy successfully created.\n")	
 
 	except (ClientError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -54,7 +54,7 @@ def check_for_deny_policy(policy_arn,event_log):
 			#If the policy isn't there - add it into the account
 			event_log = create_deny_policy(event_log)
 		else:
-			event_log.append("Unexpected error: %s" % e + "\n")
+			event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -73,7 +73,7 @@ def create_IAM_group(event_log):
 		if error == 'entityAlredyExists':
 			event_log.append("Group already exists.\n")
 		else:
-			event_log.append("Unexpected error: %s" % e + "\n")
+			event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -94,7 +94,7 @@ def check_for_deny_group(event_log):
 			event_log.append("Deny-all group not found. Creating.\n")
 			event_log = create_IAM_group(event_log)
 		else:
-			event_log.append("Unexpected error: %s" % e + "\n")
+			event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -111,7 +111,7 @@ def attach_policy_to_group(policy_arn,event_log):
 		event_log.append ("Attached policy " + policy_arn + " to quarantine_user_deny_all_group.\n")
 
 	except (ClientError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -129,13 +129,13 @@ def add_user_to_group(user,event_log):
 		event_log.append ("User \"" + user + "\" attached to quarantine_user_deny_all_group.\n")
 
 	except (ClientError, AttributeError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
 ### Quarantine user - core method
-def main(message,event_log,):
-	account_id = message['Account']['Id']
+def run_action(message,event_log,):
+	account_id = message['Entity']['AccountNumber']
 	policy_arn = "arn:aws:iam::" + account_id + ":policy/quarantine_deny_all_policy"
 
 	user = message['Entity']['Name']
@@ -147,7 +147,7 @@ def main(message,event_log,):
 		add_user_to_group(user,event_log)
 
 	except (ClientError, AttributeError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 

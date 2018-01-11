@@ -27,12 +27,12 @@ def create_deny_policy(event_log):
 
 		responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
 		if responseCode >= 400:
-			event_log.append("Unexpected error: %s" % create_policy_response + "\n")
+			event_log.append("Unexpected error: %s \n" % (create_policy_response))
 		else:
 			event_log.append("IAM deny-all policy successfully created.\n")	
 
 	except (ClientError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 	
 	return(event_log)
 
@@ -54,7 +54,7 @@ def check_for_deny_policy(policy_arn,event_log):
 			#If the policy isn't there - add it into the account
 			event_log = create_deny_policy(event_log)
 		else:
-			event_log.append("Unexpected error: %s" % e + "\n")
+			event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -72,13 +72,13 @@ def add_policy_to_role(role,policy_arn,event_log):
 		event_log.append ("Deny policy attached to role: \"" + role + "\"\n")
 
 	except (ClientError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
 ### Quarantine role - core method
-def main(message,event_log):
-	account_id = message['Account']['Id']
+def run_action(message,event_log):
+	account_id = message['Entity']['AccountNumber']
 	policy_arn = "arn:aws:iam::" + account_id + ":policy/quarantine_deny_all_policy"
 	role = message['Entity']['Name']
 
@@ -87,7 +87,7 @@ def main(message,event_log):
 		add_policy_to_role(role,policy_arn,event_log)
 
 	except (ClientError, AttributeError) as e:
-		event_log.append("Unexpected error: %s" % e + "\n")
+		event_log.append("Unexpected error: %s \n" % (e))
 	
 	return(event_log)
 

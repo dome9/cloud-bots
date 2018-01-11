@@ -27,7 +27,7 @@ Sample tag: AUTO: iam_turn_on_password_policy (MinimumPasswordLength:5,RequireSy
 iam = boto3.client('iam')
 
 
-def main(message,event_log):
+def run_action(message,event_log):
 	compliance_tags = message['Rule']['ComplianceTags'].split("|")
 
 	#pull the tags and make sure to just take action on the one that matches the action we want

@@ -61,12 +61,12 @@ def create_log_delivery_policy(event_log):
 
 		responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
 		if responseCode >= 400:
-			print("Unexpected error: %s" % create_policy_response + "\n")
+			print("Unexpected error: %s \n" % (create_policy_response))
 		else:
 			print("FlowLogsDelivery policy successfully created.\n")	
 
 	except (ClientError) as e:
-		print("Unexpected error: %s" % e + "\n")
+		print("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -88,7 +88,7 @@ def check_for_log_delivery_policy(policy_arn,event_log):
 			#If the policy isn't there - add it into the account
 			event_log = create_log_delivery_policy(event_log)
 		else:
-			print("Unexpected error: %s" % e + "\n")
+			print("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
@@ -118,7 +118,7 @@ def create_role(policy_arn,event_log):
 			Description='Created by Dome9 remediation function. This is to allow flow logs to be delivered to CloudWatch'
 			)
 	except (ClientError) as e:
-		print("Unexpected error: %s" % e + "\n")
+		print("Unexpected error: %s \n" % (e))
 
 	responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
 	if responseCode >= 400:
@@ -140,13 +140,16 @@ def add_policy_to_role(policy_arn,event_log):
 		print("IAM policy attached to role: \"" + role + "\"\n")
 
 	except (ClientError) as e:
-		print("Unexpected error: %s" % e + "\n")
+		print("Unexpected error: %s \n" % (e))
 
 	return(event_log)
 
 
 
-def main(compliance_tags,vpc,event_log):
+def run_action(compliance_tags,vpc,event_log):
+
+	account_id = message['Entity']['AccountNumber']
+
 	#Get the VPC ID out of the message
 	
 	ec2 = boto3.client('ec2')
@@ -185,6 +188,6 @@ def main(compliance_tags,vpc,event_log):
 			)
 
 		except (ClientError) as e:
-			print("Unexpected error: %s" % e + "\n")
+			print("Unexpected error: %s \n" % (e))
 
 	print(event_log)

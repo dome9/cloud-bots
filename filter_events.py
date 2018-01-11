@@ -42,7 +42,7 @@ def filter_events(message,event_log):
 		event_log.append("Unexpected STS error: %s" % e + "\n")
 
 	if account_id != compliance_account_id:
-		event_log.append("Error: This rule was found for account id " + account_id + ". This function is running in account id: " + compliance_account_id + ". Remediations need to be ran from the account there is the issue in.\n")
+		event_log.append("Error: This rule was found for account id %s. This function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (account_id, compliance_account_id))
 		return(event_log)
 	else:
 		print("Account IDs match - continuing to check for remediations to do")
@@ -52,7 +52,7 @@ def filter_events(message,event_log):
 
 	#evaluate the event and tags and decide is there's something to do with them. 
 	if status == "Passed":
-		event_log.append("Previously failing rule has been resolved: " + rule_name + "\n ID: " + entity_id + "\nName: " + entity_name + "\n") 
+		event_log.append("Previously failing rule has been resolved: %s \n ID: %s \nName: %s \n" % (rule_name, entity_id, entity_name)) 
 	else:
 		for tag in compliance_tags:
 			tag = tag.strip() #Sometimes the tags come through with trailing or leading spaces. 
@@ -67,14 +67,12 @@ def filter_events(message,event_log):
 				possibles = globals().copy()
 				possibles.update(locals())
 				method = possibles.get(action)
-				event_message = "Rule violation found: " + rule_name + "\nID: " + entity_id + " | Name: " + entity_name + "\nRemediation Action: " + action + "\n"
-				event_log.append(event_message) 
+				event_log.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Action: %s \n" % (rule_name, entity_id, entity_name, action))
 				
 				if method:
-					event_log = method.main(message,event_log)	
+					event_log = method.run_action(message,event_log)	
 				#Getting blank messages if auto matches. Clean up this else to stop sending things if nothing to do
 				else:
-					event_log.append(event_message) 
 					event_log.append("Action: " + action + " is not a known action. Skipping.\n")
 
 			else:

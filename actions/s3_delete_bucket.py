@@ -4,7 +4,7 @@ import os
 from botocore.exceptions import ClientError
 
 ### DeleteS3Bucket ###
-def main(message,event_log):
+def run_action(message,event_log):
 	# Create an S3 client
 	s3 = boto3.client('s3')
 

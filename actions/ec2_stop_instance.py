@@ -4,7 +4,7 @@ import os
 from botocore.exceptions import ClientError
 
 ### Turn off EC2 instance ###
-def main(message,event_log):
+def run_action(message,event_log):
 	#House keeping - set up variables	
 	instance = message['Entity']['Id']
 	region = message['Entity']['Region']

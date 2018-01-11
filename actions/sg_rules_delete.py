@@ -4,7 +4,7 @@ import os
 from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroupRules ###
-def main(message,event_log):
+def run_action(message,event_log):
 	sg_id = message['Entity']['Id']
 	region = message['Entity']['Region']
 	region = region.replace("_","-")
