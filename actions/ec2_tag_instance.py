@@ -4,48 +4,31 @@ import os
 import re
 from botocore.exceptions import ClientError
 
-### Add Tags to EC2 ###
-#Tag format: AUTO: EC2_tag_instance (key:value)"
-def run_action(message):
-    #House keeping - set up variables    
-    instance = message['Entity']['Id']
-    region = message['Entity']['Region']
+### Add Tags to EC2 ### 
+# Tag format: AUTO: ec2_tag_instance key value"
+def run_action(rule,entity, params):
+    instance = entity['Id']
+    region = entity['Region']
     region = region.replace("_","-")
-    compliance_tags = message['Rule']['ComplianceTags'].split("|")
+    key = params[0]
+    value = params[1]
+    print("tagging:", key,value)
 
-    #initialize ec2
     ec2 = boto3.client('ec2', region_name=region)
+    result = ec2.create_tags(
+        Resources=[instance],
+        Tags=[
+            {
+                'Key': key,
+                'Value': value
+            }
+        ]
+    )
+    
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        text_output = ("Unexpected error:" + result + "\n")
+    else:
+        text_output = ("Instance tagged: " + instance + "\nKey: " + key + " | Value: " + value + " \n")
 
-    for tag in compliance_tags:
-        tag = tag.strip() #Sometimes the tags come through with trailing or leading spaces. 
-        remediate_tag = re.match(r'AUTO:\sec2_tag_instance\s\((?P<key>.+):(?P<value>.+)\)', tag) #we just want the tag that matches "AUTO: ec2_tag_instance (key:value)"
-
-        if remediate_tag:
-            key = remediate_tag.group(1)
-            value = remediate_tag.group(2)
-
-            try:    
-                #Apply the tags
-                tag_instance = ec2.create_tags(
-                    Resources=[instance],
-                    Tags=[
-                        {
-                            'Key': key,
-                            'Value': value
-                        }
-                    ]
-                )
-                
-                responseCode = tag_instance['ResponseMetadata']['HTTPStatusCode']
-
-                if responseCode >= 400:
-                    text_output = ("Unexpected error:" + tag_instance + "\n")
-                else:
-                    text_output = ("Instance tagged: " + instance + "\nKey: " + key + " | Value: " + value + " \n")
-
-            except (ClientError, AttributeError) as e:
-                text_output = ("Unexpected error: %s" % e + "\n")
-
-    return text_output 
-
-
+    return text_output

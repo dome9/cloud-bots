@@ -26,9 +26,7 @@ def handle_event(message,text_output_array):
     if lambda_account_id != event_account_id:
         text_output_array.append("Error: This finding was found in account id %s. The Lambda function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (event_account_id, lambda_account_id))
         return text_output_array
-    else:
-        print("Account IDs match - continuing to check for remediations to do")
-
+    
     #All of the remediation values are coming in on the compliance tags and they're pipe delimited
     compliance_tags = message['Rule']['ComplianceTags'].split("|")
 
@@ -45,9 +43,20 @@ def handle_event(message,text_output_array):
         if pattern.match(tag):
             text_output_array.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Action: %s \n" % (rule_name, entity_id, entity_name, tag))
 
-            #Pull out only the action verb to run as a function
-            action_regex_match = re.match(r'AUTO:\s(?P<action>\w+)', tag)
-            action = action_regex_match.group(1)
+            # Pull out only the action verb to run as a function
+            # The format is AUTO: action name param1 param2
+            arr = tag.split(' ')
+            if len(arr) < 2:
+                err_msg = "Empty AUTO: tag. No action was specified"
+                print(err_msg)
+                text_output_array.append(err_msg)
+                continue
+            
+            action = arr[1]
+            params = arr[2:]
+
+            # action_regex_match = re.match(r'AUTO:\s(?P<action>\w+)', tag)
+            # action = action_regex_match.group(1)
             
             try:
                 action_module = importlib.import_module('actions.' + action, package=None)
@@ -59,7 +68,7 @@ def handle_event(message,text_output_array):
             print("Found action '%s', about to invoke it" % action)
             action_msg = ""
             try:
-                action_msg = action_module.run_action(message)
+                action_msg = action_module.run_action(message['Rule'],message['Entity'], params)
             except Exception as e: 
                 action_msg = "Error while executing function '%s'. Ex=%s \n" % (action,e)
                 print(action_msg)
