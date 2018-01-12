@@ -55,9 +55,6 @@ def handle_event(message,text_output_array):
             action = arr[1]
             params = arr[2:]
 
-            # action_regex_match = re.match(r'AUTO:\s(?P<action>\w+)', tag)
-            # action = action_regex_match.group(1)
-            
             try:
                 action_module = importlib.import_module('actions.' + action, package=None)
             except:

@@ -1,14 +1,12 @@
 import boto3
-import json
-import os
 from botocore.exceptions import ClientError
 
 ### DeleteS3BucketPermissions ###
-def run_action(message):
+def run_action(rule,entity,params):
     # Create an S3 client
     s3 = boto3.client('s3')
 
-    bucket = message['Entity']['Id']
+    bucket = entity['Id']
 
     try:
         #sendEvent out the S3 permissions first so we can reference them later
@@ -20,16 +18,16 @@ def run_action(message):
         
         responseCode = bucket_policy_delete_output['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s" % bucket_policy_delete_output + "\n"
+            text_output = text_output + "Unexpected error: %s \n" % bucket_policy_delete_output
         else:
-            text_output = text_output + "Bucket policy deleted: " + bucket + " \n"
+            text_output = text_output + "Bucket policy deleted: %s \n" % bucket
 
     except (ClientError, AttributeError) as e:
         error = e.response['Error']['Code']
         if error == 'NoSuchBucketPolicy':
-             text_output = "Bucket " + bucket + " does not have a bucket policy. Checking ACLs next.\n"
+            text_output = "Bucket %s does not have a bucket policy. Checking ACLs next.\n" % bucket
         else:
-            text_output = "Unexpected error: %s" % e + "\n"
+            text_output = "Unexpected error: %s \n" % e
 
     try:
         #list bucket ACLs
@@ -45,11 +43,11 @@ def run_action(message):
         
             responseCode = acl_delete_output['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = text_output + "Unexpected error: %s" % acl_delete_output + "\n"
+                text_output = text_output + "Unexpected error: %s \n" % acl_delete_output 
             else:
-                text_output = text_output + "Bucket ACL deleted: " + bucket + " \n"
+                text_output = text_output + "Bucket ACL deleted: %s \n" % bucket
     
     except (ClientError, AttributeError) as e:
-        text_output = text_output + "Unexpected error: %s" % e + "\n"
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output

@@ -1,12 +1,10 @@
 import boto3
-import json
-import os
 from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroupRules ###
-def run_action(message):
-    sg_id = message['Entity']['Id']
-    region = message['Entity']['Region']
+def run_action(rule,entity,params):
+    sg_id = entity['Id']
+    region = entity['Region']
     region = region.replace("_","-")
 
     try:
@@ -34,9 +32,9 @@ def run_action(message):
         except (ClientError, AttributeError) as e:
             error = e.response['Error']['Code']
             if error == 'MissingParameter':
-                 text_output = text_output + "Security Group " + sg_id + " does not have any inbound rules. Checking outbound next.\n"
+                text_output = text_output + "Security Group " + sg_id + " does not have any inbound rules. Checking outbound next.\n"
             else:
-                text_output = text_output + "Unexpected error: %s" % e + "\n")
+                text_output = text_output + "Unexpected error: %s" % e + "\n"
 
         #Try to delete outbound rules if they exist
         try:
@@ -46,7 +44,7 @@ def run_action(message):
         except (ClientError, AttributeError) as e:
             error = e.response['Error']['Code']
             if error == 'MissingParameter':
-                 text_output = text_output + "Security Group " + sg_id + " does not have any outbound rules. Skipping.\n"
+                text_output = text_output + "Security Group " + sg_id + " does not have any outbound rules. Skipping.\n"
             else:
                 text_output = text_output + "Unexpected error: %s" % e + "\n"
 

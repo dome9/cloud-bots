@@ -1,14 +1,12 @@
 import boto3
-import json
-import os
 from botocore.exceptions import ClientError
 
 ### Kill EC2 Instance ###
 # def ec2_terminate_instance(instance,tags,event_log):
-def run_action(message,event_log):
-    #House keeping - set up variables    
-    instance = message['Entity']['Id']
-    region = message['Entity']['Region']
+def run_action(rule,entity,params):
+    #House keeping - set up variables   
+    instance = entity['Id']
+    region = entity['Region']
     region = region.replace("_","-")
     
     #initialize ec2
@@ -20,11 +18,11 @@ def run_action(message,event_log):
         responseCode = stop_instance['ResponseMetadata']['HTTPStatusCode']
 
         if responseCode >= 400:
-            text_output = ("Unexpected error:" + stop_instance + "\n")
+            text_output = "Unexpected error: %s \n" % stop_instance
         else:
-            text_output = ("Instance terminated: " + instance + " \n")
+            text_output = "Instance terminated: %s \n" % instance
         
     except (ClientError, AttributeError) as e:
-        text_output = ("Unexpected error: %s" % e + "\n")
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output

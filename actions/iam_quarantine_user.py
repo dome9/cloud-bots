@@ -1,6 +1,4 @@
 import boto3
-import json
-import os
 from botocore.exceptions import ClientError
 
 #This will make the quarantining IAM policy that'll be applied to the users or roles that need to be locked down.
@@ -27,12 +25,12 @@ def create_deny_policy():
 
         responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % (create_policy_response)
+            text_output = "Unexpected error: %s \n" % create_policy_response
         else:
             text_output = "IAM deny-all policy successfully created.\n"
 
     except (ClientError) as e:
-        text_output = "Unexpected error: %s \n" % (e)
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -54,7 +52,7 @@ def check_for_deny_policy(policy_arn):
             #If the policy isn't there - add it into the account
             text_output = create_deny_policy()
         else:
-            text_output = "Unexpected error: %s \n" % (e)
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -68,7 +66,7 @@ def create_IAM_group():
         create_group_response = iam.create_group(GroupName='quarantine_user_deny_all_group')
         text_output = "IAM Group (quarantine_user_deny_all_group) successfully created\n"
 
-    except (ClientError) as e:
+    except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'entityAlredyExists':
             text_output = "Group already exists.\n"
@@ -94,7 +92,7 @@ def check_for_deny_group():
             text_output = "Deny-all group not found. Creating.\n"
             event_log = create_IAM_group(event_log)
         else:
-            text_output = "Unexpected error: %s \n" % (e)
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -108,10 +106,10 @@ def attach_policy_to_group(policy_arn):
             GroupName='quarantine_user_deny_all_group',
             PolicyArn=policy_arn
         )
-        text_output =  "Attached policy " + policy_arn + " to quarantine_user_deny_all_group.\n"
+        text_output =  "Attached policy %s to quarantine_user_deny_all_group.\n" % policy_arn
 
-    except (ClientError) as e:
-        text_output = "Unexpected error: %s \n" % (e)
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -126,16 +124,16 @@ def add_user_to_group(user):
             GroupName='quarantine_user_deny_all_group',
             UserName=user
         )
-        text_output =  "User \"" + user + "\" attached to quarantine_user_deny_all_group.\n"
+        text_output =  "User \" %s \" attached to quarantine_user_deny_all_group.\n" % user
 
     except (ClientError, AttributeError) as e:
-        text_output = "Unexpected error: %s \n" % (e)
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
 ### Quarantine user - core method
-def run_action(message):
-    account_id = message['Entity']['AccountNumber']
+def run_action(rule,entity,params):
+    account_id = entity['AccountNumber']
     policy_arn = "arn:aws:iam::" + account_id + ":policy/quarantine_deny_all_policy"
 
     user = message['Entity']['Name']

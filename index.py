@@ -1,7 +1,6 @@
 import boto3
 import json
 import os
-import time
 from botocore.exceptions import ClientError
 
 from handle_event import * 

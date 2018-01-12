@@ -4,10 +4,10 @@ import os
 from botocore.exceptions import ClientError
 
 ### Turn off EC2 instance ###
-def run_action(message):
-    #House keeping - set up variables    
-    instance = message['Entity']['Id']
-    region = message['Entity']['Region']
+def run_action(rule,entity,params):
+    #House keeping - set up variables   
+    instance = entity['Id']
+    region = entity['Region']
     region = region.replace("_","-")
 
     #initialize ec2
@@ -19,11 +19,11 @@ def run_action(message):
         responseCode = stop_instance['ResponseMetadata']['HTTPStatusCode']
 
         if responseCode >= 400:
-            text_output = ("Unexpected error:" + stop_instance + "\n")
+            text_output = "Unexpected error: %s \n" % stop_instance
         else:
-            text_output = ("Instance stopped: " + instance + " \n")
+            text_output = "Instance stopped: %s \n" % instance
                 
     except (ClientError, AttributeError) as e:
-        text_output = ("Unexpected error: %s" % e + "\n")
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output 

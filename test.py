@@ -23,6 +23,8 @@ event = {
     }]
 }
 
+
+
 #export SNS_TOPIC_ARN="arn:aws:sns:us-west-2:621958466464:eventsToSlack"
 SNS_TOPIC_ARN = "arn:aws:sns:us-west-2:621958466464:eventsToSlack"
 

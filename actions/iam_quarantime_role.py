@@ -1,6 +1,4 @@
 import boto3
-import json
-import os
 from botocore.exceptions import ClientError
 
 #This will make the quarantining IAM policy that'll be applied to the users or roles that need to be locked down.
@@ -27,12 +25,12 @@ def create_deny_policy():
 
         responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = ("Unexpected error: %s \n" % (create_policy_response))
+            text_output = "Unexpected error: %s \n" % create_policy_response
         else:
-            text_output = ("IAM deny-all policy successfully created.\n")    
+            text_output = "IAM deny-all policy successfully created.\n"
 
-    except (ClientError) as e:
-        text_output = ("Unexpected error: %s \n" % (e))
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output
 
@@ -46,15 +44,15 @@ def check_for_deny_policy(policy_arn):
         get_policy_response = iam.get_policy(PolicyArn=policy_arn)
         
         if get_policy_response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  ("IAM deny-all policy exists in this account.\n")
+            text_output =  "IAM deny-all policy exists in this account.\n"
 
-    except (ClientError) as e:
+    except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'NoSuchEntity':
             #If the policy isn't there - add it into the account
             text_output = create_deny_policy()
         else:
-            text_output = ("Unexpected error: %s \n" % (e))
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -69,25 +67,25 @@ def add_policy_to_role(role,policy_arn):
             RoleName=role,
             PolicyArn=policy_arn
         )
-        text_output = ("Deny policy attached to role: \"" + role + "\"\n")
+        text_output = "Deny policy attached to role: \" %s \"\n" % e
 
-    except (ClientError) as e:
-        text_output = ("Unexpected error: %s \n" % (e))
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
 ### Quarantine role - core method
-def run_action(message):
-    account_id = message['Entity']['AccountNumber']
+def run_action(rule,entity,params):
+    account_id = entity['AccountNumber']
     policy_arn = "arn:aws:iam::" + account_id + ":policy/quarantine_deny_all_policy"
-    role = message['Entity']['Name']
+    role = entity['Name']
 
     try:
         text_output = check_for_deny_policy(policy_arn)
         text_output = text output + add_policy_to_role(role,policy_arn)
 
     except (ClientError, AttributeError) as e:
-        text_output = ("Unexpected error: %s \n" % (e))
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output
 

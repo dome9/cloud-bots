@@ -1,7 +1,4 @@
 import boto3
-import json
-import os
-import re
 from botocore.exceptions import ClientError
 
 ### Add Tags to EC2 ### 
@@ -27,8 +24,8 @@ def run_action(rule,entity, params):
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = ("Unexpected error:" + result + "\n")
+        text_output = "Unexpected error: %s \n" % tag_instance
     else:
-        text_output = ("Instance tagged: " + instance + "\nKey: " + key + " | Value: " + value + " \n")
+        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,key,value)
 
     return text_output
