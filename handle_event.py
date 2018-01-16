@@ -1,4 +1,3 @@
-# import glob
 import re
 import boto3
 import importlib 
