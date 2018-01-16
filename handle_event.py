@@ -4,7 +4,6 @@ import boto3
 import importlib 
 from botocore.exceptions import ClientError
 
-
 def handle_event(message,text_output_array):
 
     #Break out the values from the JSON payload from Dome9
@@ -19,8 +18,8 @@ def handle_event(message,text_output_array):
         #get the accountID
         sts = boto3.client("sts")
         lambda_account_id = sts.get_caller_identity()["Account"]
-    except (ClientError, AttributeError) as e:
-        text_output_array.append("Unexpected STS error: %s" % e + "\n")
+    except ClientError as e:
+        text_output_array.append("Unexpected STS error: %s \n"  % e)
 
     if lambda_account_id != event_account_id:
         text_output_array.append("Error: This finding was found in account id %s. The Lambda function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (event_account_id, lambda_account_id))
@@ -43,7 +42,7 @@ def handle_event(message,text_output_array):
             text_output_array.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Action: %s \n" % (rule_name, entity_id, entity_name, tag))
 
             # Pull out only the action verb to run as a function
-            # The format is AUTO: action name param1 param2
+            # The format is AUTO: action_name param1 param2
             arr = tag.split(' ')
             if len(arr) < 2:
                 err_msg = "Empty AUTO: tag. No action was specified"
