@@ -16,7 +16,7 @@ def sendEvent(text_output_array,SNS_TOPIC_ARN):
 		Subject='RemediationLog',
 		MessageStructure='string'
 	)
-	#To do - Add more error handling in here if >200
+
 	status_code = response['ResponseMetadata']['HTTPStatusCode']
 	if status_code > 400:
 		print("SNS message failed to send!")
