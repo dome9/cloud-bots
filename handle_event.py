@@ -2,7 +2,6 @@
 import re
 import boto3
 import importlib 
-# from importlib import util
 from botocore.exceptions import ClientError
 
 
@@ -67,7 +66,7 @@ def handle_event(message,text_output_array):
             try:
                 action_msg = action_module.run_action(message['Rule'],message['Entity'], params)
             except Exception as e: 
-                action_msg = "Error while executing function '%s'. Ex=%s \n" % (action,e)
+                action_msg = "Error while executing function '%s'.\n Error: %s \n" % (action,e)
                 print(action_msg)
             finally:
                 text_output_array.append(action_msg)

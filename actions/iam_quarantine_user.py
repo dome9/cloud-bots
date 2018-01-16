@@ -6,31 +6,27 @@ def create_deny_policy():
     # Create IAM client
     iam = boto3.client('iam')
 
-    try:
-        # Create a policy
-        deny_policy = {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Effect": "Deny",
-                    "Action": "*",
-                    "Resource": "*"
-                }
-            ]
-        }
-        create_policy_response = iam.create_policy(
-            PolicyName='quarantine_deny_all_policy',
-            PolicyDocument=json.dumps(deny_policy)
-        )
+    # Create a policy
+    deny_policy = {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Deny",
+                "Action": "*",
+                "Resource": "*"
+            }
+        ]
+    }
+    result = iam.create_policy(
+        PolicyName='quarantine_deny_all_policy',
+        PolicyDocument=json.dumps(deny_policy)
+    )
 
-        responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % create_policy_response
-        else:
-            text_output = "IAM deny-all policy successfully created.\n"
-
-    except (ClientError) as e:
-        text_output = "Unexpected error: %s \n" % e
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        text_output = "Unexpected error: %s \n" % result
+    else:
+        text_output = "IAM deny-all policy successfully created.\n"
 
     return text_output
 
@@ -41,9 +37,9 @@ def check_for_deny_policy(policy_arn):
 
     try:
         #Check to see if the deny policy exists in the account currently
-        get_policy_response = iam.get_policy(PolicyArn=policy_arn)
+        result = iam.get_policy(PolicyArn=policy_arn)
         
-        if get_policy_response['ResponseMetadata']['HTTPStatusCode'] < 400:
+        if result['ResponseMetadata']['HTTPStatusCode'] < 400:
             text_output =  "IAM deny-all policy exists in this account.\n"
 
     except (ClientError) as e:
@@ -63,7 +59,7 @@ def create_IAM_group():
 
     try:
         #If the group isn't there - add it into the account and attach the policy to it.
-        create_group_response = iam.create_group(GroupName='quarantine_user_deny_all_group')
+        result = iam.create_group(GroupName='quarantine_user_deny_all_group')
         text_output = "IAM Group (quarantine_user_deny_all_group) successfully created\n"
 
     except ClientError as e:
@@ -83,7 +79,7 @@ def check_for_deny_group():
     try:
         #Check to see if the deny group exists in the account currently
         text_output = "Checking to see if group quarantine_user_deny_all_group exists in this account.\n"
-        get_group_response = iam.get_group(GroupName='quarantine_user_deny_all_group')
+        result = iam.get_group(GroupName='quarantine_user_deny_all_group')
         text_output =  text_output + "Deny-all group exists in this account.\n"
 
     except (ClientError, AttributeError) as e:
@@ -101,15 +97,11 @@ def attach_policy_to_group(policy_arn):
     # Create IAM client
     iam = boto3.client('iam')
 
-    try:
-        attach_policy_response = iam.attach_group_policy(
-            GroupName='quarantine_user_deny_all_group',
-            PolicyArn=policy_arn
-        )
-        text_output =  "Attached policy %s to quarantine_user_deny_all_group.\n" % policy_arn
-
-    except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+    attach_policy_response = iam.attach_group_policy(
+        GroupName='quarantine_user_deny_all_group',
+        PolicyArn=policy_arn
+    )
+    text_output =  "Attached policy %s to quarantine_user_deny_all_group.\n" % policy_arn
 
     return text_output
 
@@ -119,15 +111,11 @@ def add_user_to_group(user):
     # Create IAM client
     iam = boto3.client('iam')
 
-    try:
-        attach_policy_response = iam.add_user_to_group(
-            GroupName='quarantine_user_deny_all_group',
-            UserName=user
-        )
-        text_output =  "User \" %s \" attached to quarantine_user_deny_all_group.\n" % user
-
-    except (ClientError, AttributeError) as e:
-        text_output = "Unexpected error: %s \n" % e
+    attach_policy_response = iam.add_user_to_group(
+        GroupName='quarantine_user_deny_all_group',
+        UserName=user
+    )
+    text_output =  "User \" %s \" attached to quarantine_user_deny_all_group.\n" % user
 
     return text_output
 
@@ -135,14 +123,13 @@ def add_user_to_group(user):
 def run_action(rule,entity,params):
     account_id = entity['AccountNumber']
     policy_arn = "arn:aws:iam::" + account_id + ":policy/quarantine_deny_all_policy"
-
-    user = message['Entity']['Name']
+    user = entity['Name']
 
     try:
-        check_for_deny_policy(policy_arn)
-        check_for_deny_group()
-        attach_policy_to_group(policy_arn)
-        add_user_to_group(user)
+        text_output = check_for_deny_policy(policy_arn)
+        text_output = text output + check_for_deny_group()
+        text_output = text output + attach_policy_to_group(policy_arn)
+        text_output = text output + add_user_to_group(user)
 
     except (ClientError, AttributeError) as e:
         text_output = "Unexpected error: %s \n" % (e)

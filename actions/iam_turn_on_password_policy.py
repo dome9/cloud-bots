@@ -1,5 +1,4 @@
 import boto3
-from botocore.exceptions import ClientError
 
 #This will make the quarantining IAM policy that'll be applied to the users or roles that need to be locked down.
 #EVERYTHING needs to be set at once. If you just set 1 property, it kills everything else off. 
@@ -17,7 +16,6 @@ Sample PasswordPolicy:
    PasswordReusePrevention=int,
    HardExpiry=True|False
 }
-
 
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 '''
@@ -49,29 +47,23 @@ def run_action(rule,entity,params):
 
         password_config[property_to_update] = value
 
-    try:
-        response = iam.update_account_password_policy(
-            MinimumPasswordLength=password_config["MinimumPasswordLength"],
-            RequireSymbols=password_config["RequireSymbols"],
-            RequireNumbers=password_config["RequireNumbers"],
-            RequireUppercaseCharacters=password_config["RequireUppercaseCharacters"],
-            RequireLowercaseCharacters=password_config["RequireLowercaseCharacters"],
-            AllowUsersToChangePassword=password_config["AllowUsersToChangePassword"],
-            MaxPasswordAge=password_config["MaxPasswordAge"],
-            PasswordReusePrevention=password_config["PasswordReusePrevention"],
-            HardExpiry=password_config["HardExpiry"]
-        )
 
-        responseCode = response['ResponseMetadata']['HTTPStatusCode']
+    result = iam.update_account_password_policy(
+        MinimumPasswordLength=password_config["MinimumPasswordLength"],
+        RequireSymbols=password_config["RequireSymbols"],
+        RequireNumbers=password_config["RequireNumbers"],
+        RequireUppercaseCharacters=password_config["RequireUppercaseCharacters"],
+        RequireLowercaseCharacters=password_config["RequireLowercaseCharacters"],
+        AllowUsersToChangePassword=password_config["AllowUsersToChangePassword"],
+        MaxPasswordAge=password_config["MaxPasswordAge"],
+        PasswordReusePrevention=password_config["PasswordReusePrevention"],
+        HardExpiry=password_config["HardExpiry"]
+    )
 
-        if responseCode >= 400:
-            text_output = "Unexpected error:" + str(response) + "\n"
-        else:
-            text_output = "Account Password Policy updated successfully \n" 
-
-
-    except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
-                
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        text_output = "Unexpected error:" + str(result) + "\n"
+    else:
+        text_output = "Account Password Policy updated successfully \n" 
 
     return text_output
