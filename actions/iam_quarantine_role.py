@@ -76,7 +76,7 @@ def run_action(rule,entity,params):
         text_output = check_for_deny_policy(policy_arn)
         text_output = text output + add_policy_to_role(role,policy_arn)
 
-    except (ClientError, AttributeError) as e:
+    except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
     
     return text_output
