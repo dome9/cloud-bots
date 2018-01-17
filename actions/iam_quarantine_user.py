@@ -42,7 +42,7 @@ def check_for_deny_policy(policy_arn):
         if result['ResponseMetadata']['HTTPStatusCode'] < 400:
             text_output =  "IAM deny-all policy exists in this account.\n"
 
-    except (ClientError) as e:
+    except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'NoSuchEntity':
             #If the policy isn't there - add it into the account
@@ -131,7 +131,7 @@ def run_action(rule,entity,params):
         text_output = text output + attach_policy_to_group(policy_arn)
         text_output = text output + add_user_to_group(user)
 
-    except (ClientError, AttributeError) as e:
+    except ClientError as e:
         text_output = "Unexpected error: %s \n" % (e)
 
     return text_output
