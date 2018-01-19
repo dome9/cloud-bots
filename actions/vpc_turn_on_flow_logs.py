@@ -20,6 +20,7 @@ account_id = "621958466464"
 compliance_tags = ["a", "b", "vpc-a7fb7fc0", "AUTO: vpc_turn_on_flow_logs (All)"]
 
 
+#set defaults but allow them to be overridden
 
 
 ####################################################################################
