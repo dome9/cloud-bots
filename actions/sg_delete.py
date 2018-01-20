@@ -2,7 +2,7 @@ import boto3
 
 ### DeleteSecurityGroup ###
 def run_action(rule,entity,params):
-    region = entity['Region']
+    region = entity['region']
     region = region.replace("_","-")
     sg_id = entity['Id']
     

@@ -3,8 +3,8 @@ from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroupRules ###
 def run_action(rule,entity,params):
-    sg_id = entity['Id']
-    region = entity['Region']
+    sg_id = entity['id']
+    region = entity['region']
     region = region.replace("_","-")
 
     ec2_client = boto3.client('ec2', region_name=region)

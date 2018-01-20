@@ -3,8 +3,8 @@ import boto3
 ### Add Tags to EC2 ### 
 # Tag format: AUTO: ec2_tag_instance key value"
 def run_action(rule,entity, params):
-    instance = entity['Id']
-    region = entity['Region']
+    instance = entity['id']
+    region = entity['region']
     region = region.replace("_","-")
 
     key = params[0]

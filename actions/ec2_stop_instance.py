@@ -2,8 +2,8 @@ import boto3
 
 ### Turn off EC2 instance ###
 def run_action(rule,entity,params):
-    instance = entity['Id']
-    region = entity['Region']
+    instance = entity['id']
+    region = entity['region']
     region = region.replace("_","-")
 
     ec2 = boto3.client('ec2', region_name=region)
