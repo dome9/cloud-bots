@@ -4,7 +4,7 @@ import boto3
 def run_action(rule,entity,params):
     region = entity['region']
     region = region.replace("_","-")
-    sg_id = entity['Id']
+    sg_id = entity['id']
     
     ec2 = boto3.resource('ec2', region_name=region)
     result = ec2.SecurityGroup(sg_id).delete()
