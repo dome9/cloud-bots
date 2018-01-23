@@ -5,3 +5,4 @@ AWS_SAM.yaml
 /__pycache__/   
 sample_*
 **.pyc
+deploy.sh

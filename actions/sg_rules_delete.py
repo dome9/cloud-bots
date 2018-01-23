@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroupRules ###
 def run_action(rule,entity,params):
+
     sg_id = entity['id']
     region = entity['region']
     region = region.replace("_","-")
@@ -13,6 +14,7 @@ def run_action(rule,entity,params):
 
     #Save the inbound/outbound rules for logging/forensics
     egressRules = sgInformation['SecurityGroups'][0]['IpPermissionsEgress']
+    
     text_output = "Egress rules to be deleted: " + str(egressRules) + "\n"
 
     ingressRules = sgInformation['SecurityGroups'][0]['IpPermissions']

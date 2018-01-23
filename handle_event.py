@@ -8,8 +8,8 @@ def handle_event(message,text_output_array):
     #Break out the values from the JSON payload from Dome9
     rule_name = message['Rule']['Name']
     status = message['Status']
-    entity_id = message['Entity']['Id']
-    entity_name = message['Entity']['Name']
+    entity_id = message['Entity']['id']
+    entity_name = message['Entity']['name']
 
     #Make sure that the event that's being referenced is for the account this function is running in.
     event_account_id = message['Account']['Id']
