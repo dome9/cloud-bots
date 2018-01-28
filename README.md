@@ -20,13 +20,14 @@ Make sure you're getting the results you want and expect
 
 ### Create 2 new SNS topics
 One topic will be for Dome9 to send events to, and the second will be for remediation outputs.
-1. Go to SNS and create two new topics. Call it whatever you want (I went with d9-events and remediation-output).
-
+- Go to SNS and create two new topics. Call it whatever you want (I went with d9-events and remediation-output).
+ 
 For the d9-events topic:
-2. Go into the topic and edit the Topic Policy
-3. "Allow these users to publish messages to this topic" - select "Only these AWS users" and put in 634729597623 in the text box.
+- Go into the topic and edit the Topic Policy
+- "Allow these users to publish messages to this topic" - select "Only these AWS users" and put in 634729597623 in the text box.
 
-For both topics: Copy down the topic ARNs as we'll use them later
+For both topics: 
+- Copy down the topic ARNs as we'll use them later
 
 ### Create a new IAM policy
 Use this policy document.
