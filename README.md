@@ -6,7 +6,7 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 ## Setup Steps
 
 ### Create a bundle that you want to use for auto remediation. 
-A sample bundle is in sample_bundle.json
+It's recommended but not required to break remediation actions into their own bundles. 
 
 ### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
 
