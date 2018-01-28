@@ -1,4 +1,4 @@
-# Cloud-Supervisor v2
+# Cloud-Supervisor v2 (CS2)
 Auto remediation actions
 
 This is meant to be used in conjunction with Dome9's Continuous Compliance to remediate issues that are uncovered. 
