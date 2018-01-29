@@ -7,6 +7,22 @@ Resources:
     Properties: 
       DisplayName: 'd9Events'
       TopicName: 'd9Events'
+  InputTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: D9DeliveryPolicy
+        Version: '2012-10-17'
+        Statement:
+        - Sid: D9DeliveryPolicy
+          Effect: Allow
+          Principal:
+            AWS: 'arn:aws:iam::634729597623:root'
+          Action: sns:Publish
+          Resource: !Ref InputTopic
+      Topics:
+      - !Ref InputTopic
+
   OutputTopic:
     Type: "AWS::SNS::Topic"
     Properties: 
@@ -48,6 +64,12 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref InputTopic
-
+Outputs:
+  InputTopicARN:
+    Description: 'ARN that Dome9 needs to send events to'
+    Value: !Ref InputTopic
+  OutputTopicARN:
+    Description: 'ARN that the function will export logs to'
+    Value: !Ref OutputTopic
 
 
