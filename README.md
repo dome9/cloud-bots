@@ -19,7 +19,33 @@ All available remediation actions are in the actions folder.
 Make sure you're getting the results you want and expect
 
 
-! DEPLOYMENT!!
+### Clone this GitHub project
+``` 
+git clone git@github.com:Dome9/cloud-supervisor2.git 
+```
+
+### Zip the folder and copy it to S3
+```
+cd cloud-supervisor2
+zip -r -X remediation-function.zip *
+aws s3 cp remediation-function.zip s3://<YOUR-BUCKET-NAME>/
+
+```
+
+### Deploy the template via CloudFormation
+```
+aws cloudformation package    \
+--template-file ./deployment_cft.yaml    \
+--output-template-file serverless-output.yaml    \
+--s3-bucket <YOUR-BUCKET-NAME>
+
+aws cloudformation deploy \
+--template-file ./serverless-output.yaml \
+--stack-name lambda-remediations \
+--capabilities CAPABILITY_IAM
+```
+
+
 
 ### Set the Dome9 compliance bundle to run via continuous compliance. 
 Currently there needs to be a 1 Continuous Compliance bundle per account
