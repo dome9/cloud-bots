@@ -45,11 +45,15 @@ aws cloudformation deploy \
 --capabilities CAPABILITY_IAM
 ```
 
+### Get the outputs from the new stack
+```
+aws cloudformation describe-stacks --stack-name lambda-remediation --query 'Stacks[0].Outputs' --output text
+```
 
 
 ### Set the Dome9 compliance bundle to run via continuous compliance. 
 Currently there needs to be a 1 Continuous Compliance bundle per account
-Set the output topic as the d9-events one we set up
+Set the output topic as the ARN from the InputTopicARN one we set up
 Set the format to be JSON - Full Entity
 
 ### Recommended:
