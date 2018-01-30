@@ -26,7 +26,7 @@ def run_action(rule,entity,params):
 
     #Try to delete inbound rules if they exist
     if ingressRules:
-        result = sg.revoke_ingress(IpPermissions=sg.ip_permissions)
+        result = sg.revoke_ingress(IpPermissions=ingressRules)
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
@@ -38,7 +38,7 @@ def run_action(rule,entity,params):
 
     #Try to delete outbound rules if they exist
     if egressRules:
-        result = sg.revoke_egress(IpPermissions=sg.ip_permissions_egress)
+        result = sg.revoke_egress(IpPermissions=egressRules)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
