@@ -53,7 +53,7 @@ aws cloudformation deploy \
 
 ### Get the outputs from the new stack
 ```
-aws cloudformation describe-stacks --stack-name lambda-remediation --query 'Stacks[0].Outputs' --output text
+aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
 
