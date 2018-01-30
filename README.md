@@ -5,19 +5,7 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 
 ## Setup Steps
 
-### Create a bundle that you want to use for auto remediation. 
-It's recommended but not required to break remediation actions into their own bundles. 
-
-### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
-
-All available remediation actions are in the actions folder. 
-
-#### Tag Syntax: AUTO: <action_name> <params>
-    Ex: AUTO: ec2_stop_instance
-
-### Test this compliance bundle. 
-Make sure you're getting the results you want and expect
-
+## AWS
 
 ### Clone this GitHub project
 ``` 
@@ -56,23 +44,42 @@ aws cloudformation deploy \
 aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
-
-### Set the Dome9 compliance bundle to run via continuous compliance. 
-Currently there needs to be a 1 Continuous Compliance bundle per account
-Set the output topic as the ARN from the InputTopicARN one we set up
-Set the format to be JSON - Full Entity
-
-## NOTE: 
-Currently Continuous Compliance sends a 'diff' for the SNS notifications. Because of this, if you have ran the bundle before, only new issues will be sent to SNS. 
-If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to clone the bundle and set the new never-ran bundle as the thing that is being tested in the CC config. This works because if it's never ran, then every existing issue is considered 'new' and will be sent to SNS. 
-This will be changed in future releases and is being currently worked on. 
-
 ### Recommended:
 Set up a separate function to send the events to Slack
 https://github.com/alpalwal/D9SnsToSlack
 
 From SNS you can send the events wherever you want, but we have found that Slack works great for collaboration as well as troubleshooting. 
 
+
+## Dome9
+
+### Create a bundle that you want to use for auto remediation. 
+It's recommended but not required to break remediation actions into their own bundles. 
+
+### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
+
+All available remediation actions are in the actions folder. 
+
+#### Tag Syntax: AUTO: <action_name> <params>
+    Ex: AUTO: ec2_stop_instance
+
+### Test this compliance bundle. 
+Make sure you're getting the results you want and expect
+
+### Set the Dome9 compliance bundle to run via continuous compliance. 
+Currently there needs to be a 1 Continuous Compliance bundle per account
+Set the output topic as the ARN from the InputTopicARN one we set up
+Set the format to be JSON - Full Entity
+
+### NOTE: 
+Currently Continuous Compliance sends a 'diff' for the SNS notifications. Because of this, if you have ran the bundle before, only new issues will be sent to SNS. 
+If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to clone the bundle and set the new never-ran bundle as the thing that is being tested in the CC config. This works because if it's never ran, then every existing issue is considered 'new' and will be sent to SNS. 
+This will be changed in future releases and is being currently worked on. 
+
+
+
+## Examples
+ 
 ### Sample output from Slack:
 ```
 -------------------------
