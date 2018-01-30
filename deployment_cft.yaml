@@ -58,6 +58,7 @@ Resources:
                - iam:CreatePolicy
                - iam:GetPolicy
                - iam:AttachRolePolicy
+               - iam:AddUserToGroup
 
              Resource: '*'
       Environment:
