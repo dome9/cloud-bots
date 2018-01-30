@@ -33,7 +33,7 @@ aws s3 cp remediation-function.zip s3://<YOUR-BUCKET-NAME>/
 ```
 
 ### Update the deployment_cft.yaml file with your file name
-Change this line to the path for your 
+Change this line to the path for your bucket/file
 ```
 CodeUri: s3://<YOUR-BUCKET-NAME>/remediation-function.zip
 ```
@@ -53,7 +53,7 @@ aws cloudformation deploy \
 
 ### Get the outputs from the new stack
 ```
-aws cloudformation describe-stacks --stack-name lambda-remediation --query 'Stacks[0].Outputs' --output text
+aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
 
