@@ -33,7 +33,7 @@ aws s3 cp remediation-function.zip s3://<YOUR-BUCKET-NAME>/
 ```
 
 ### Update the deployment_cft.yaml file with your file name
-Change this line to the path for your 
+Change this line to the path for your bucket/file
 ```
 CodeUri: s3://<YOUR-BUCKET-NAME>/remediation-function.zip
 ```
