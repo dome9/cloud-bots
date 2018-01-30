@@ -6,3 +6,4 @@ sample_*
 **.pyc
 deploy.sh
 /beta_actions/
+serverless-output.yaml
