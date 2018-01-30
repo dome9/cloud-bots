@@ -33,7 +33,7 @@ Resources:
     Properties:
       FunctionName: dome9AutoRemediations
       Description: 'Auto-remediation actions from Dome9 events'
-      CodeUri: s3://alexalextestbucket/function.zip
+      CodeUri: s3://alexremediationbuckett/remediation-function.zip
       Runtime: python3.6
       Handler: index.lambda_handler
       Policies:
@@ -41,6 +41,7 @@ Resources:
          Statement:
            - Effect: Allow
              Action:
+               - S3:GetObject
                - sns:Publish
                - sts:GetCallerIdentity
                - ec2:TerminateInstances
