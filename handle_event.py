@@ -6,13 +6,13 @@ from botocore.exceptions import ClientError
 def handle_event(message,text_output_array):
 
     #Break out the values from the JSON payload from Dome9
-    rule_name = message['Rule']['Name']
-    status = message['Status']
-    entity_id = message['Entity']['id']
-    entity_name = message['Entity']['name']
+    rule_name = message['rule']['name']
+    status = message['status']
+    entity_id = message['entity']['id']
+    entity_name = message['entity']['name']
 
     #Make sure that the event that's being referenced is for the account this function is running in.
-    event_account_id = message['Account']['Id']
+    event_account_id = message['account']['id']
     try:
         #get the accountID
         sts = boto3.client("sts")
@@ -25,7 +25,7 @@ def handle_event(message,text_output_array):
         return text_output_array
     
     #All of the remediation values are coming in on the compliance tags and they're pipe delimited
-    compliance_tags = message['Rule']['ComplianceTags'].split("|")
+    compliance_tags = message['rule']['complianceTags'].split("|")
 
     #evaluate the event and tags and decide is there's something to do with them. 
     if status == "Passed":
@@ -62,7 +62,7 @@ def handle_event(message,text_output_array):
             print("Found action '%s', about to invoke it" % action)
             action_msg = ""
             try:
-                action_msg = action_module.run_action(message['Rule'],message['Entity'], params)
+                action_msg = action_module.run_action(message['rule'],message['entity'], params)
             except Exception as e: 
                 action_msg = "Error while executing function '%s'.\n Error: %s \n" % (action,e)
                 print(action_msg)
