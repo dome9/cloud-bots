@@ -5,7 +5,7 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 
 ## Setup Steps
 
-## AWS
+## In AWS
 
 ### Clone this GitHub project
 ``` 
@@ -51,7 +51,9 @@ https://github.com/alpalwal/D9SnsToSlack
 From SNS you can send the events wherever you want, but we have found that Slack works great for collaboration as well as troubleshooting. 
 
 
-## Dome9
+
+
+## In Dome9
 
 ### Create a bundle that you want to use for auto remediation. 
 It's recommended but not required to break remediation actions into their own bundles. 
@@ -76,6 +78,8 @@ Currently Continuous Compliance sends a 'diff' for the SNS notifications. Becaus
 If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to clone the bundle and set the new never-ran bundle as the thing that is being tested in the CC config. This works because if it's never ran, then every existing issue is considered 'new' and will be sent to SNS. 
 This will be changed in future releases and is being currently worked on. 
 
+
+### From here, you should be good to go!
 
 
 ## Examples
