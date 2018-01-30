@@ -56,6 +56,11 @@ Currently there needs to be a 1 Continuous Compliance bundle per account
 Set the output topic as the ARN from the InputTopicARN one we set up
 Set the format to be JSON - Full Entity
 
+## NOTE: 
+Currently Continuous Compliance sends a 'diff' for the SNS notifications. Because of this, if you have ran the bundle before, only new issues will be sent to SNS. 
+If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to clone the bundle and set the new never-ran bundle as the thing that is being tested in the CC config. This works because if it's never ran, then every existing issue is considered 'new' and will be sent to SNS. 
+This will be changed in future releases and is being currently worked on. 
+
 ### Recommended:
 Set up a separate function to send the events to Slack
 https://github.com/alpalwal/D9SnsToSlack
