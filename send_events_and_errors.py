@@ -17,6 +17,9 @@ def sendEvent(text_output_array,SNS_TOPIC_ARN):
 		MessageStructure='string'
 	)
 
+	#print it for the logs too
+	print(text_output_str)
+
 	status_code = response['ResponseMetadata']['HTTPStatusCode']
 	if status_code > 400:
 		print("SNS message failed to send!")

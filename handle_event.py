@@ -23,13 +23,19 @@ def handle_event(message,text_output_array):
     if lambda_account_id != event_account_id:
         text_output_array.append("Error: This finding was found in account id %s. The Lambda function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (event_account_id, lambda_account_id))
         return text_output_array
-    
+            
     #All of the remediation values are coming in on the compliance tags and they're pipe delimited
     compliance_tags = message['rule']['complianceTags'].split("|")
 
     #evaluate the event and tags and decide is there's something to do with them. 
     if status == "Passed":
         text_output_array.append("Previously failing rule has been resolved: %s \n ID: %s \nName: %s \n" % (rule_name, entity_id, entity_name))
+        return text_output_array
+
+    #Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it. 
+    auto_pattern = re.compile("AUTO:")
+    if not auto_pattern.search(message['rule']['complianceTags']):
+        text_output_array.append("Rule %s \n Doesn't have any 'AUTO:' tags. \nSkipping.\n" % rule_name)
         return text_output_array
 
     for tag in compliance_tags:
