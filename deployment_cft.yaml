@@ -55,6 +55,10 @@ Resources:
                - s3:DeleteBucketPolicy
                - s3:GetBucketAcl
                - s3:PutBucketAcl
+               - iam:CreatePolicy
+               - iam:GetPolicy
+               - iam:AttachRolePolicy
+
              Resource: '*'
       Environment:
         Variables:
