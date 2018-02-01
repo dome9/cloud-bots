@@ -24,8 +24,17 @@ def run_action(rule,entity,params):
     ec2_resource = boto3.resource('ec2', region_name=region)
     sg = ec2_resource.SecurityGroup(sg_id)
 
+    print(ingressRules)
+
     #Try to delete inbound rules if they exist
     if ingressRules:
+        #An IP permission may contain a group name or a group ID, but not both. This removes the group name from the rules to we just have the ID
+        for i, v in enumerate(ingressRules):
+            try:
+                del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
+            except Exception as e: 
+                        print("No GroupName to delete. Skipping")
+
         result = sg.revoke_ingress(IpPermissions=ingressRules)
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -38,6 +47,13 @@ def run_action(rule,entity,params):
 
     #Try to delete outbound rules if they exist
     if egressRules:
+        #An IP permission may contain a group name or a group ID, but not both. This removes the group name from the rules to we just have the ID
+        for i, v in enumerate(ingressRules):
+            try:
+                del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
+            except Exception as e: 
+                        print("No GroupName to delete. Skipping")
+
         result = sg.revoke_egress(IpPermissions=egressRules)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
