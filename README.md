@@ -50,6 +50,11 @@ https://github.com/alpalwal/D9SnsToSlack
 
 From SNS you can send the events wherever you want, but we have found that Slack works great for collaboration as well as troubleshooting. 
 
+To set up an email subscriber, you can do it from the CLI:
+```
+aws sns subscribe --topic-arn <your remediationOutput topic ARN> --protocol email --notification-endpoint <your email>
+```
+
 
 
 
