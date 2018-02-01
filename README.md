@@ -8,7 +8,7 @@ Table of Contents
 =================
 
 * [Cloud\-Supervisor v2 (CS2)](#cloud-supervisor-v2-cs2)
-  * [Setup Steps](#setup-steps)
+* [Setup Steps](#setup-steps)
   * [In AWS](#in-aws)
     * [Clone this GitHub project](#clone-this-github-project)
     * [Zip the folder and copy it to S3](#zip-the-folder-and-copy-it-to-s3)
@@ -19,13 +19,11 @@ Table of Contents
   * [In Dome9](#in-dome9)
     * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation)
     * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule)
-      * [Tag Syntax: AUTO: &lt;action\_name&gt;](#tag-syntax-auto-action_name-)
     * [Test this compliance bundle\.](#test-this-compliance-bundle)
     * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance)
-    * [NOTE:](#note)
     * [From here, you should be good to go\!](#from-here-you-should-be-good-to-go)
   * [Examples](#examples)
-    * [Sample output from Slack:](#sample-output-from-slack)
+    * [Sample output from Slack](#sample-output-from-slack)
   * [How does it work?](#how-does-it-work)
   * [Adding new actions](#adding-new-actions)
   * [Sample event output from Dome9](#sample-event-output-from-dome9)
@@ -45,7 +43,7 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
 
 
-## Setup Steps
+# Setup Steps
 
 ## In AWS
 
@@ -131,7 +129,7 @@ This will be changed in future releases and is being currently worked on.
 
 ## Examples
  
-### Sample output from Slack:
+### Sample output from Slack
 ```
 -------------------------
 Rule violation found: Remove Unused Security Groups
