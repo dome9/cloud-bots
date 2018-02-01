@@ -3,6 +3,48 @@ Auto remediation actions
 
 This is meant to be used in conjunction with Dome9's Continuous Compliance to remediate issues that are uncovered. 
 
+
+Table of Contents
+=================
+
+* [Cloud\-Supervisor v2 (CS2)](#cloud-supervisor-v2-cs2)
+  * [Setup Steps](#setup-steps)
+  * [In AWS](#in-aws)
+    * [Clone this GitHub project](#clone-this-github-project)
+    * [Zip the folder and copy it to S3](#zip-the-folder-and-copy-it-to-s3)
+    * [Update the deployment\_cft\.yaml file with your file name](#update-the-deployment_cftyaml-file-with-your-file-name)
+    * [Deploy the template via CloudFormation](#deploy-the-template-via-cloudformation)
+    * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
+    * [Recommended:](#recommended)
+  * [In Dome9](#in-dome9)
+    * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation)
+    * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule)
+      * [Tag Syntax: AUTO: &lt;action\_name&gt;](#tag-syntax-auto-action_name-)
+    * [Test this compliance bundle\.](#test-this-compliance-bundle)
+    * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance)
+    * [NOTE:](#note)
+    * [From here, you should be good to go\!](#from-here-you-should-be-good-to-go)
+  * [Examples](#examples)
+    * [Sample output from Slack:](#sample-output-from-slack)
+  * [How does it work?](#how-does-it-work)
+  * [Adding new actions](#adding-new-actions)
+  * [Sample event output from Dome9](#sample-event-output-from-dome9)
+  * [Actions Explanations](#actions-explanations)
+    * [ec2\_stop\_instance](#ec2_stop_instance)
+    * [ec2\_tag\_instance](#ec2_tag_instance)
+    * [ec2\_terminate\_instance](#ec2_terminate_instance)
+    * [iam\_quarantine\_role](#iam_quarantine_role)
+    * [iam\_quarantine\_user](#iam_quarantine_user)
+    * [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
+    * [s3\_delete\_bucket](#s3_delete_bucket)
+    * [s3\_delete\_permissions](#s3_delete_permissions)
+    * [sg\_delete](#sg_delete)
+    * [sg\_rules\_delete](#sg_rules_delete)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
+
+
+
 ## Setup Steps
 
 ## In AWS
