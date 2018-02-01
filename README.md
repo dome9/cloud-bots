@@ -242,51 +242,51 @@ JSON - Full Entity
 ## Actions Explanations
 
 ### ec2_stop_instance
-What it does: Stops an ec2 instance
-Usage: AUTO: ec2_stop_instance
-Limitations: none
-
+What it does: Stops an ec2 instance  
+Usage: AUTO: ec2_stop_instance  
+Limitations: none  
+ 
 ### ec2_tag_instance
-What it does: Tags an ec2 instance
-Usage: AUTO: ec2_tag_instance <key> <value>
-Limitations: Does not support keys/values with spaces 
+What it does: Tags an ec2 instance  
+Usage: AUTO: ec2_tag_instance <key> <value>  
+Limitations: Does not support keys/values with spaces   
 
 ### ec2_terminate_instance
-What it does: Terminates an ec2 instance
-Usage: AUTO: ec2_terminate_instance
-Limitations: none
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
 
 ### iam_quarantine_role
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role
-Usage: AUTO: iam_quarantine_role
-Limitations: none
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
+Usage: AUTO: iam_quarantine_role  
+Limitations: none  
 
 ### iam_quarantine_user
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user
-Usage: AUTO: iam_quarantine_user
-Limitations: none
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
+Usage: AUTO: iam_quarantine_user  
+Limitations: none  
 
 ### iam_turn_on_password_policy
-What it does: Sets all settings in an account password policy
-Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False> 
-Limitations: ALL variables need to be set at the same time
+What it does: Sets all settings in an account password policy  
+Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
+Limitations: ALL variables need to be set at the same time  
 
 ### s3_delete_bucket
-What it does: Deletes an S3 bucket
-Usage: AUTO: s3_delete_bucket
-Limitations: none
+What it does: Deletes an S3 bucket  
+Usage: AUTO: s3_delete_bucket  
+Limitations: none  
 
 ### s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket
-Usage: AUTO: s3_delete_permissions
-Limitations: none
+What it does: Deletes all ACLs and bucket policies from a bucket  
+Usage: AUTO: s3_delete_permissions  
+Limitations: none  
 
 ### sg_delete
-What it does: Deletes a security group
-Usage: AUTO: sg_delete
-Limitations: This will fail if there is something still attached to the SG. 
+What it does: Deletes a security group  
+Usage: AUTO: sg_delete  
+Limitations: This will fail if there is something still attached to the SG.  
 
 ### sg_rules_delete
-What it does: Deletes all ingress and egress rules from a SG
-Usage: AUTO: sg_rules_delete
-Limitations: none
+What it does: Deletes all ingress and egress rules from a SG  
+Usage: AUTO: sg_rules_delete  
+Limitations: none  
