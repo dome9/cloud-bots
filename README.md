@@ -7,7 +7,6 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 Table of Contents
 =================
 
-* [Cloud\-Supervisor v2 (CS2)](#cloud-supervisor-v2-cs2)
 * [Setup Steps](#setup-steps)
   * [In AWS](#in-aws)
     * [Clone this GitHub project](#clone-this-github-project)
