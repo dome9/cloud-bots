@@ -33,8 +33,9 @@ Resources:
     Properties:
       FunctionName: dome9AutoRemediations
       Description: 'Auto-remediation actions from Dome9 events'
-      CodeUri: s3://<YOUR-BUCKET-NAME>/remediation-function.zip
+      CodeUri: s3://alexremediationbuckett/remediation-function.zip
       Runtime: python3.6
+      Timeout: 6
       Handler: index.lambda_handler
       Policies:
        - Version: '2012-10-17' # Custom Policy Document
