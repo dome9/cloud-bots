@@ -24,8 +24,6 @@ def run_action(rule,entity,params):
     ec2_resource = boto3.resource('ec2', region_name=region)
     sg = ec2_resource.SecurityGroup(sg_id)
 
-    print(ingressRules)
-
     #Try to delete inbound rules if they exist
     if ingressRules:
         #An IP permission may contain a group name or a group ID, but not both. This removes the group name from the rules to we just have the ID
