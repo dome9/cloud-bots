@@ -19,7 +19,7 @@ Dome9's core focus is around identifying security misconfigurations, but some cu
 - If any of those AUTO tags match a remediation that we have built out, it'll call that function
 - All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
 
-![alt text]([img]https://i.imgur.com/1Jv4STd.png[/img])
+!(https://i.imgur.com/1Jv4STd.png)
 
 # Setup Steps
 
