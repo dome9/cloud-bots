@@ -58,7 +58,7 @@ aws cloudformation deploy \
 aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
-#### Set up a subscriber to the SNS output topic
+### OPTIONAL: Set up a subscriber to the SNS output topic
 Since the Lambda output is exported to SNS, you can send it from there to wherever you please. 
 
 - If you want to send the events to Slack, please follow this guide: https://github.com/alpalwal/D9SnsToSlack
