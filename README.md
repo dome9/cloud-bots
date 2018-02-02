@@ -36,7 +36,7 @@ git clone git@github.com:Dome9/cloud-supervisor2.git
 ### Zip the folder
 ```
 cd cloud-supervisor2
-zip -r -X remediation-function.zip *
+zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
 
 ### Deploy the template via CloudFormation
