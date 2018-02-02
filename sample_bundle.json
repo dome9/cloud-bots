@@ -14,7 +14,7 @@
     "severity": "High",
     "logic": "SecurityGroup where name != 'default' should not have networkAssetsStats contain-all [ count = 0 ]",
     "remediation": "Delete Unused Security Groups detected by the Dome9 Report.",
-    "complianceTag": "PCI-DSS Section 1.1.6| PCI-DSS Section 1.1.7| AUTO: sg_delete",
+    "complianceTag": "AUTO: sg_delete",
     "id": 2
   },
   {
