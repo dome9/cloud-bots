@@ -1,0 +1,47 @@
+[
+  {
+    "name": "'default' Security Groups should not have network policies",
+    "description": "The VPC default security group is automatically created, can't be deleted and by default is created with a rule allowing all inbound and outbound traffic.\nAWS and Dome9's best practice is to keep the default Security Group without any rules and avoid using it. ",
+    "severity": "High",
+    "logic": "SecurityGroup where name='default' should have inboundRules isEmpty() and outboundRules isEmpty()",
+    "remediation": "Make sure the default security group is not used and has no rules defined. \nDelete all rules that exist in the default group especially the default rules allowing any inbound and outbound traffic. ",
+    "complianceTag": "AUTO: sg_rules_delete",
+    "id": 1
+  },
+  {
+    "name": "Remove Unused Security Groups",
+    "description": "a security group with no attached protected assets. PCI-DSS Section 1.1.6, 1.1.7 Removing Unused Security Groups is the expected outcome of a 6 months firewall review and proper justification for used rules.",
+    "severity": "High",
+    "logic": "SecurityGroup where name != 'default' should not have networkAssetsStats contain-all [ count = 0 ]",
+    "remediation": "Delete Unused Security Groups detected by the Dome9 Report.",
+    "complianceTag": "PCI-DSS Section 1.1.6| PCI-DSS Section 1.1.7| AUTO: sg_delete",
+    "id": 2
+  },
+  {
+    "name": "Instances should have owner tags",
+    "description": "All instances should have an owner tag so we don't have abandoned instances in the account",
+    "severity": "High",
+    "logic": "Instance should have tags with [ key='owner' ]",
+    "remediation": "Tag with owner and if needed, turn off boxes that we can't find the owners to",
+    "complianceTag": "AUTO: ec2_tag_instance (owner:Who owns this box)",
+    "id": 3
+  },
+  {
+    "name": "Turn off instances that are tagged with decommission",
+    "description": "",
+    "severity": "High",
+    "logic": "Instance where isRunning=true should not have tags with [ key='decommission' ]",
+    "remediation": "Turn off all instances that are running and have a decommission tag",
+    "complianceTag": "AUTO: ec2_stop_instance",
+    "id": 4
+  },
+  {
+    "name": "Instances with PCI should not have public IPs",
+    "description": "",
+    "severity": "High",
+    "logic": "Instance where tags with [ key='hasPCI' ] should not have isPublic=true",
+    "remediation": "Kill off all instances that could be exposed",
+    "complianceTag": "AUTO: ec2_terminate_instance",
+    "id": 5
+  }
+]
