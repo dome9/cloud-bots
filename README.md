@@ -40,7 +40,7 @@ zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events
 ```
 
 ### Deploy the template via CloudFormation
-For <YOUR-BUCKET-NAME>, put in the name of a bucket that remediation-function.zip can be uploaded to. 
+For YOUR-BUCKET-NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```
 aws cloudformation package    \
 --template-file ./deployment_cft.yaml    \
