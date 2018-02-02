@@ -4,43 +4,22 @@ Auto remediation actions
 This is meant to be used in conjunction with Dome9's Continuous Compliance to remediate issues that are uncovered. 
 
 
-Table of Contents
-=================
-
-* [Setup Steps](#setup-steps)
-  * [In AWS](#in-aws)
-    * [Clone this GitHub project](#clone-this-github-project)
-    * [Zip the folder and copy it to S3](#zip-the-folder-and-copy-it-to-s3)
-    * [Update the deployment\_cft\.yaml file with your file name](#update-the-deployment_cftyaml-file-with-your-file-name)
-    * [Deploy the template via CloudFormation](#deploy-the-template-via-cloudformation)
-    * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
-    * [Recommended:](#recommended)
-  * [In Dome9](#in-dome9)
-    * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation)
-    * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule)
-    * [Test this compliance bundle\.](#test-this-compliance-bundle)
-    * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance)
-    * [From here, you should be good to go\!](#from-here-you-should-be-good-to-go)
-* [Examples](#examples)
-  * [Sample output from Slack](#sample-output-from-slack)
-* [How does it work?](#how-does-it-work)
-* [Adding new actions](#adding-new-actions)
-* [Sample event output from Dome9](#sample-event-output-from-dome9)
-* [Actions Explanations](#actions-explanations)
-  * [ec2\_stop\_instance](#ec2_stop_instance)
-  * [ec2\_tag\_instance](#ec2_tag_instance)
-  * [ec2\_terminate\_instance](#ec2_terminate_instance)
-  * [iam\_quarantine\_role](#iam_quarantine_role)
-  * [iam\_quarantine\_user](#iam_quarantine_user)
-  * [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
-  * [s3\_delete\_bucket](#s3_delete_bucket)
-  * [s3\_delete\_permissions](#s3_delete_permissions)
-  * [sg\_delete](#sg_delete)
-  * [sg\_rules\_delete](#sg_rules_delete)
-
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
 
+
+# Overview
+## When would this be used
+Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to resolve issues when they arise. 
+
+## How does it work
+- Dome9 will scan the accounts on an ongoing basis and send failing rules to SNS
+- In the rules, if we want to add remediation, we can add in a "remediation flag" into the compliance section so that the SNS event is tagged with what we want to do. 
+- Each remediation action that is tagged correlates to a file in the actions folder. 
+- Lambda reads the message tags and looks for a tag that matches AUTO: <anything>
+- If any of those AUTO tags match a remediation that we have built out, it'll call that function
+- All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
+
+![alt text]([img]https://i.imgur.com/1Jv4STd.png[/img])
 
 # Setup Steps
 
@@ -51,21 +30,14 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 git clone git@github.com:Dome9/cloud-supervisor2.git 
 ```
 
-### Zip the folder and copy it to S3
+### Zip the folder
 ```
 cd cloud-supervisor2
 zip -r -X remediation-function.zip *
-aws s3 cp remediation-function.zip s3://<YOUR-BUCKET-NAME>/
-
-```
-
-### Update the deployment_cft.yaml file with your file name
-Change this line to the path for your bucket/file
-```
-CodeUri: s3://<YOUR-BUCKET-NAME>/remediation-function.zip
 ```
 
 ### Deploy the template via CloudFormation
+For <YOUR-BUCKET-NAME>, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```
 aws cloudformation package    \
 --template-file ./deployment_cft.yaml    \
@@ -83,13 +55,12 @@ aws cloudformation deploy \
 aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
-### Recommended:
-Set up a separate function to send the events to Slack
-https://github.com/alpalwal/D9SnsToSlack
+#### Set up a subscriber to the SNS output topic
+Since the Lambda output is exported to SNS, you can send it from there to wherever you please. 
 
-From SNS you can send the events wherever you want, but we have found that Slack works great for collaboration as well as troubleshooting. 
+- If you want to send the events to Slack, please follow this guide: https://github.com/alpalwal/D9SnsToSlack
 
-To set up an email subscriber, you can do it from the CLI:
+- To get email alerts instead, you can do it from the CLI:
 ```
 aws sns subscribe --topic-arn <your remediationOutput topic ARN> --protocol email --notification-endpoint <your email>
 ```
@@ -126,9 +97,64 @@ This will be changed in future releases and is being currently worked on.
 ### From here, you should be good to go!
 
 
-## Examples
+
+# Actions Explanations
+
+## ec2_stop_instance
+What it does: Stops an ec2 instance  
+Usage: AUTO: ec2_stop_instance  
+Limitations: none  
  
-### Sample output from Slack
+## ec2_tag_instance
+What it does: Tags an ec2 instance  
+Usage: AUTO: ec2_tag_instance <key> <value>  
+Limitations: Does not support keys/values with spaces   
+
+## ec2_terminate_instance
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
+
+## iam_quarantine_role
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
+Usage: AUTO: iam_quarantine_role  
+Limitations: none  
+
+## iam_quarantine_user
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
+Usage: AUTO: iam_quarantine_user  
+Limitations: none  
+
+## iam_turn_on_password_policy
+What it does: Sets all settings in an account password policy  
+Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
+Limitations: ALL variables need to be set at the same time  
+
+## s3_delete_bucket
+What it does: Deletes an S3 bucket  
+Usage: AUTO: s3_delete_bucket  
+Limitations: none  
+
+## s3_delete_permissions
+What it does: Deletes all ACLs and bucket policies from a bucket  
+Usage: AUTO: s3_delete_permissions  
+Limitations: none  
+
+## sg_delete
+What it does: Deletes a security group  
+Usage: AUTO: sg_delete  
+Limitations: This will fail if there is something still attached to the SG.  
+
+## sg_rules_delete
+What it does: Deletes all ingress and egress rules from a SG  
+Usage: AUTO: sg_rules_delete  
+Limitations: none  
+
+
+
+# Examples
+ 
+## Sample output from Slack
 ```
 -------------------------
 Rule violation found: Remove Unused Security Groups
@@ -161,43 +187,6 @@ IAM deny-all policy exists in this account.
 Deny policy attached to role: "testremediationrole4"
 -------------------------
 ```
-
-
-
-## How does it work?
-- Dome9 will scan the accounts on an ongoing basis and send failing rules to SNS
-- In the rules, if we want to add remediation, we can add in a "remediation flag" into the compliance section so that the SNS event is tagged with what we want to do. 
-- Each remediation action that is tagged correlates to a file in the actions folder. 
-- Lambda reads the message tags and looks for a tag that matches AUTO: <anything>
-- If any of those AUTO tags match a remediation that we have built out, it'll call that function
-- All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
-
-
-## Adding new actions
-Any new action that is added just needs to follow the format of the other actions and be put in the action folder. 
-
-Here is a sample from sg_delete. The rule and entity variables that are passed through come from the source SNS message. Params are only passed through if there are any in the tag (ex: AUTO: ec2_tag_instance owner unknown)
-```
-import boto3
-
-def run_action(rule,entity,params):
-    text_output = str(entity)
-    region = entity['region']
-    region = region.replace("_","-")
-    sg_id = entity['id']
-    
-    ec2 = boto3.resource('ec2', region_name=region)
-    result = ec2.SecurityGroup(sg_id).delete()
-
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
-    else:
-        text_output = "Security Group %s successfully deleted\n" % sg_id
-
-    return text_output 
-```
-
 
 
 ## Sample event output from Dome9
@@ -279,58 +268,38 @@ JSON - Full Entity
         "region": "us_west_2",
         "source": "db",
         "tags": []
-    }
 }
 ```
 
-## Actions Explanations
 
-### ec2_stop_instance
-What it does: Stops an ec2 instance  
-Usage: AUTO: ec2_stop_instance  
-Limitations: none  
- 
-### ec2_tag_instance
-What it does: Tags an ec2 instance  
-Usage: AUTO: ec2_tag_instance <key> <value>  
-Limitations: Does not support keys/values with spaces   
 
-### ec2_terminate_instance
-What it does: Terminates an ec2 instance  
-Usage: AUTO: ec2_terminate_instance  
-Limitations: none  
 
-### iam_quarantine_role
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
-Usage: AUTO: iam_quarantine_role  
-Limitations: none  
 
-### iam_quarantine_user
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
-Usage: AUTO: iam_quarantine_user  
-Limitations: none  
+# Adding new actions
+Any new action that is added just needs to follow the format of the other actions and be put in the action folder. 
 
-### iam_turn_on_password_policy
-What it does: Sets all settings in an account password policy  
-Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
-Limitations: ALL variables need to be set at the same time  
+Here is a sample from sg_delete. The rule and entity variables that are passed through come from the source SNS message. Params are only passed through if there are any in the tag (ex: AUTO: ec2_tag_instance owner unknown)
+```
+import boto3
 
-### s3_delete_bucket
-What it does: Deletes an S3 bucket  
-Usage: AUTO: s3_delete_bucket  
-Limitations: none  
+def run_action(rule,entity,params):
+    text_output = str(entity)
+    region = entity['region']
+    region = region.replace("_","-")
+    sg_id = entity['id']
+    
+    ec2 = boto3.resource('ec2', region_name=region)
+    result = ec2.SecurityGroup(sg_id).delete()
 
-### s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket  
-Usage: AUTO: s3_delete_permissions  
-Limitations: none  
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        text_output = "Unexpected error: %s \n" % str(result)
+    else:
+        text_output = "Security Group %s successfully deleted\n" % sg_id
 
-### sg_delete
-What it does: Deletes a security group  
-Usage: AUTO: sg_delete  
-Limitations: This will fail if there is something still attached to the SG.  
+    return text_output 
+```
 
-### sg_rules_delete
-What it does: Deletes all ingress and egress rules from a SG  
-Usage: AUTO: sg_rules_delete  
-Limitations: none  
+
+## Questions / Comments
+Contact: alex@dome9.com
