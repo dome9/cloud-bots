@@ -18,22 +18,13 @@
     "id": 2
   },
   {
-    "name": "Instances should have owner tags",
-    "description": "All instances should have an owner tag so we don't have abandoned instances in the account",
-    "severity": "High",
-    "logic": "Instance should have tags with [ key='owner' ]",
-    "remediation": "Tag with owner and if needed, turn off boxes that we can't find the owners to",
-    "complianceTag": "AUTO: ec2_tag_instance (owner:Who owns this box)",
-    "id": 3
-  },
-  {
     "name": "Turn off instances that are tagged with decommission",
     "description": "",
     "severity": "High",
     "logic": "Instance where isRunning=true should not have tags with [ key='decommission' ]",
     "remediation": "Turn off all instances that are running and have a decommission tag",
     "complianceTag": "AUTO: ec2_stop_instance",
-    "id": 4
+    "id": 3
   },
   {
     "name": "Instances with PCI should not have public IPs",
@@ -42,6 +33,6 @@
     "logic": "Instance where tags with [ key='hasPCI' ] should not have isPublic=true",
     "remediation": "Kill off all instances that could be exposed",
     "complianceTag": "AUTO: ec2_terminate_instance",
-    "id": 5
+    "id": 4
   }
 ]
