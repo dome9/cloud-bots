@@ -67,7 +67,7 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
       Events:
-        d9-findings:
+        d9Findings:
           Type: SNS
           Properties:
             Topic: !Ref InputTopic
