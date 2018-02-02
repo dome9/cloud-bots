@@ -12,6 +12,10 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to resolve issues when they arise. 
 
 ## How does it work
+![Alt text](./data-flow.png?raw=true "Title")
+
+
+
 - Dome9 will scan the accounts on an ongoing basis and send failing rules to SNS
 - In the rules, if we want to add remediation, we can add in a "remediation flag" into the compliance section so that the SNS event is tagged with what we want to do. 
 - Each remediation action that is tagged correlates to a file in the actions folder. 
@@ -19,7 +23,6 @@ Dome9's core focus is around identifying security misconfigurations, but some cu
 - If any of those AUTO tags match a remediation that we have built out, it'll call that function
 - All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
 
-![Alt text](./data-flow.png?raw=true "Title")
 
 # Setup Steps
 
