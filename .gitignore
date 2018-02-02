@@ -6,3 +6,4 @@
 deploy.sh
 /beta_actions/
 serverless-output.yaml
+**.zip
