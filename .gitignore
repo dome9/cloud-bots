@@ -2,7 +2,6 @@
 /actions/.DS_Store
 /actions/__pycache__/
 /__pycache__/   
-sample_*
 **.pyc
 deploy.sh
 /beta_actions/
