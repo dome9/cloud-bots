@@ -5,8 +5,8 @@ Resources:
   InputTopic:
     Type: "AWS::SNS::Topic"
     Properties: 
-      DisplayName: 'd9Events'
-      TopicName: 'd9Events'
+      DisplayName: 'd9-findings'
+      TopicName: 'd9-findings'
   InputTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
@@ -67,7 +67,7 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
       Events:
-        d9Event:
+        d9-findings:
           Type: SNS
           Properties:
             Topic: !Ref InputTopic
