@@ -1,7 +1,7 @@
 # Cloud-Supervisor v2 (CS2)
-Auto remediation actions
+Auto remediation actions for AWS
 
-This is meant to be used in conjunction with Dome9's Continuous Compliance to remediate issues that are uncovered. 
+This is meant to be used in conjunction with Dome9's Continuous Compliance Engine to remediate issues that are uncovered. 
 
 
 
@@ -9,37 +9,37 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance to re
 
 # Overview
 ## When would this be used
-Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to resolve issues when they arise. 
+Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to automatically resolve issues when they arise. 
 
 ## How does it work
-![Alt text](./data-flow.png?raw=true "Title")
+![Alt text](./pictures/data-flow.png?raw=true "Title")
 
 
 
 - Dome9 will scan the accounts on an ongoing basis and send failing rules to SNS
 - In the rules, if we want to add remediation, we can add in a "remediation flag" into the compliance section so that the SNS event is tagged with what we want to do. 
-- Each remediation action that is tagged correlates to a file in the actions folder. 
+- Each remediation action that is tagged correlates to a file in the actions folder of the remediation function. 
 - Lambda reads the message tags and looks for a tag that matches AUTO: <anything>
-- If any of those AUTO tags match a remediation that we have built out, it'll call that function
+- If any of those AUTO tags match a remediation that we have built out, it'll call that action.
 - All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
 
 
 # Setup Steps
 
-## In AWS
+## Outside of Dome9
 
 ### Clone this GitHub project
 ``` 
 git clone git@github.com:Dome9/cloud-supervisor2.git 
 ```
 
-### Zip the folder
+### Zip the function
 ```
 cd cloud-supervisor2
 zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
 
-### Deploy the template via CloudFormation
+### Deploy the fucnction via CloudFormation template
 For YOUR-BUCKET-NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```
 aws cloudformation package    \
@@ -75,6 +75,7 @@ aws sns subscribe --topic-arn <your remediationOutput topic ARN> --protocol emai
 
 ### Create a bundle that you want to use for auto remediation. 
 It's recommended but not required to break remediation actions into their own bundles. 
+There is a sample bundle (sample_bundle.json) that can be used as a starting point. 
 
 ### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
 
@@ -98,6 +99,9 @@ This will be changed in future releases and is being currently worked on.
 
 
 ### From here, you should be good to go!
+
+
+# Sample Setup Example
 
 
 
@@ -157,7 +161,7 @@ Limitations: none
 
 # Examples
  
-## Sample output from Slack
+## Sample output from the remediation function
 ```
 -------------------------
 Rule violation found: Remove Unused Security Groups
@@ -305,4 +309,4 @@ def run_action(rule,entity,params):
 
 
 ## Questions / Comments
-Contact: alex@dome9.com
+Contact: Alex Corstorphine (alex@dome9.com)
