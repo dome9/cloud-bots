@@ -145,7 +145,6 @@ Execute the following command to deploy the packaged template
 aws cloudformation deploy --template-file /Users/ale/cloud-supervisor2/serverless-output.yaml --stack-name <YOUR STACK NAME>
 
 
-
 [cloud-supervisor2]$aws cloudformation deploy \
 > --template-file ./serverless-output.yaml \
 > --stack-name lambda-remediations \
@@ -155,12 +154,10 @@ Waiting for stack create/update to complete
 Successfully created/updated stack - lambda-remediations
 
 
-
 # Get the outputs from the new stack
 [cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text --profile staging-demo
 ARN that the function will export logs to   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
 ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
-
 
 
 # OPTIONAL: Set up a subscriber to the SNS output topic
