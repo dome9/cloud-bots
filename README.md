@@ -12,7 +12,7 @@ This is meant to be used in conjunction with Dome9's Continuous Compliance Engin
 Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to automatically resolve issues when they arise. 
 
 ## How does it work
-![Alt text](./pictures/data-flow.png?raw=true "Title")
+![Data Flow](./pictures/data-flow.png?raw=true "Title")
 
 
 
@@ -167,6 +167,24 @@ ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:72
     "SubscriptionArn": "pending confirmation"
 }
 ```
+
+## In Dome9
+
+### Create a bundle that you want to use for auto remediation. 
+![Sample Bundle](./pictures/sample_bundle.png?raw=true "Title")
+
+### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
+![Rule Tagging](./pictures/tagging_a_rule.png?raw=true "Title")
+
+### Test this compliance bundle. 
+![Sample Report](./pictures/sample_report.png?raw=true "Title")
+![Sample Results](./pictures/sample_findings.png?raw=true "Title")
+
+### Set the Dome9 compliance bundle to run via continuous compliance. 
+![CC Setup1](./pictures/dcc_setup1.png?raw=true "Title")
+![CC Setup2](./pictures/dcc_setup2.png?raw=true "Title")
+
+
 
 
 
