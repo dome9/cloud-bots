@@ -23,8 +23,6 @@ Table of Contents
       * [Tag Syntax: AUTO: &lt;action\_name&gt;](#tag-syntax-auto-action_name-)
     * [Test this compliance bundle\.](#test-this-compliance-bundle)
     * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance)
-    * [NOTE:](#note)
-    * [From here, you should be good to go\!](#from-here-you-should-be-good-to-go)
 * [Sample Setup Example](#sample-setup-example)
   * [Outside of Dome9](#outside-of-dome9-1)
   * [In Dome9](#in-dome9-1)
@@ -196,7 +194,7 @@ Successfully created/updated stack - lambda-remediations
 
 
 # Get the outputs from the new stack
-[cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text --profile staging-demo
+[cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
 ARN that the function will export logs to   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
 ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
 
