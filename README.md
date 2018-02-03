@@ -181,8 +181,8 @@ ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:72
 ![Sample Results](./pictures/sample_findings.png?raw=true "Title")
 
 ### Set the Dome9 compliance bundle to run via continuous compliance. 
-![CC Setup1](./pictures/dcc_setup1.png?raw=true "Title")
-![CC Setup2](./pictures/dcc_setup2.png?raw=true "Title")
+![CC Setup1](./pictures/cc_setup1.png?raw=true "Title")
+![CC Setup2](./pictures/cc_setup2.png?raw=true "Title")
 
 
 
