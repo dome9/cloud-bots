@@ -4,6 +4,51 @@ Auto remediation actions for AWS
 This is meant to be used in conjunction with Dome9's Continuous Compliance Engine to remediate issues that are uncovered. 
 
 
+Table of Contents
+=================
+
+* [Overview](#overview)
+  * [When would this be used](#when-would-this-be-used)
+  * [How does it work](#how-does-it-work)
+* [Setup Steps](#setup-steps)
+  * [Outside of Dome9](#outside-of-dome9)
+    * [Clone this GitHub project](#clone-this-github-project)
+    * [Zip the function](#zip-the-function)
+    * [Deploy the fucnction via CloudFormation template](#deploy-the-fucnction-via-cloudformation-template)
+    * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
+    * [OPTIONAL: Set up a subscriber to the SNS output topic](#optional-set-up-a-subscriber-to-the-sns-output-topic)
+  * [In Dome9](#in-dome9)
+    * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation)
+    * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule)
+      * [Tag Syntax: AUTO: &lt;action\_name&gt;](#tag-syntax-auto-action_name-)
+    * [Test this compliance bundle\.](#test-this-compliance-bundle)
+    * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance)
+    * [NOTE:](#note)
+    * [From here, you should be good to go\!](#from-here-you-should-be-good-to-go)
+* [Sample Setup Example](#sample-setup-example)
+  * [Outside of Dome9](#outside-of-dome9-1)
+  * [In Dome9](#in-dome9-1)
+    * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation-1)
+    * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule-1)
+    * [Test this compliance bundle\.](#test-this-compliance-bundle-1)
+    * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance-1)
+* [Actions Reference](#actions-reference)
+  * [ec2\_stop\_instance](#ec2_stop_instance)
+  * [ec2\_tag\_instance](#ec2_tag_instance)
+  * [ec2\_terminate\_instance](#ec2_terminate_instance)
+  * [iam\_quarantine\_role](#iam_quarantine_role)
+  * [iam\_quarantine\_user](#iam_quarantine_user)
+  * [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
+  * [s3\_delete\_bucket](#s3_delete_bucket)
+  * [s3\_delete\_permissions](#s3_delete_permissions)
+  * [sg\_delete](#sg_delete)
+  * [sg\_rules\_delete](#sg_rules_delete)
+* [Examples](#examples)
+  * [Sample output from the remediation function](#sample-output-from-the-remediation-function)
+  * [Sample event output from Dome9](#sample-event-output-from-dome9)
+* [Adding new actions](#adding-new-actions)
+  * [Questions / Comments](#questions--comments)
+
 
 
 
