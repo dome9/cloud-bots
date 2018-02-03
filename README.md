@@ -153,6 +153,7 @@ Receiving objects: 100% (390/390), 640.04 KiB | 0 bytes/s, done.
 Resolving deltas: 100% (247/247), done.
 
 
+# Zip the function
 [~]$cd cloud-supervisor2
 [cloud-supervisor2]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
   adding: actions/ (stored 0%)
