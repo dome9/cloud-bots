@@ -28,10 +28,6 @@ Table of Contents
 * [Sample Setup Example](#sample-setup-example)
   * [Outside of Dome9](#outside-of-dome9-1)
   * [In Dome9](#in-dome9-1)
-    * [Create a bundle that you want to use for auto remediation\.](#create-a-bundle-that-you-want-to-use-for-auto-remediation-1)
-    * [For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule\.](#for-all-rules-that-you-want-to-add-remediation-to-add-the-remediation-tag-to-the-compliance-section-of-the-rule-1)
-    * [Test this compliance bundle\.](#test-this-compliance-bundle-1)
-    * [Set the Dome9 compliance bundle to run via continuous compliance\.](#set-the-dome9-compliance-bundle-to-run-via-continuous-compliance-1)
 * [Actions Reference](#actions-reference)
   * [ec2\_stop\_instance](#ec2_stop_instance)
   * [ec2\_tag\_instance](#ec2_tag_instance)
@@ -47,7 +43,7 @@ Table of Contents
   * [Sample output from the remediation function](#sample-output-from-the-remediation-function)
   * [Sample event output from Dome9](#sample-event-output-from-dome9)
 * [Adding new actions](#adding-new-actions)
-  * [Questions / Comments](#questions--comments)
+* [Questions / Comments](#questions--comments)
 
 
 
@@ -215,17 +211,17 @@ ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:72
 
 ## In Dome9
 
-### Create a bundle that you want to use for auto remediation. 
+- Create a bundle that you want to use for auto remediation. 
 ![Sample Bundle](./pictures/sample_bundle.png?raw=true "Title")
 
-### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
+- For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
 ![Rule Tagging](./pictures/tagging_a_rule.png?raw=true "Title")
 
-### Test this compliance bundle. 
+- Test this compliance bundle. 
 ![Sample Report](./pictures/sample_report.png?raw=true "Title")
 ![Sample Results](./pictures/sample_findings.png?raw=true "Title")
 
-### Set the Dome9 compliance bundle to run via continuous compliance. 
+- Set the Dome9 compliance bundle to run via continuous compliance. 
 ![CC Setup1](./pictures/cc_setup1.png?raw=true "Title")
 ![CC Setup2](./pictures/cc_setup2.png?raw=true "Title")
 
