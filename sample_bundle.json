@@ -14,7 +14,7 @@
     "severity": "High",
     "logic": "SecurityGroup where name != 'default' should not have networkAssetsStats contain-all [ count = 0 ]",
     "remediation": "Delete Unused Security Groups detected by the Dome9 Report.",
-    "complianceTag": "AUTO: sg_delete",
+    "complianceTag": "PCI-DSS Section 1.1.6| PCI-DSS Section 1.1.7| AUTO: sg_delete",
     "id": 2
   },
   {
@@ -34,5 +34,14 @@
     "remediation": "Kill off all instances that could be exposed",
     "complianceTag": "AUTO: ec2_terminate_instance",
     "id": 4
+  },
+  {
+    "name": "Ensure S3 buckets are not publicly accessible",
+    "description": "Misconfigured S3 buckets can leak private information to the entire internet or allow unauthorized data tampering / deletion",
+    "severity": "High",
+    "logic": "S3Bucket should not have ( acl.grants contain [uri like 'http://acs.amazonaws.com/groups/global/%'] or policy.Statement contain [Effect='Allow' and (Principal='*' or Principal.AWS='*')])",
+    "remediation": "Review the S3 bucket's ACL list and the IAM policy document. Remove all world accessible entries and set a proper policy. You might wish to use the AWS Policy Generator at: https://awspolicygen.s3.amazonaws.com/policygen.html",
+    "complianceTag": "AUTO: s3_delete_permissions",
+    "id": 5
   }
 ]
