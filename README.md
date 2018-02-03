@@ -102,6 +102,76 @@ This will be changed in future releases and is being currently worked on.
 
 
 # Sample Setup Example
+## Outside of Dome9
+```
+# Clone this GitHub project
+[~]$git clone git@github.com:Dome9/cloud-supervisor2.git 
+Cloning into 'cloud-supervisor2'...
+remote: Counting objects: 390, done.
+remote: Compressing objects: 100% (52/52), done.
+remote: Total 390 (delta 42), reused 55 (delta 22), pack-reused 315
+Receiving objects: 100% (390/390), 640.04 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (247/247), done.
+
+
+[~]$cd cloud-supervisor2
+[cloud-supervisor2]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
+  adding: actions/ (stored 0%)
+  adding: actions/__init__.py (stored 0%)
+  adding: actions/ec2_stop_instance.py (deflated 46%)
+  adding: actions/ec2_tag_instance.py (deflated 49%)
+  adding: actions/ec2_terminate_instance.py (deflated 46%)
+  adding: actions/iam_quarantine_role.py (deflated 67%)
+  adding: actions/iam_quarantine_user.py (deflated 67%)
+  adding: actions/iam_turn_on_password_policy.py (deflated 66%)
+  adding: actions/s3_delete_bucket.py (deflated 42%)
+  adding: actions/s3_delete_permissions.py (deflated 68%)
+  adding: actions/sg_delete.py (deflated 47%)
+  adding: actions/sg_rules_delete.py (deflated 71%)
+  adding: handle_event.py (deflated 64%)
+  adding: index.py (deflated 52%)
+  adding: send_events_and_errors.py (deflated 44%)
+
+
+# Deploy the fucnction via CloudFormation template
+[cloud-supervisor2]$aws cloudformation package    \
+> --template-file ./deployment_cft.yaml    \
+> --output-template-file serverless-output.yaml    \
+> --s3-bucket remediationuploadsdome 
+
+Uploading to 87666a89b6af585e6726fd3d2e472a52  9851 / 9851.0  (100.00%)
+Successfully packaged artifacts and wrote output template to file serverless-output.yaml.
+Execute the following command to deploy the packaged template
+aws cloudformation deploy --template-file /Users/ale/cloud-supervisor2/serverless-output.yaml --stack-name <YOUR STACK NAME>
+
+
+
+[cloud-supervisor2]$aws cloudformation deploy \
+> --template-file ./serverless-output.yaml \
+> --stack-name lambda-remediations \
+> --capabilities CAPABILITY_IAM 
+Waiting for changeset to be created..
+Waiting for stack create/update to complete
+Successfully created/updated stack - lambda-remediations
+
+
+
+# Get the outputs from the new stack
+[cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text --profile staging-demo
+ARN that the function will export logs to   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
+ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
+
+
+
+# OPTIONAL: Set up a subscriber to the SNS output topic
+[cloud-supervisor2]$aws sns subscribe --topic-arn arn:aws:sns:us-west-2:726853184812:remediationOutput --protocol email --notification-endpoint alex@dome9.com 
+
+{
+    "SubscriptionArn": "pending confirmation"
+}
+```
+
+
 
 
 
