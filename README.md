@@ -113,7 +113,7 @@ remote: Total 390 (delta 42), reused 55 (delta 22), pack-reused 315
 Receiving objects: 100% (390/390), 640.04 KiB | 0 bytes/s, done.
 Resolving deltas: 100% (247/247), done.
 
-# Zip the function
+
 [~]$cd cloud-supervisor2
 [cloud-supervisor2]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
   adding: actions/ (stored 0%)
@@ -145,6 +145,7 @@ Execute the following command to deploy the packaged template
 aws cloudformation deploy --template-file /Users/ale/cloud-supervisor2/serverless-output.yaml --stack-name <YOUR STACK NAME>
 
 
+
 [cloud-supervisor2]$aws cloudformation deploy \
 > --template-file ./serverless-output.yaml \
 > --stack-name lambda-remediations \
@@ -154,10 +155,12 @@ Waiting for stack create/update to complete
 Successfully created/updated stack - lambda-remediations
 
 
+
 # Get the outputs from the new stack
 [cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text --profile staging-demo
 ARN that the function will export logs to   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
 ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
+
 
 
 # OPTIONAL: Set up a subscriber to the SNS output topic
@@ -190,7 +193,7 @@ ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:72
 
 
 
-# Actions Explanations
+# Actions Reference
 
 ## ec2_stop_instance
 What it does: Stops an ec2 instance  
@@ -309,49 +312,9 @@ JSON - Full Entity
     },
     "Region": "Oregon",
     "Entity": {
-        "description": "a",
+        "description": "my description",
         "inboundRules": [],
-        "outboundRules": [{
-            "protocol": "ALL",
-            "port": 0,
-            "portTo": 0,
-            "scope": "0.0.0.0/0",
-            "scopeMetaData": null
-        }],
-        "networkAssetsStats": [{
-            "type": "ELBs",
-            "count": 0
-        }, {
-            "type": "instances",
-            "count": 0
-        },  {
-            "type": "ElastiCacheClusters",
-            "count": 0
-        }],
-        "isProtected": false,
-        "vpc": {
-            "cloudAccountId": "89ff48fc-9c8b-4292-a169-d6e938af2dd2",
-            "cidr": "10.0.0.0/16",
-            "region": 5,
-            "id": "vpc-c037c1b9",
-            "accountNumber": "621958466464",
-            "vpnGateways": [],
-            "internetGateways": [{
-                "externalId": "igw-e49a6d82",
-                "vpcAttachments": [{
-                    "state": "available",
-                    "vpcId": "vpc-c037c1b9"
-                }],
-                "name": ""
-            }],
-            "dhcpOptionsId": "dopt-b18786d5",
-            "instanceTenancy": "default",
-            "isDefault": false,
-            "state": "available",
-            "tags": {},
-            "name": "testDeleteMe",
-            "source": 1
-        },
+        ... REDACTED ...
         "id": "sg-d03158ac",
         "type": "SecurityGroup",
         "name": "myTestSG",
