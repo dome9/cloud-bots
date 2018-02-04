@@ -104,7 +104,7 @@ Since the Lambda output is exported to SNS, you can send it from there to wherev
 
 - To get email alerts instead, you can do it from the CLI:
 ```
-aws sns subscribe --topic-arn <your remediationOutput topic ARN> --protocol email --notification-endpoint <your email>
+aws sns subscribe --topic-arn <your OutputTopic ARN> --protocol email --notification-endpoint <your email>
 ```
 
 
@@ -114,7 +114,8 @@ aws sns subscribe --topic-arn <your remediationOutput topic ARN> --protocol emai
 
 ### Create a bundle that you want to use for auto remediation. 
 It's recommended but not required to break remediation actions into their own bundles. 
-There is a sample bundle (sample_bundle.json) that can be used as a starting point. 
+There is a sample bundle (sample_bundle.json) that can be used as a starting point.
+The rule in the sample bundle will remove rules from the default security group if the SG is empty. 
 
 ### For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
 
@@ -213,7 +214,13 @@ ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:72
 - Create a bundle that you want to use for auto remediation. 
 ![Sample Bundle](./pictures/sample_bundle.png?raw=true "Title")
 
-- For all rules that you want to add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
+- Edit the bundle (Edit JSON). 
+![Sample Bundle](./pictures/edit_bundle.png?raw=true "Title")
+
+- Paste in the text from sample_bundle.json. 
+![Sample Bundle](./pictures/edit_json.png?raw=true "Title")
+
+- For any other rules that you want to create and add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
 ![Rule Tagging](./pictures/tagging_a_rule.png?raw=true "Title")
 
 - Test this compliance bundle. 
