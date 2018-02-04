@@ -79,12 +79,12 @@ zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events
 ```
 
 ### Deploy the fucnction via CloudFormation template
-For YOUR-BUCKET-NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
+For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```
 aws cloudformation package    \
 --template-file ./deployment_cft.yaml    \
 --output-template-file serverless-output.yaml    \
---s3-bucket <YOUR-BUCKET-NAME>
+--s3-bucket <YOUR_BUCKET_NAME>
 
 aws cloudformation deploy \
 --template-file ./serverless-output.yaml \
@@ -94,7 +94,10 @@ aws cloudformation deploy \
 
 ### Get the outputs from the new stack
 ```
-aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
+aws cloudformation describe-stacks \
+--stack-name lambda-remediations \
+--query 'Stacks[0].Outputs' \
+--output text
 ```
 
 The output will look like this:
@@ -111,7 +114,10 @@ Since the Lambda output is exported to SNS, you can send it from there to wherev
 
 - To get email alerts instead, you can do it from the CLI:
 ```
-aws sns subscribe --topic-arn <your OutputTopic ARN> --protocol email --notification-endpoint <your email>
+aws sns subscribe \
+--topic-arn <OUTPUT_TOPIC_ARN> \
+--protocol email \
+--notification-endpoint <your email>
 ```
 
 
