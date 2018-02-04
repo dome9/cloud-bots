@@ -1,47 +1,11 @@
 [
   {
-    "name": "'default' Security Groups should not have network policies",
-    "description": "The VPC default security group is automatically created, can't be deleted and by default is created with a rule allowing all inbound and outbound traffic.\nAWS and Dome9's best practice is to keep the default Security Group without any rules and avoid using it. ",
+    "name": "Ensure the default security group restricts all traffic (Scored)",
+    "description": "A VPC comes with a default security group whose initial settings deny all inbound traffic, allow all outbound traffic, and allow all traffic between instances assigned to the security group. If you don't specify a security group when you launch an instance, the instance is automatically assigned to this default security group. Security groups provide stateful filtering of ingress/egress network traffic to AWS resources. It is recommended that the default security group restrict all traffic.\nConfiguring the default security group to restrict all traffic will encourage least privilege security group development and mindful placement of AWS resource into security groups which will in-turn reduce the exposure of those resources.",
     "severity": "High",
-    "logic": "SecurityGroup where name='default' should have inboundRules isEmpty() and outboundRules isEmpty()",
-    "remediation": "Make sure the default security group is not used and has no rules defined. \nDelete all rules that exist in the default group especially the default rules allowing any inbound and outbound traffic. ",
+    "logic": "SecurityGroup where (name like 'default' and networkAssetsStats contain-all [ count = 0 ]) should have inboundRules isEmpty() and outboundRules isEmpty()",
+    "remediation": "Follow AWS CIS Web Services Foundations Benchmark guidelines at https://benchmarks.cisecurity.org/tools2/amazon/CIS_Amazon_Web_Services_Foundations_Benchmark_v1.0.0.pdf",
     "complianceTag": "AUTO: sg_rules_delete",
     "id": 1
-  },
-  {
-    "name": "Remove Unused Security Groups",
-    "description": "a security group with no attached protected assets. PCI-DSS Section 1.1.6, 1.1.7 Removing Unused Security Groups is the expected outcome of a 6 months firewall review and proper justification for used rules.",
-    "severity": "High",
-    "logic": "SecurityGroup where name != 'default' should not have networkAssetsStats contain-all [ count = 0 ]",
-    "remediation": "Delete Unused Security Groups detected by the Dome9 Report.",
-    "complianceTag": "PCI-DSS Section 1.1.6| PCI-DSS Section 1.1.7| AUTO: sg_delete",
-    "id": 2
-  },
-  {
-    "name": "Turn off instances that are tagged with decommission",
-    "description": "",
-    "severity": "High",
-    "logic": "Instance where isRunning=true should not have tags with [ key='decommission' ]",
-    "remediation": "Turn off all instances that are running and have a decommission tag",
-    "complianceTag": "AUTO: ec2_stop_instance",
-    "id": 3
-  },
-  {
-    "name": "Instances with PCI should not have public IPs",
-    "description": "",
-    "severity": "High",
-    "logic": "Instance where tags with [ key='hasPCI' ] should not have isPublic=true",
-    "remediation": "Kill off all instances that could be exposed",
-    "complianceTag": "AUTO: ec2_terminate_instance",
-    "id": 4
-  },
-  {
-    "name": "Ensure S3 buckets are not publicly accessible",
-    "description": "Misconfigured S3 buckets can leak private information to the entire internet or allow unauthorized data tampering / deletion",
-    "severity": "High",
-    "logic": "S3Bucket should not have ( acl.grants contain [uri like 'http://acs.amazonaws.com/groups/global/%'] or policy.Statement contain [Effect='Allow' and (Principal='*' or Principal.AWS='*')])",
-    "remediation": "Review the S3 bucket's ACL list and the IAM policy document. Remove all world accessible entries and set a proper policy. You might wish to use the AWS Policy Generator at: https://awspolicygen.s3.amazonaws.com/policygen.html",
-    "complianceTag": "AUTO: s3_delete_permissions",
-    "id": 5
   }
 ]
