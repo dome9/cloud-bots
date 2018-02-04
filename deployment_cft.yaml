@@ -73,10 +73,10 @@ Resources:
             Topic: !Ref InputTopic
 Outputs:
   InputTopicARN:
-    Description: 'ARN that Dome9 needs to send events to'
+    Description: 'ARN that Dome9 sends events to'
     Value: !Ref InputTopic
   OutputTopicARN:
-    Description: 'ARN that the function will export logs to'
+    Description: 'ARN for the export logs topic'
     Value: !Ref OutputTopic
 
 
