@@ -124,7 +124,7 @@ aws sns subscribe \
 
 
 ## In Dome9
-See [this section](#in-dome9-1) for sample screenshots
+See [this section](#in-dome9-1) for sample screenshots of the setup
 
 ### Create a bundle that you want to use for auto remediation. 
 It's recommended but not required to break remediation actions into their own bundles. 
@@ -145,6 +145,16 @@ Make sure you're getting the results you want and expect
 Currently there needs to be a 1 Continuous Compliance bundle per account
 Set the output topic as the ARN from the InputTopicARN one we set up
 Set the format to be JSON - Full Entity
+
+If you have a subscriber set up for the remediationOutput topic, you'll see this message when you send the SNS test message during setup:
+```
+-------------------------
+ReportTime: 2018-02-04T01:38:05.5899299+00:00
+Error: This finding was found in account id 123456789123. The Lambda function is running in account id: 794306781643. Remediations need to be ran from the account there is the issue in.
+-------------------------
+```
+This is alright and means that everything is working properly. 
+
 
 ### NOTE: 
 Currently Continuous Compliance sends a 'diff' for the SNS notifications. Because of this, if you have ran the bundle before, only new issues will be sent to SNS. 
