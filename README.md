@@ -124,6 +124,7 @@ aws sns subscribe \
 
 
 ## In Dome9
+See [this section](#in-dome9-1) for sample screenshots
 
 ### Create a bundle that you want to use for auto remediation. 
 It's recommended but not required to break remediation actions into their own bundles. 
