@@ -97,6 +97,13 @@ aws cloudformation deploy \
 aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text
 ```
 
+The output will look like this:
+```
+ARN for the export logs topic   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
+ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
+```
+Save these ARNs for the next step and the Dome9 Continuous Compliance setup
+
 ### OPTIONAL: Set up a subscriber to the SNS output topic
 Since the Lambda output is exported to SNS, you can send it from there to wherever you please. 
 
@@ -197,8 +204,8 @@ Successfully created/updated stack - lambda-remediations
 
 # Get the outputs from the new stack
 [cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
-ARN that the function will export logs to   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
-ARN that Dome9 needs to send events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
+ARN for the export logs topic   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
+ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
 
 
 # OPTIONAL: Set up a subscriber to the SNS output topic
