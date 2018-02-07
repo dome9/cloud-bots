@@ -8,7 +8,8 @@ Table of Contents
 =================
 
 * [Overview](#overview)
-  * [When would this be used](#when-would-this-be-used)
+  * [What is this](#What-is-this)
+  * [Why and when would I need it](#Why-and-when-would-I-need-it)
   * [How does it work](#how-does-it-work)
 * [Setup Steps](#setup-steps)
   * [Outside of Dome9](#outside-of-dome9)
@@ -47,8 +48,13 @@ Table of Contents
 
 
 # Overview
-## When would this be used
-Dome9's core focus is around identifying security misconfigurations, but some customers want to take this a step further and have issues be automatically resolved when they are found. Using Dome9's Continuous Compliance Engine and Cloud Supervisor 2 (CS2), we can identify issues and then use Lambda to automatically resolve issues when they arise. 
+## What is this
+Cloud-Supervisor 2 is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
+
+## Why and when would I need it
+Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
+For some organizations that is enough. However, at a certain scale and cloud matureness level- organizations prefer to move towards automatic-remediation approach, in which the system takes specific automated remediation actions in regards to specific violations.</br>
+This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
 ## How does it work
 ![Data Flow](./pictures/data-flow.png?raw=true "Title")
