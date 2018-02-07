@@ -86,7 +86,7 @@ zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events
 ```
 
 ### Get the name of a S3 bucket to load the zip into
-The zip needs to be uploaded to your S3 bucket before deployment. If you have an S3 bucket already, skip this step and put the bucket name in the command on the next step. 
+The zip will be automicatically uploaded to your S3 bucket before deployment. If you have an S3 bucket already, skip this step and put the bucket name in the command on the next step. 
 
 If you need to create a new bucket:
 
