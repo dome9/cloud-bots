@@ -14,6 +14,7 @@ Table of Contents
   * [Outside of Dome9](#outside-of-dome9)
     * [Clone this GitHub project](#clone-this-github-project)
     * [Zip the function](#zip-the-function)
+    * [Get the name of a S3 bucket to load the zip into](# Get the name of a S3 bucket to load the zip into)
     * [Deploy the fucnction via CloudFormation template](#deploy-the-fucnction-via-cloudformation-template)
     * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
     * [OPTIONAL: Set up a subscriber to the SNS output topic](#optional-set-up-a-subscriber-to-the-sns-output-topic)
@@ -77,6 +78,16 @@ git clone git@github.com:Dome9/cloud-supervisor2.git
 cd cloud-supervisor2
 zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
+
+### Get the name of a S3 bucket to load the zip into
+The zip needs to be uploaded to your S3 bucket before deployment. If you have an S3 bucket already, skip this step and put the bucket name in the command on the next step. 
+
+If you need to create a new bucket:
+
+```
+aws s3 mb s3://<NEW_BUCKET_NAME>
+```
+
 
 ### Deploy the fucnction via CloudFormation template
 For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
