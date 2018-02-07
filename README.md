@@ -94,7 +94,6 @@ If you need to create a new bucket:
 aws s3 mb s3://<NEW_BUCKET_NAME>
 ```
 
-
 ### Deploy the fucnction via CloudFormation template
 For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```
