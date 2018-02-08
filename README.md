@@ -8,9 +8,9 @@ Table of Contents
 =================
 
 * [Overview](#overview)
-  * [What is this](#What-is-this)
-  * [Why and when would I need it](#Why-and-when-would-I-need-it)
-  * [How does it work](#how-does-it-work)
+  * [What is this ?](#What-is-this)
+  * [Why and when would I need it ?](#Why-and-when-would-I-need-it)
+  * [How does it work ?](#how-does-it-work)
 * [Setup Steps](#setup-steps)
   * [Outside of Dome9](#outside-of-dome9)
     * [Clone this GitHub project](#clone-this-github-project)
@@ -49,15 +49,15 @@ Table of Contents
 
 
 # Overview
-## What is this
+## What is this ?
 Cloud-Supervisor 2 is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
 
-## Why and when would I need it
+## Why and when would I need it ?
 Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
 For some organizations that is enough. However, at a certain scale and cloud matureness level- organizations prefer to move towards automatic-remediation approach, in which the system takes specific automated remediation actions in regards to specific violations.</br>
 This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
-## How does it work
+## How does it work ?
 ![Data Flow](./pictures/data-flow.png?raw=true "Title")
 
 
