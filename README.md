@@ -15,7 +15,7 @@ Table of Contents
   * [Outside of Dome9](#outside-of-dome9)
     * [Clone this GitHub project](#clone-this-github-project)
     * [Zip the function](#zip-the-function)
-    * [Get the name of a S3 bucket to load the zip into](# Get the name of a S3 bucket to load the zip into)
+    * [Get the name of a S3 bucket to load the zip into](#Get-the-name=of-a-S3-bucket-to-load-the-zip-into)
     * [Deploy the fucnction via CloudFormation template](#deploy-the-fucnction-via-cloudformation-template)
     * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
     * [OPTIONAL: Set up a subscriber to the SNS output topic](#optional-set-up-a-subscriber-to-the-sns-output-topic)
