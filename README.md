@@ -8,9 +8,9 @@ Table of Contents
 =================
 
 * [Overview](#overview)
-  * [What is this ?](#What-is-this)
-  * [Why and when would I need it ?](#Why-and-when-would-I-need-it)
-  * [How does it work ?](#how-does-it-work)
+  * [What is this ?](#what-is-this-)
+  * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
+  * [How does it work ?](#how-does-it-work-)
 * [Setup Steps](#setup-steps)
   * [Outside of Dome9](#outside-of-dome9)
     * [Clone this GitHub project](#clone-this-github-project)
