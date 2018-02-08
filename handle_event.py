@@ -4,7 +4,7 @@ import importlib
 from botocore.exceptions import ClientError
 
 def handle_event(message,text_output_array):
-
+    post_to_sns = True
     #Break out the values from the JSON payload from Dome9
     rule_name = message['rule']['name']
     status = message['status']
@@ -30,13 +30,15 @@ def handle_event(message,text_output_array):
     #evaluate the event and tags and decide is there's something to do with them. 
     if status == "Passed":
         text_output_array.append("Previously failing rule has been resolved: %s \n ID: %s \nName: %s \n" % (rule_name, entity_id, entity_name))
-        return text_output_array
+        post_to_sns = False
+        return text_output_array,post_to_sns
 
     #Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it. 
     auto_pattern = re.compile("AUTO:")
     if not auto_pattern.search(message['rule']['complianceTags']):
         text_output_array.append("Rule %s \n Doesn't have any 'AUTO:' tags. \nSkipping.\n" % rule_name)
-        return text_output_array
+        post_to_sns = False
+        return text_output_array,post_to_sns
 
     for tag in compliance_tags:
         tag = tag.strip() #Sometimes the tags come through with trailing or leading spaces. 
@@ -76,4 +78,4 @@ def handle_event(message,text_output_array):
                 text_output_array.append(action_msg)
 
     #After the remediation functions finish, send the notification out. 
-    return text_output_array
+    return text_output_array,post_to_sns

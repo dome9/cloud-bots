@@ -20,10 +20,10 @@ def lambda_handler(event, context):
     timestamp = "ReportTime: " + message['reportTime'] + "\n"
     text_output_array.append(timestamp)
 
-    text_output_array = handle_event(message,text_output_array)
+    text_output_array, post_to_sns = handle_event(message,text_output_array)
     
     if SNS_TOPIC_ARN != '':
-        sendEvent(text_output_array,SNS_TOPIC_ARN)
+        sendEvent(text_output_array,SNS_TOPIC_ARN,post_to_sns)
     else:
         print('NO SNS out was defined')
         print(text_output_array)
