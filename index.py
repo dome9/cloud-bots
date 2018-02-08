@@ -22,11 +22,13 @@ def lambda_handler(event, context):
 
     text_output_array, post_to_sns = handle_event(message,text_output_array)
     
-    if SNS_TOPIC_ARN != '':
-        sendEvent(text_output_array,SNS_TOPIC_ARN,post_to_sns)
-    else:
-        print('NO SNS out was defined')
-        print(text_output_array)
+    if SNS_TOPIC_ARN != '' and post_to_sns:
+        sendEvent(text_output_array,SNS_TOPIC_ARN)
+
+    if not SNS_TOPIC_ARN:
+        print("SNS topic out was not defined!")
+
+    print(text_output_array)
     return
 
 
