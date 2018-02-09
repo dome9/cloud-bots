@@ -426,7 +426,7 @@ JSON - Full Entity
 Any new action that is added just needs to follow the format of the other actions and be put in the action folder. 
 
 Here is a sample from sg_delete. The rule and entity variables that are passed through come from the source SNS message. Params are only passed through if there are any in the tag (ex: AUTO: ec2_tag_instance owner unknown)
-```
+```python
 import boto3
 
 def run_action(rule,entity,params):
