@@ -84,12 +84,12 @@ This approach could reduce the load from the security operators and drastically 
 ## Outside of Dome9
 
 ### Clone this GitHub project
-``` 
+```bash 
 git clone git@github.com:Dome9/cloud-supervisor2.git 
 ```
 
 ### Zip the function
-```
+```bash
 cd cloud-supervisor2
 zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
@@ -99,13 +99,13 @@ The zip will be automicatically uploaded to your S3 bucket before deployment. If
 
 If you need to create a new bucket:
 
-```
+```bash
 aws s3 mb s3://<NEW_BUCKET_NAME>
 ```
 
 ### Deploy the fucnction via CloudFormation template
 For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
-```
+```bash
 aws cloudformation package    \
 --template-file ./deployment_cft.yaml    \
 --output-template-file serverless-output.yaml    \
@@ -118,7 +118,7 @@ aws cloudformation deploy \
 ```
 
 ### Get the outputs from the new stack
-```
+```bash
 aws cloudformation describe-stacks \
 --stack-name lambda-remediations \
 --query 'Stacks[0].Outputs' \
@@ -138,7 +138,7 @@ Since the Lambda output is exported to SNS, you can send it from there to wherev
 - If you want to send the events to Slack, please follow this guide: https://github.com/alpalwal/D9SnsToSlack
 
 - To get email alerts instead, you can do it from the CLI:
-```
+```bash
 aws sns subscribe \
 --topic-arn <OUTPUT_TOPIC_ARN> \
 --protocol email \
