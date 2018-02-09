@@ -378,9 +378,8 @@ Deny policy attached to role: "testremediationrole4"
 
 
 ## Sample event output from Dome9
-```
 JSON - Full Entity
-
+```json
 {
     "Policy": {
         "Name": "Remediation-compliance - full entity",
