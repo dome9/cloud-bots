@@ -22,7 +22,8 @@ def handle_event(message,text_output_array):
 
     if lambda_account_id != event_account_id:
         text_output_array.append("Error: This finding was found in account id %s. The Lambda function is running in account id: %s. Remediations need to be ran from the account there is the issue in.\n" % (event_account_id, lambda_account_id))
-        return text_output_array
+        post_to_sns = False
+        return text_output_array,post_to_sns
             
     #All of the remediation values are coming in on the compliance tags and they're pipe delimited
     compliance_tags = message['rule']['complianceTags'].split("|")
