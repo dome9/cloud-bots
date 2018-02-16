@@ -20,7 +20,13 @@ def lambda_handler(event, context):
     timestamp = "ReportTime: " + message['reportTime'] + "\n"
     text_output_array.append(timestamp)
 
-    text_output_array, post_to_sns = handle_event(message,text_output_array)
+    try:
+        text_output_array, post_to_sns = handle_event(message,text_output_array)
+    except Exception as e: 
+        post_to_sns = True
+        text_output_array.append("Handle_event failed\n")
+        text_output_array.append(str(e))
+
     
     if SNS_TOPIC_ARN != '' and post_to_sns:
         sendEvent(text_output_array,SNS_TOPIC_ARN)
