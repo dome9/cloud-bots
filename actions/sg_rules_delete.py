@@ -31,9 +31,7 @@ def run_action(rule,entity,params):
             try:
                 del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
-                        print("No GroupName to delete. Skipping")
-                        print("error:" + e)
-
+                        print("No groupName to clean up - deleting rules")
         result = sg.revoke_ingress(IpPermissions=ingressRules)
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -51,9 +49,7 @@ def run_action(rule,entity,params):
             try:
                 del egressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
-                        print("No GroupName to delete. Skipping")
-                        print("error:" + e)
-
+                        print("No groupName to clean up - deleting rules")
         result = sg.revoke_egress(IpPermissions=egressRules)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
