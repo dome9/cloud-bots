@@ -32,6 +32,7 @@ def run_action(rule,entity,params):
                 del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
                         print("No GroupName to delete. Skipping")
+                        print("error:" + e)
 
         result = sg.revoke_ingress(IpPermissions=ingressRules)
 
@@ -46,11 +47,12 @@ def run_action(rule,entity,params):
     #Try to delete outbound rules if they exist
     if egressRules:
         #An IP permission may contain a group name or a group ID, but not both. This removes the group name from the rules to we just have the ID
-        for i, v in enumerate(ingressRules):
+        for i, v in enumerate(egressRules):
             try:
-                del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
+                del egressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
                         print("No GroupName to delete. Skipping")
+                        print("error:" + e)
 
         result = sg.revoke_egress(IpPermissions=egressRules)
         
