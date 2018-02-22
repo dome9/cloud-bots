@@ -64,6 +64,8 @@ Resources:
                - iam:CreateRole
                - iam:UpdateAccountPasswordPolicy
                - iam:AttachUserPolicy
+               - s3:PutObject # For create_cloudtrail
+               - cloudtrail:CreateTrail 
 
              Resource: '*'
       Environment:
