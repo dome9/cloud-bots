@@ -296,7 +296,8 @@ Limitations: none
 ## ec2_tag_instance
 What it does: Tags an ec2 instance  
 Usage: AUTO: ec2_tag_instance <key> <value>  
-Limitations: Does not support keys/values with spaces   
+Note: Tags with spaces can be added if they are surrounded by quotes: ex: ec2_tag_instance "this is my key" "this is a value"
+Limitations: none
 
 ## ec2_terminate_instance
 What it does: Terminates an ec2 instance  
