@@ -35,7 +35,7 @@ Resources:
       Description: 'Auto-remediation actions from Dome9 events'
       CodeUri: ./remediation-function.zip
       Runtime: python3.6
-      Timeout: 6
+      Timeout: 8
       Handler: index.lambda_handler
       Policies:
        - Version: '2012-10-17' # Custom Policy Document
@@ -65,7 +65,10 @@ Resources:
                - iam:UpdateAccountPasswordPolicy
                - iam:AttachUserPolicy
                - s3:PutObject # For create_cloudtrail
-               - cloudtrail:CreateTrail 
+               - s3:PutBucketPolicy # For create_cloudtrail
+               - s3:CreateBucket # For create_cloudtrail
+               - cloudtrail:CreateTrail # For create_cloudtrail
+               - cloudtrail:StartLogging # For create_cloudtrail
 
              Resource: '*'
       Environment:
