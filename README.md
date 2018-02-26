@@ -48,6 +48,9 @@ Table of Contents
   * [s3\_delete\_permissions](#s3_delete_permissions)
   * [sg\_delete](#sg_delete)
   * [sg\_rules\_delete](#sg_rules_delete)
+  * [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
+  * [cloudtrail\_enable](#cloudtrail_enable)
+
 * [Examples](#examples)
   * [Sample output from the remediation function](#sample-output-from-the-remediation-function)
   * [Sample event output from Dome9](#sample-event-output-from-dome9)
@@ -338,6 +341,25 @@ Limitations: This will fail if there is something still attached to the SG.
 What it does: Deletes all ingress and egress rules from a SG  
 Usage: AUTO: sg_rules_delete  
 Limitations: none  
+
+## vpc_turn_on_flow_logs
+What it does: Turns on flow logs for a VPC
+Settings: 
+Log Group Name: vpcFlowLogs
+If traffic type to be logged isn't specified, it defaults to all.
+Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
+Limitations: none 
+
+## cloudtrail_enable
+What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
+Settings:  
+Bucket name: acct<account_id>cloudtraillogs
+IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
+IncludeGlobalServiceEvents: True
+EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
+Usage: AUTO: cloudtrail_enable 
+Limitations: none 
+
 
 
 
