@@ -3,7 +3,7 @@ import json
 from botocore.exceptions import ClientError
 
 # Usage:
-# AUTO: cloudtrail_enable <trailName> <S3bucket_name>
+# AUTO: cloudtrail_enable 
 
 # Settings: 
 # IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
@@ -11,12 +11,6 @@ from botocore.exceptions import ClientError
 # ElableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2)
 # Boto3 Cloudtrail docs:
 # http://boto3.readthedocs.io/en/latest/reference/services/cloudtrail.html#CloudTrail.Client.create_trail
-
-#### IAM Permissions needed ########
-# s3:PutObject
-# cloudtrail:CreateTrail
-
-#update bucket policy / create bucket
 
 
 # Create S3 bucket
