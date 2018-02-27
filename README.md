@@ -50,6 +50,8 @@ Table of Contents
   * [sg\_rules\_delete](#sg_rules_delete)
   * [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   * [cloudtrail\_enable](#cloudtrail_enable)
+  * [s3\_enable\_versioning](#s3_enable_versioning)
+
 
 * [Examples](#examples)
   * [Sample output from the remediation function](#sample-output-from-the-remediation-function)
@@ -360,8 +362,10 @@ EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2)
 Usage: AUTO: cloudtrail_enable 
 Limitations: none 
 
-
-
+## s3_enable_versioning
+What it does: Turns on versioning for an S3 bucket
+Usage: AUTO: s3_enable_versioning
+Limitations: none 
 
 # Examples
  
