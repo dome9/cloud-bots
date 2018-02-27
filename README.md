@@ -51,7 +51,7 @@ Table of Contents
   * [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   * [cloudtrail\_enable](#cloudtrail_enable)
   * [s3\_enable\_versioning](#s3_enable_versioning)
-
+  * [ec2\_enable\_detailed\_monitoring](#ec2_enable_detailed_monitoring)
 
 * [Examples](#examples)
   * [Sample output from the remediation function](#sample-output-from-the-remediation-function)
@@ -365,6 +365,11 @@ Limitations: none
 ## s3_enable_versioning
 What it does: Turns on versioning for an S3 bucket
 Usage: AUTO: s3_enable_versioning
+Limitations: none 
+
+## ec2_enable_detailed_monitoring
+What it does: Turns on detailed monitoring for an ec2 instance
+Usage: AUTO: ec2_enable_detailed_monitoring
 Limitations: none 
 
 # Examples
