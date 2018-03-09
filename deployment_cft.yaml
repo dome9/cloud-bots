@@ -35,7 +35,7 @@ Resources:
       Description: 'Auto-remediation actions from Dome9 events'
       CodeUri: ./remediation-function.zip
       Runtime: python3.6
-      Timeout: 8
+      Timeout: 120 # Most will be under 8 seconds, but delete IGW needs to wait for the instances to be off before detaching from the VPC. This takes a bunch of time. 
       Handler: index.lambda_handler
       Policies:
        - Version: '2012-10-17' # Custom Policy Document
@@ -59,6 +59,7 @@ Resources:
                - s3:DeleteBucketPolicy
                - s3:GetBucketAcl
                - s3:PutBucketAcl
+               - s3:PutEncryptionConfiguration # For s3_enable_encryption
                - iam:CreatePolicy
                - iam:GetPolicy
                - iam:AttachRolePolicy
