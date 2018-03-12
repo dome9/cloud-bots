@@ -1,3 +1,10 @@
+'''
+## s3_delete_bucket
+What it does: Deletes an S3 bucket  
+Usage: AUTO: s3_delete_bucket  
+Limitations: none  
+'''
+
 import boto3
 
 ### DeleteS3Bucket ###

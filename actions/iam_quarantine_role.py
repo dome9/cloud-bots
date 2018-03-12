@@ -1,3 +1,10 @@
+'''
+## iam_quarantine_role
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
+Usage: AUTO: iam_quarantine_role  
+Limitations: none  
+'''
+
 import boto3
 import json
 from botocore.exceptions import ClientError

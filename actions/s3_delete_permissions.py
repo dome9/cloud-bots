@@ -1,3 +1,10 @@
+'''
+## s3_delete_permissions
+What it does: Deletes all ACLs and bucket policies from a bucket  
+Usage: AUTO: s3_delete_permissions  
+Limitations: none  
+'''
+
 import boto3
 from botocore.exceptions import ClientError
 

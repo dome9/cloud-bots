@@ -1,3 +1,10 @@
+'''
+## sg_rules_delete
+What it does: Deletes all ingress and egress rules from a SG  
+Usage: AUTO: sg_rules_delete  
+Limitations: none  
+'''
+
 import boto3
 from botocore.exceptions import ClientError
 

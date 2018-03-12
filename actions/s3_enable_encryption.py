@@ -1,3 +1,10 @@
+'''
+## s3_enable_encryption
+What it does: Turns on AES-256 encryption on the target bucket  
+Usage: AUTO: s3_enable_encryption  
+Limitations: none  
+'''
+
 import boto3
 from botocore.exceptions import ClientError
 

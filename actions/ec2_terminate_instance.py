@@ -1,3 +1,10 @@
+'''
+## ec2_terminate_instance
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
+'''
+
 import boto3
 
 ### Kill EC2 Instance ###

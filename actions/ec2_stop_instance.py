@@ -1,3 +1,10 @@
+'''
+## ec2_stop_instance
+What it does: Stops an ec2 instance  
+Usage: AUTO: ec2_stop_instance  
+Limitations: none  
+'''
+
 import boto3
 
 ### Turn off EC2 instance ###

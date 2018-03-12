@@ -1,3 +1,10 @@
+'''
+## iam_quarantine_user
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
+Usage: AUTO: iam_quarantine_user  
+Limitations: none  
+'''
+
 import boto3
 import json
 from botocore.exceptions import ClientError

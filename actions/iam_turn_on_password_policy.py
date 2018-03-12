@@ -1,9 +1,9 @@
-import boto3
-
-#This will make the quarantining IAM policy that'll be applied to the users or roles that need to be locked down.
-#EVERYTHING needs to be set at once. If you just set 1 property, it kills everything else off. 
-
 '''
+## iam_turn_on_password_policy
+What it does: Sets all settings in an account password policy  
+Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
+Limitations: ALL variables need to be set at the same time  
+
 Sample PasswordPolicy:
 {
    MinimumPasswordLength=int,
@@ -19,6 +19,8 @@ Sample PasswordPolicy:
 
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 '''
+
+import boto3
 
 def run_action(rule,entity,params):
     # Create IAM client

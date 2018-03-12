@@ -1,3 +1,10 @@
+'''
+## sg_delete
+What it does: Deletes a security group  
+Usage: AUTO: sg_delete  
+Limitations: This will fail if there is something still attached to the SG.  
+'''
+
 import boto3
 
 ### DeleteSecurityGroup ###

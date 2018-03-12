@@ -1,13 +1,21 @@
+'''
+## vpc_turn_on_flow_logs
+What it does: Turns on flow logs for a VPC
+Settings: 
+Log Group Name: vpcFlowLogs
+If traffic type to be logged isn't specified, it defaults to all.
+Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
+Limitations: none 
+
+#log delivery policy name is set as: vpcFlowLogDelivery
+#log relivery role is set as: vpcFlowLogDelivery
+
+
+'''
+
 import boto3
 import json
 from botocore.exceptions import ClientError
-
-#Usage:
-#AUTO: vpc_turn_on_flow_logs <traffic_to_be_logged>
-#ex: AUTO: vpc_turn_on_flow_logs All
-#Default if no value is set is All. Accepted values are Accept, Reject, All (case insensitive)
-#log delivery policy name is set as: vpcFlowLogDelivery
-#log relivery role is set as: vpcFlowLogDelivery
 
 
 def create_log_delivery_policy():

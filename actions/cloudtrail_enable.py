@@ -1,17 +1,18 @@
+'''
+## cloudtrail_enable
+What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
+Pre-set Settings:  
+Bucket name: acct<account_id>cloudtraillogs
+IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
+IncludeGlobalServiceEvents: True
+EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
+Usage: AUTO: cloudtrail_enable 
+Limitations: none 
+'''
+
 import boto3
 import json
 from botocore.exceptions import ClientError
-
-# Usage:
-# AUTO: cloudtrail_enable 
-
-# Settings: 
-# IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
-# IncludeGlobalServiceEvents: True
-# ElableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2)
-# Boto3 Cloudtrail docs:
-# http://boto3.readthedocs.io/en/latest/reference/services/cloudtrail.html#CloudTrail.Client.create_trail
-
 
 # Create S3 bucket
 def make_bucket(account_id,bucket_name):

@@ -1,6 +1,11 @@
-import boto3
+'''
+## s3_enable_versioning
+What it does: Turns on versioning for an S3 bucket
+Usage: AUTO: s3_enable_versioning
+Limitations: none 
+'''
 
-##### YOU HAVE TO BE THE BUCKET OWNER FOR THIS TO WORK ####
+import boto3
 
 ## Turn on S3 bucket versioning
 def run_action(rule,entity,params):
