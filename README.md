@@ -293,84 +293,8 @@ ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:7268531848
 
 # Actions Reference
 
-## ec2_stop_instance
-What it does: Stops an ec2 instance  
-Usage: AUTO: ec2_stop_instance  
-Limitations: none  
- 
-## ec2_tag_instance
-What it does: Tags an ec2 instance  
-Usage: AUTO: ec2_tag_instance <key> <value>  
-Note: Tags with spaces can be added if they are surrounded by quotes: ex: ec2_tag_instance "this is my key" "this is a value"
-Limitations: none
+## All action descriptions have been moved to the action files to ensure that documentation stays up to date
 
-## ec2_terminate_instance
-What it does: Terminates an ec2 instance  
-Usage: AUTO: ec2_terminate_instance  
-Limitations: none  
-
-## iam_quarantine_role
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
-Usage: AUTO: iam_quarantine_role  
-Limitations: none  
-
-## iam_quarantine_user
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
-Usage: AUTO: iam_quarantine_user  
-Limitations: none  
-
-## iam_turn_on_password_policy
-What it does: Sets all settings in an account password policy  
-Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
-Limitations: ALL variables need to be set at the same time  
-
-## s3_delete_bucket
-What it does: Deletes an S3 bucket  
-Usage: AUTO: s3_delete_bucket  
-Limitations: none  
-
-## s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket  
-Usage: AUTO: s3_delete_permissions  
-Limitations: none  
-
-## sg_delete
-What it does: Deletes a security group  
-Usage: AUTO: sg_delete  
-Limitations: This will fail if there is something still attached to the SG.  
-
-## sg_rules_delete
-What it does: Deletes all ingress and egress rules from a SG  
-Usage: AUTO: sg_rules_delete  
-Limitations: none  
-
-## vpc_turn_on_flow_logs
-What it does: Turns on flow logs for a VPC
-Settings: 
-Log Group Name: vpcFlowLogs
-If traffic type to be logged isn't specified, it defaults to all.
-Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
-Limitations: none 
-
-## cloudtrail_enable
-What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
-Settings:  
-Bucket name: acct<account_id>cloudtraillogs
-IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
-IncludeGlobalServiceEvents: True
-EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
-Usage: AUTO: cloudtrail_enable 
-Limitations: none 
-
-## s3_enable_versioning
-What it does: Turns on versioning for an S3 bucket
-Usage: AUTO: s3_enable_versioning
-Limitations: none 
-
-## ec2_enable_detailed_monitoring
-What it does: Turns on detailed monitoring for an ec2 instance
-Usage: AUTO: ec2_enable_detailed_monitoring
-Limitations: none 
 
 # Examples
  
