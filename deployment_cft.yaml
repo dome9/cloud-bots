@@ -43,14 +43,14 @@ Resources:
            - Effect: Allow
              Action:
                - S3:GetObject
-               - sns:Publish
-               - sts:GetCallerIdentity
+               - sns:Publish # For exporting the logs from CS2 
+               - sts:GetCallerIdentity # For checking what account this is running in
                - ec2:TerminateInstances
                - ec2:StopInstances
                - ec2:CreateTags
-               - ec2:CreateFlowLogs
+               - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
-               - ec2:DeleteSecurityGroup
+               - ec2:DeleteSecurityGroup # For sg_delete
                - ec2:DescribeSecurityGroups
                - ec2:RevokeSecurityGroupEgress
                - ec2:RevokeSecurityGroupIngress
@@ -64,7 +64,7 @@ Resources:
                - iam:CreatePolicy
                - iam:GetPolicy
                - iam:AttachRolePolicy
-               - iam:CreateRole
+               - iam:CreateRole # For vpc_turn_on_flow_logs
                - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                - iam:AttachUserPolicy # For iam_quarantine_user
                - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
