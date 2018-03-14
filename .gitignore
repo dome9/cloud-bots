@@ -10,3 +10,4 @@ serverless-output.yaml
 **.zip
 broken_out_handle_event.py
 lambda_test_event.json
+/events/
