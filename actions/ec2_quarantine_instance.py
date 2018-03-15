@@ -4,10 +4,6 @@
 What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
 Usage: AUTO: ec2_quarantine_instance
 Limitations: None
-
-
-# Create a quarantine SG in the VPC (if fail, it exists)
-# Attach instance to SG (detaches existing SGs at the same time)
 '''
 
 import boto3
@@ -54,6 +50,7 @@ def run_action(rule,entity,params):
 
     text_output = text_output + "Updating the instance SG attachments to only contain the quarantine SG\n"
 
+    #Attach the instance to only the quarantine SG
     try:
         result = ec2_resource.Instance(instance_id).modify_attribute(Groups=quarantine_sg_id)  
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
