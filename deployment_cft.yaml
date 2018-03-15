@@ -42,39 +42,40 @@ Resources:
          Statement:
            - Effect: Allow
              Action:
-               - S3:GetObject
-               - sns:Publish # For exporting the logs from CS2 
-               - sts:GetCallerIdentity # For checking what account this is running in
-               - ec2:TerminateInstances
-               - ec2:StopInstances
-               - ec2:CreateTags
-               - ec2:CreateSecurityGroup # For instance_quarantine
-               - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
-               - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
-               - ec2:ModifyInstanceAttribute # For instance_quarantine
-               - ec2:DeleteSecurityGroup # For sg_delete
-               - ec2:DescribeSecurityGroups # For instance_quarantine
-               - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
-               - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
-               - s3:DeleteBucket # For s3_delete_bucket
-               - s3:GetBucketPolicy
-               - s3:DeleteBucketPolicy
-               - s3:GetBucketAcl
-               - s3:PutBucketAcl
-               - s3:PutBucketLogging # For s3_enable_logging
-               - s3:PutEncryptionConfiguration # For s3_enable_encryption
-               - iam:CreatePolicy
-               - iam:GetPolicy
-               - iam:AttachRolePolicy
-               - iam:CreateRole # For vpc_turn_on_flow_logs
-               - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
-               - iam:AttachUserPolicy # For iam_quarantine_user
-               - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
-               - s3:PutObject # For create_cloudtrail
-               - s3:PutBucketPolicy # For create_cloudtrail
-               - s3:CreateBucket # For create_cloudtrail
                - cloudtrail:CreateTrail # For create_cloudtrail
                - cloudtrail:StartLogging # For create_cloudtrail
+               - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
+               - ec2:CreateSecurityGroup # For instance_quarantine
+               - ec2:CreateTags # For ec2_tag_instance
+               - ec2:DeleteSecurityGroup # For sg_delete
+               - ec2:DescribeSecurityGroups # For instance_quarantine
+               - ec2:ModifyInstanceAttribute # For instance_quarantine
+               - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
+               - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
+               - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
+               - ec2:StopInstances # For ec2_stop_instance
+               - ec2:TerminateInstances # For ec2_terminate_instance
+               - iam:AttachRolePolicy
+               - iam:AttachUserPolicy # For iam_quarantine_user
+               - iam:CreatePolicy
+               - iam:CreateRole # For vpc_turn_on_flow_logs
+               - iam:GetPolicy
+               - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
+               - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
+               - rds:ModifyDBInstance # For rds_quarantine_instance
+               - s3:CreateBucket # For create_cloudtrail
+               - s3:DeleteBucket # For s3_delete_bucket
+               - s3:DeleteBucketPolicy # For s3_delete_permissions
+               - s3:GetBucketAcl # For s3_delete_permissions
+               - s3:GetBucketPolicy # For s3_delete_permissions
+               - s3:GetObject
+               - s3:PutBucketAcl # For s3_delete_permissions
+               - s3:PutBucketLogging # For s3_enable_logging
+               - s3:PutBucketPolicy # For create_cloudtrail
+               - s3:PutEncryptionConfiguration # For s3_enable_encryption
+               - s3:PutObject # For create_cloudtrail
+               - sns:Publish # For exporting the logs from CS2 
+               - sts:GetCallerIdentity # For checking what account this is running in
              Resource: '*'
       Environment:
         Variables:
