@@ -51,7 +51,7 @@ Resources:
                - ec2:CreateSecurityGroup # For instance_quarantine
                - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
-               - ec2:ModifyImageAttribute # For instance_quarantine
+               - ec2:ModifyInstanceAttribute # For instance_quarantine
                - ec2:DeleteSecurityGroup # For sg_delete
                - ec2:DescribeSecurityGroups # For instance_quarantine
                - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
