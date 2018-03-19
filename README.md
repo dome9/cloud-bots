@@ -72,7 +72,7 @@ For some organizations that is enough. However, at a certain scale and cloud mat
 This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
 ## How does it work ?
-![Data Flow](./pictures/data-flow.png?raw=true "Title")
+![Data Flow](./pictures/data-flow.png?raw=true "Single account data flow")
 
 
 
