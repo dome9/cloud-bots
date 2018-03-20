@@ -12,7 +12,10 @@ def run_action(rule,entity, params):
     
     text_output = "Tagging instance with tags from VPC (id: %s)\n" % vpc_id
 
-    for key, value in tags.items():
+    for tag in tags:
+        key = tag['key']
+        value = tag['value']
+
         if not value:
             text_output = text_output + "Key \"%s\" has an empty value. Skipping\n" % key
             continue
@@ -35,3 +38,4 @@ def run_action(rule,entity, params):
             text_output = text_output + "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,key,value)
 
     return text_output
+
