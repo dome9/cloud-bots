@@ -4,6 +4,21 @@ What it does: Tags an ec2 instance
 Usage: AUTO: ec2_tag_instance <key> <value>  
 Note: Tags with spaces can be added if they are surrounded by quotes: ex: ec2_tag_instance "this is my key" "this is a value"
 Limitations: none
+
+## THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+* Image
+* Instance
+* InternetGateway
+* NetworkAcl
+* NetworkInterface
+* PlacementGroup
+* RouteTable
+* SecurityGroup
+* Snapshot
+* Subnet
+* Volume
+* Vpc
+* VpcPeeringConnection
 '''
 
 import boto3
@@ -38,15 +53,15 @@ def run_action(rule,entity, params):
         value = both_tags_no_spaces[1]
 
     ec2 = boto3.client('ec2', region_name=region)
-    result = ec2.create_tags(
-        Resources=[instance],
-        Tags=[
-            {
-                'Key': key,
-                'Value': value
-            }
-        ]
-    )
+result = ec2.create_tags(
+    Resources=[instance],
+    Tags=[
+        {
+            'Key': key,
+            'Value': value
+        }
+    ]
+)
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
