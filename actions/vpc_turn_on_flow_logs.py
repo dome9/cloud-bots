@@ -137,15 +137,11 @@ def add_policy_to_role(policy_arn):
 def create_logs(role_id,vpc_id,traffic_type.region):
     ec2 = boto3.client('ec2', region_name=region)
 
-    #Resource IDs need to be in a list - not string
-    vpc_ids = []
-    vpc_ids.append(vpc_id)
-
     try:
         response = ec2.create_flow_logs(
             DeliverLogsPermissionArn=role_id,
             LogGroupName='vpcFlowLogs',
-            ResourceIds=vpc_ids,
+            ResourceIds=[vpc_id],
             ResourceType='VPC',
             TrafficType=traffic_type
         )
