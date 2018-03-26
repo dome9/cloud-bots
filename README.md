@@ -25,7 +25,7 @@ Table of Contents
     * [Clone this GitHub project](#clone-this-github-project)
     * [Zip the function](#zip-the-function)
     * [Get the name of a S3 bucket to load the zip into](#Get-the-name=of-a-S3-bucket-to-load-the-zip-into)
-    * [Deploy the fucnction via CloudFormation template](#deploy-the-fucnction-via-cloudformation-template)
+    * [Deploy the function via CloudFormation template](#deploy-the-function-via-cloudformation-template)
     * [Get the outputs from the new stack](#get-the-outputs-from-the-new-stack)
     * [OPTIONAL: Set up a subscriber to the SNS output topic](#optional-set-up-a-subscriber-to-the-sns-output-topic)
   * [In Dome9](#in-dome9)
@@ -228,7 +228,7 @@ Resolving deltas: 100% (247/247), done.
   adding: send_events_and_errors.py (deflated 44%)
 
 
-# Deploy the fucnction via CloudFormation template
+# Deploy the function via CloudFormation template
 [cloud-supervisor2]$aws cloudformation package    \
 > --template-file ./deployment_cft.yaml    \
 > --output-template-file serverless-output.yaml    \
