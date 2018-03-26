@@ -134,7 +134,7 @@ def add_policy_to_role(policy_arn):
 
     return text_output
 
-def create_logs(role_id,vpc_id,traffic_type.region):
+def create_logs(role_id,vpc_id,traffic_type,region):
     ec2 = boto3.client('ec2', region_name=region)
 
     try:
