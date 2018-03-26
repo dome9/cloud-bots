@@ -17,7 +17,7 @@ def run_action(rule,entity,params):
 
     #target_bucket needs to be passed through params
     if not params:
-        text_output = "No target_bucket found. Can't remediate.\nUsage: AUTO: s3_enable_logging <target_bucket_name>\n"
+        text_output = "No target_bucket found to send the logs to. Can't remediate.\nUsage: AUTO: s3_enable_logging <target_bucket_name>\n"
         return text_output
 
     target_bucket_name = params[0]
