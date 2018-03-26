@@ -88,7 +88,7 @@ This approach could reduce the load from the security operators and drastically 
 
 ## Outside of Dome9
 
-### Clone this GitHub project
+### Download / clone this GitHub project
 ```bash 
 git clone git@github.com:Dome9/cloud-supervisor2.git 
 ```
