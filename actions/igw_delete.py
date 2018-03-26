@@ -58,10 +58,10 @@ def run_action(rule,entity,params):
         
                 instance = ec2_resource.Instance(instances_to_turn_off[0])
                 while instance.state['Name'] not in 'stopped':
-                    print("Sleeping while waiting for instances to turn off (usually about 45 seconds)")
+                    text_output = text_output + "Sleeping while waiting for instances to turn off (usually about 45 seconds)"
                     sleep(5)
                     instance.load()
-                print("Instances are fully shut down. Continuing")
+                    text_output = text_output + "Instances are fully shut down. Continuing"
 
         else:
             text_output = text_output + "No instances in this VPC that have public IPs. Trying to remove the IGW next.\n"
