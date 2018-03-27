@@ -95,7 +95,7 @@ def run_action(rule,entity,params):
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'DependencyViolation':
-             text_output =  "There is an existing public IP in this VPC that needs to be detached. Please check RDS and Redshift and try again.\nUnexpected error: %s \n" % e
+             text_output =  "There is an existing public IP in this VPC that needs to be detached. Please check RDS and Redshift and try again.\nCurrently igw_delete only supports EC2\nUnexpected error: %s \n" % e
         else:
             text_output = "Unexpected error: %s \n" % e
 
