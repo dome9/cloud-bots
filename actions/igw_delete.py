@@ -2,6 +2,9 @@
 # From the boto3 docs: The VPC must not contain any running instances with Elastic IP addresses or public IPv4 addresses.
 # Because of this, all instances with a public IP will be turned off in the VPC before the IGW can be detached
 
+# Limitations: 
+# VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+
 import boto3  
 from time import sleep
 from botocore.exceptions import ClientError
@@ -45,7 +48,6 @@ def run_action(rule,entity,params):
                             continue
 
         if instances_to_turn_off:
-            print("turning instances off")
             result = ec2_client.stop_instances(InstanceIds=instances_to_turn_off)
 
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -58,10 +60,10 @@ def run_action(rule,entity,params):
         
                 instance = ec2_resource.Instance(instances_to_turn_off[0])
                 while instance.state['Name'] not in 'stopped':
-                    text_output = text_output + "Sleeping while waiting for instances to turn off (usually about 45 seconds)"
+                    text_output = text_output + "Sleeping while waiting for instances to turn off (usually about 45 seconds)\n"
                     sleep(5)
                     instance.load()
-                    text_output = text_output + "Instances are fully shut down. Continuing"
+                    text_output = text_output + "Instances are fully shut down. Continuing\n"
 
         else:
             text_output = text_output + "No instances in this VPC that have public IPs. Trying to remove the IGW next.\n"
@@ -90,8 +92,11 @@ def run_action(rule,entity,params):
         else:
             text_output = text_output + "IGW deleted %s \n" % igw_id
 
-
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        error = e.response['Error']['Code']
+        if error == 'DependencyViolation':
+             text_output =  "There is an existing public IP in this VPC that needs to be detached. Please check RDS and Redshift and try again.\nUnexpected error: %s \n" % e
+        else:
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output 
