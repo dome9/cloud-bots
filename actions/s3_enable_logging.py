@@ -41,8 +41,13 @@ def run_action(rule,entity,params):
         else:
             text_output = "Bucket logging enabled from bucket: %s to bucket: %s \n" % (bucket_name,target_bucket_name)
 
-    
     except ClientError as e:
+        error = e.response['Error']['Code']
+        if error == 'CrossLocationLoggingProhibitted':
+             text_output =  "The target bucket for logging needs to be in the same region as the remediation bucket.\nUnexpected error: %s \n" % e
+        else if error == 'InvalidTargetBucketForLogging':
+             text_output =  "The target bucket must have write_object and read_bucket_permissions S3 logging ACLs.\nUnexpected error: %s \n" % e
+        else:
             text_output = "Unexpected error: %s \n" % e
 
     return text_output 
