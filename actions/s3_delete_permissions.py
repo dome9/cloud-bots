@@ -43,7 +43,7 @@ def run_action(rule,entity,params):
         bucket_acls = s3.get_bucket_acl(Bucket=bucket)['Grants']
         
         if len(bucket_acls) == 1:
-            text_output = text_output + "Only the CanonicalUser ACL found. Skipping.\n"
+            text_output = text_output + "Only the CanonicalUser ACL found. Not removing.\n"
             return text_output
 
         text_output = text_output + "ACLs that will be removed: \n " + str(bucket_acls[1:]) + "\n"
