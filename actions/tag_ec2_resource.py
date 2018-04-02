@@ -52,16 +52,16 @@ def run_action(rule,entity, params):
         key = both_tags_no_spaces[0]
         value = both_tags_no_spaces[1]
 
-    ec2 = boto3.client('ec2', region_name=region)
-result = ec2.create_tags(
-    Resources=[instance],
-    Tags=[
-        {
-            'Key': key,
-            'Value': value
-        }
-    ]
-)
+        ec2 = boto3.client('ec2', region_name=region)
+        result = ec2.create_tags(
+            Resources=[instance],
+            Tags=[
+                {
+                    'Key': key,
+                    'Value': value
+                }
+            ]
+        )
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
