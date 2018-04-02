@@ -1,8 +1,8 @@
 '''
-## ec2_tag_instance
+## tag_ec2_resource
 What it does: Tags an ec2 instance  
-Usage: AUTO: ec2_tag_instance <key> <value>  
-Note: Tags with spaces can be added if they are surrounded by quotes: ex: ec2_tag_instance "this is my key" "this is a value"
+Usage: AUTO: tag_ec2_resource <key> <value>  
+Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"
 Limitations: none
 
 ## THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
