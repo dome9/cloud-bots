@@ -42,7 +42,7 @@ def run_action(rule,entity,params):
                     GroupName='quarantine',
                     VpcId=vpc_id )
             text_output = "Quarantine SG created %s \n" % result.id
-            quarantine_sg_id = [result.id]
+            quarantine_sg_id = result['id']
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
