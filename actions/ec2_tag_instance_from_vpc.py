@@ -18,7 +18,7 @@ def run_action(rule,entity, params):
 
     instance_tagged = False
 
-    text_output = "Checking instance VPC tags for %s tag\n" % key
+    text_output = "Checking instance VPC tags for \"%s\" tag\n" % key
 
     for tag in vpc_tags:
         vpc_key = tag['key']
@@ -44,6 +44,6 @@ def run_action(rule,entity, params):
                 instance_tagged = True
 
     if not instance_tagged:
-        text_output = text_output + "Did not find the %s key in the VPC tags. Please check the VPC and try again.\n" % key
+        text_output = text_output + "Did not find the \"%s\" key in the VPC tags. Please check the VPC and try again.\n" % key
 
     return text_output
