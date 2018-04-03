@@ -66,12 +66,14 @@ Resources:
                - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                - rds:ModifyDBInstance # For rds_quarantine_instance
-               - s3:CreateBucket # For create_cloudtrail
+               - s3:CreateBucket # For create_cloudtrail and s3_enable_logging
                - s3:DeleteBucket # For s3_delete_bucket
                - s3:DeleteBucketPolicy # For s3_delete_permissions
                - s3:GetBucketAcl # For s3_delete_permissions
                - s3:GetBucketPolicy # For s3_delete_permissions
                - s3:GetObject
+               - s3:HeadBucket # For enable_logging
+               - s3:ListBucket # For enable_logging
                - s3:PutBucketAcl # For s3_delete_permissions
                - s3:PutBucketLogging # For s3_enable_logging
                - s3:PutBucketPolicy # For create_cloudtrail
