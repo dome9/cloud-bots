@@ -70,7 +70,22 @@ This approach could reduce the load from the security operators and drastically 
 
 # Setup Steps
 
-## Outside of Dome9
+## Outside of Dome9 - Easy mode
+
+You can deploy this stack via the link below. It'll automatically select the region you were last in. 
+
+[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=cloudsupervisor2&templateURL=https://s3-us-west-2.amazonaws.com/dome9cftemplates/cs2_cftemplate.yaml)
+
+Click the link and click Next > Next > Next.
+On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names (This is for the role that is created for Lambda to perform the actions).
+
+Next, click on the 'Create Change Set' button at the bottom of the page. Then click 'Execute' 
+
+From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
+
+Skip to [In Dome9](#in-dome9)
+
+## Outside of Dome9 - CLI mode
 
 ### Download / clone this GitHub project
 ```bash 
