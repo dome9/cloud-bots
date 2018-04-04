@@ -78,6 +78,7 @@ You can deploy this stack via the link below. It'll automatically select the reg
 [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=cloudsupervisor2&templateURL=https://s3-us-west-2.amazonaws.com/dome9cftemplates/cs2_cftemplate.yaml)
 
 Click the link and click Next > Next > Next.
+<br>
 On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names (This is for the role that is created for Lambda to perform the actions).
 
 Next, click on the 'Create Change Set' button at the bottom of the page. Then click 'Execute' 
