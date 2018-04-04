@@ -21,7 +21,8 @@ Table of Contents
   * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
   * [How does it work ?](#how-does-it-work-)
 * [Setup Steps](#setup-steps)
-  * [Outside of Dome9](#outside-of-dome9)
+  * [Outside of Dome9 Easy mode](#outside-of-dome9-easy-mode)
+  * [Outside of Dome9 CLI mode](#outside-of-dome9-cli-mode)
     * [Clone this GitHub project](#clone-this-github-project)
     * [Zip the function](#zip-the-function)
     * [Get the name of a S3 bucket to load the zip into](#Get-the-name=of-a-S3-bucket-to-load-the-zip-into)
@@ -70,7 +71,7 @@ This approach could reduce the load from the security operators and drastically 
 
 # Setup Steps
 
-## Outside of Dome9 - Easy mode
+## Outside of Dome9 Easy mode
 
 You can deploy this stack via the link below. It'll automatically select the region you were last in. 
 
@@ -85,7 +86,7 @@ From here, the stack will deploy. If there are no errors, go to the 'Outputs' ta
 
 Skip to [In Dome9](#in-dome9)
 
-## Outside of Dome9 - CLI mode
+## Outside of Dome9 CLI mode
 
 ### Download / clone this GitHub project
 ```bash 
