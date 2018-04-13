@@ -48,10 +48,7 @@ Resources:
                - ec2:CreateSecurityGroup # For instance_quarantine
                - ec2:CreateTags # For ec2_tag_instance
                - ec2:DeleteSecurityGroup # For sg_delete
-               - ec2:DetachInternetGateway # For delete IGW
-               - ec2:DeleteInternetGateway # For delete IGW
                - ec2:DescribeSecurityGroups # For instance_quarantine
-               - ec2:DescribeInstances # For delete IGW
                - ec2:ModifyInstanceAttribute # For instance_quarantine
                - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
                - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
@@ -66,14 +63,12 @@ Resources:
                - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                - rds:ModifyDBInstance # For rds_quarantine_instance
-               - s3:CreateBucket # For create_cloudtrail and s3_enable_logging
+               - s3:CreateBucket # For create_cloudtrail
                - s3:DeleteBucket # For s3_delete_bucket
                - s3:DeleteBucketPolicy # For s3_delete_permissions
                - s3:GetBucketAcl # For s3_delete_permissions
                - s3:GetBucketPolicy # For s3_delete_permissions
                - s3:GetObject
-               - s3:HeadBucket # For enable_logging
-               - s3:ListBucket # For enable_logging
                - s3:PutBucketAcl # For s3_delete_permissions
                - s3:PutBucketLogging # For s3_enable_logging
                - s3:PutBucketPolicy # For create_cloudtrail
@@ -81,10 +76,12 @@ Resources:
                - s3:PutObject # For create_cloudtrail
                - sns:Publish # For exporting the logs from CS2 
                - sts:GetCallerIdentity # For checking what account this is running in
+               - sts:AssumeRole # For multi_account
              Resource: '*'
       Environment:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
+          ACCOUNT_MODE: 'single'
       Events:
         d9Findings:
           Type: SNS
