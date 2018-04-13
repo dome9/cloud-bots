@@ -64,6 +64,7 @@ You can deploy this stack via the link below. (Currently this only deploys in us
 
 [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=cloudsupervisor2&templateURL=https://s3-us-west-2.amazonaws.com/dome9cftemplates/cs2_cftemplate.yaml)
 
+**If you want to deploy this via CLI, please see README_ADVANCED.md**
 Click the link and click Next > Next > Next.
 
 
