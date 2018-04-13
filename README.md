@@ -1,14 +1,12 @@
-```
-                                                                                    
-,---.|                  |    ,---.                          o                   ,--.
-|    |    ,---..   .,---|    `---..   .,---.,---.,---..    ,.,---.,---.,---.    ,--'
-|    |    |   ||   ||   |        ||   ||   ||---'|     \  / |`---.|   ||        |   
-`---'`---'`---'`---'`---'    `---'`---'|---'`---'`      `'  ``---'`---'`        `--'
-                                       |                                            
+```   
+     |                  |   |         |         
+,---.|    ,---..   .,---|   |---.,---.|--- ,---.
+|    |    |   ||   ||   |---|   ||   ||    `---.
+`---'`---'`---'`---'`---'   `---'`---'`---'`---'                                                
 ```
 
-# Cloud-Supervisor v2 (CS2)
-Auto remediation actions for AWS.
+# Cloud-Bots
+Auto remediation & automation bots for AWS.
 
 This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine to remediate issues that are uncovered. 
 
@@ -49,7 +47,7 @@ Table of Contents
 
 # Overview
 ## What is this ?
-Cloud-Supervisor 2 is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
+Cloud-Bots is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
 
 ## Why and when would I need it ?
 Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
@@ -61,9 +59,9 @@ This approach could reduce the load from the security operators and drastically 
 
 
 
-- Dome9 will scan the accounts on an ongoing basis and send failing rules to SNS
+- Dome9 (CE) will scan the accounts on an ongoing basis and send failing rules to SNS
 - In the rules, if we want to add remediation, we can add in a "remediation flag" into the compliance section so that the SNS event is tagged with what we want to do. 
-- Each remediation action that is tagged correlates to a file in the actions folder of the remediation function. 
+- Each remediation action that is tagged correlates to a file in the `bots` folder of the remediation function. 
 - Lambda reads the message tags and looks for a tag that matches AUTO: <anything>
 - If any of those AUTO tags match a remediation that we have built out, it'll call that action.
 - All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
@@ -92,12 +90,12 @@ Skip to [In Dome9](#in-dome9)
 
 ### Download / clone this GitHub project
 ```bash 
-git clone git@github.com:Dome9/cloud-supervisor2.git 
+git clone git@github.com:Dome9/cloud-bots.git 
 ```
 
 ### Zip the function
 ```bash
-cd cloud-supervisor2
+cd cloud-bots
 zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
 
@@ -201,8 +199,8 @@ This will be changed in future releases and is being currently worked on.
 ## Outside of Dome9
 ```
 # Clone this GitHub project
-[~]$git clone git@github.com:Dome9/cloud-supervisor2.git 
-Cloning into 'cloud-supervisor2'...
+[~]$git clone git@github.com:Dome9/cloud-bots.git 
+Cloning into 'cloud-bots'...
 remote: Counting objects: 390, done.
 remote: Compressing objects: 100% (52/52), done.
 remote: Total 390 (delta 42), reused 55 (delta 22), pack-reused 315
@@ -211,8 +209,8 @@ Resolving deltas: 100% (247/247), done.
 
 
 # Zip the function
-[~]$cd cloud-supervisor2
-[cloud-supervisor2]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
+[~]$cd cloud-bots
+[cloud-bots]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
   adding: actions/ (stored 0%)
   adding: actions/__init__.py (stored 0%)
   adding: actions/ec2_stop_instance.py (deflated 46%)
@@ -231,7 +229,7 @@ Resolving deltas: 100% (247/247), done.
 
 
 # Deploy the function via CloudFormation template
-[cloud-supervisor2]$aws cloudformation package    \
+[cloud-bots]$aws cloudformation package    \
 > --template-file ./deployment_cft.yaml    \
 > --output-template-file serverless-output.yaml    \
 > --s3-bucket remediationuploadsdome 
@@ -239,10 +237,10 @@ Resolving deltas: 100% (247/247), done.
 Uploading to 87666a89b6af585e6726fd3d2e472a52  9851 / 9851.0  (100.00%)
 Successfully packaged artifacts and wrote output template to file serverless-output.yaml.
 Execute the following command to deploy the packaged template
-aws cloudformation deploy --template-file /Users/ale/cloud-supervisor2/serverless-output.yaml --stack-name <YOUR STACK NAME>
+aws cloudformation deploy --template-file /Users/ale/cloud-bots/serverless-output.yaml --stack-name <YOUR STACK NAME>
 
 
-[cloud-supervisor2]$aws cloudformation deploy \
+[cloud-bots]$aws cloudformation deploy \
 > --template-file ./serverless-output.yaml \
 > --stack-name lambda-remediations \
 > --capabilities CAPABILITY_IAM 
@@ -252,13 +250,13 @@ Successfully created/updated stack - lambda-remediations
 
 
 # Get the outputs from the new stack
-[cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
+[cloud-bots]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
 ARN for the export logs topic   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
 ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
 
 
 # OPTIONAL: Set up a subscriber to the SNS output topic
-[cloud-supervisor2]$aws sns subscribe --topic-arn arn:aws:sns:us-west-2:726853184812:remediationOutput --protocol email --notification-endpoint alex@dome9.com 
+[cloud-bots]$aws sns subscribe --topic-arn arn:aws:sns:us-west-2:726853184812:remediationOutput --protocol email --notification-endpoint alex@dome9.com 
 
 {
     "SubscriptionArn": "pending confirmation"
@@ -293,9 +291,8 @@ ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:7268531848
 
 
 
-# Actions Reference
-
-## All action descriptions have been moved to the action files to ensure that documentation stays up to date
+# Bots Reference
+Please review the `bots` folder. Each bot contains its own documentation
 
 
 # Examples
@@ -380,8 +377,8 @@ JSON - Full Entity
 
 
 
-# Adding new actions
-Any new action that is added just needs to follow the format of the other actions and be put in the action folder. 
+# Creating a new bot
+Any new action (bot) that is added just needs to follow the format of the other actions and be put in the `bots` folder. 
 
 Here is a sample from sg_delete. The rule and entity variables that are passed through come from the source SNS message. Params are only passed through if there are any in the tag (ex: AUTO: ec2_tag_instance owner unknown)
 ```python

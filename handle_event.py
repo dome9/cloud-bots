@@ -62,7 +62,7 @@ def handle_event(message,text_output_array):
             params = arr[2:]
 
             try:
-                action_module = importlib.import_module('actions.' + action, package=None)
+                action_module = importlib.import_module('bots.' + action, package=None)
             except:
                 print("Error: could not find action: " + action)
                 text_output_array.append("Action: %s is not a known action. Skipping.\n" % action)
