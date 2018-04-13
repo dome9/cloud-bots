@@ -7,11 +7,11 @@ Limitations: none
 
 import boto3
 
-## Turn on EC2 detailed monitoring
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     instance = entity['id']
-    ec2 = boto3.client('ec2')
-    result = ec2.monitor_instances(InstanceIds=[instance])
+    ec2_client = boto_session.client('ec2')
+    
+    result = ec2_client.monitor_instances(InstanceIds=[instance])
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:

@@ -10,14 +10,12 @@ from time import sleep
 from botocore.exceptions import ClientError
 
 
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     vpc_id = entity['id']
-    region = entity['region']
-    region = region.replace("_","-")
     igw_id = entity['internetGateways'][0]['externalId']
 
-    ec2_resource = boto3.resource('ec2')    
-    ec2_client = boto3.client('ec2', region_name=region)
+    ec2_resource = boto_session.resource('ec2')    
+    ec2_client = boto_session.client('ec2')
 
     try:
         #Check the region for instances in the VPC that was specified
@@ -48,6 +46,7 @@ def run_action(rule,entity,params):
                             continue
 
         if instances_to_turn_off:
+            print("turning instances off")
             result = ec2_client.stop_instances(InstanceIds=instances_to_turn_off)
 
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -60,10 +59,10 @@ def run_action(rule,entity,params):
         
                 instance = ec2_resource.Instance(instances_to_turn_off[0])
                 while instance.state['Name'] not in 'stopped':
-                    text_output = text_output + "Sleeping while waiting for instances to turn off (usually about 45 seconds)\n"
+                    print("Sleeping while waiting for instances to turn off (usually about 45 seconds)")
                     sleep(5)
                     instance.load()
-                    text_output = text_output + "Instances are fully shut down. Continuing\n"
+                print("Instances are fully shut down. Continuing")
 
         else:
             text_output = text_output + "No instances in this VPC that have public IPs. Trying to remove the IGW next.\n"
@@ -92,11 +91,8 @@ def run_action(rule,entity,params):
         else:
             text_output = text_output + "IGW deleted %s \n" % igw_id
 
+
     except ClientError as e:
-        error = e.response['Error']['Code']
-        if error == 'DependencyViolation':
-             text_output =  "There is an existing public IP in this VPC that needs to be detached. Please check RDS and Redshift and try again.\nCurrently igw_delete only supports EC2\nUnexpected error: %s \n" % e
-        else:
-            text_output = "Unexpected error: %s \n" % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output 

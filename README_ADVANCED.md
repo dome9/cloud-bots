@@ -13,7 +13,7 @@ git clone git@github.com:Dome9/cloud-bots.git
 ### Zip the function
 ```bash
 cd cloud-bots
-zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
+zip -r -X remediation-function.zip bots/ handle_event.py index.py send_events_and_errors.py 
 ```
 
 ### Get the name of a S3 bucket to load the zip into

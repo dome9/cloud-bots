@@ -22,9 +22,9 @@ Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSy
 
 import boto3
 
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     # Create IAM client
-    iam = boto3.client('iam')
+    iam_client = boto_session.client('iam')
 
     if len(params) != 9: #We need to make sure we have the exact amount of values for all of these properties.
         text_output = "Array length is not equal to 9. Are you sure ALL passwort policy properties were set?\n MinimumPasswordLength=int, \nRequireSymbols=True|False, \nRequireNumbers=True|False, \nRequireUppercaseCharacters=True|False, \nRequireLowercaseCharacters=True|False, \nAllowUsersToChangePassword=True|False, \nMaxPasswordAge=int, \nPasswordReusePrevention=int, \nHardExpiry=True|False \n"
@@ -50,7 +50,7 @@ def run_action(rule,entity,params):
         password_config[property_to_update] = value
 
 
-    result = iam.update_account_password_policy(
+    result = iam_client.update_account_password_policy(
         MinimumPasswordLength=password_config["MinimumPasswordLength"],
         RequireSymbols=password_config["RequireSymbols"],
         RequireNumbers=password_config["RequireNumbers"],

@@ -9,12 +9,12 @@ import boto3
 from botocore.exceptions import ClientError
 
 ## Turn on S3 AES-256 encryption
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     bucket_name = entity['id']
-    s3 = boto3.client('s3')
+    s3_client = boto_session.client('s3')
 
     try:
-        result = s3.put_bucket_encryption(
+        result = s3_client.put_bucket_encryption(
             Bucket=bucket_name,
             ServerSideEncryptionConfiguration={
                 'Rules': [

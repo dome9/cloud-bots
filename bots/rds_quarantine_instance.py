@@ -8,15 +8,13 @@ Limitations: Instance needs to be "Available" in order to update. If it's in "ba
 import boto3
 from botocore.exceptions import ClientError
 
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     db_name = entity['name']
-    region = entity['region']
-    region = region.replace("_","-")
     vpc_id = entity['vpc']['id']
 
-    ec2_resource = boto3.resource('ec2', region_name=region)
-    ec2_client = boto3.client('ec2', region_name=region)
-    rds_client = boto3.client('rds', region_name=region)
+    ec2_resource = boto_session.resource('ec2')
+    ec2_client = boto_session.client('ec2')
+    rds_client = boto_session.client('rds')
 
     #Check or create the Quarantine SG
     try:    
@@ -40,9 +38,10 @@ def run_action(rule,entity,params):
             result = ec2_resource.create_security_group(
                     Description='Quarantine Security Group. No ingress or egress rules should be attached.',
                     GroupName='quarantine',
-                    VpcId=vpc_id )
+                    VpcId=vpc_id 
+                    )
             text_output = "Quarantine SG created %s \n" % result.id
-            quarantine_sg_id = result['id']
+            quarantine_sg_id = [result.id]
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
@@ -55,7 +54,7 @@ def run_action(rule,entity,params):
             DBInstanceIdentifier=db_name,
             VpcSecurityGroupIds=quarantine_sg_id,
             ApplyImmediately=True
-        )
+            )
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:

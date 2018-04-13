@@ -7,15 +7,11 @@ Limitations: none
 
 import boto3
 
-### Kill EC2 Instance ###
-def run_action(rule,entity,params):
-    #House keeping - set up variables   
+def run_action(boto_session,rule,entity,params):
     instance = entity['id']
-    region = entity['region']
-    region = region.replace("_","-")
-    
-    ec2 = boto3.client('ec2', region_name=region)
-    result = ec2.terminate_instances(InstanceIds=[instance])
+    ec2_client = boto_session.client('ec2')
+
+    result = ec2_client.terminate_instances(InstanceIds=[instance])
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:

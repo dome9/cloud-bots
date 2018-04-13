@@ -8,20 +8,19 @@ Limitations: none
 import boto3
 from botocore.exceptions import ClientError
 
-### DeleteS3BucketPermissions ###
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     # Create an S3 client
-    s3 = boto3.client('s3')
-    bucket = entity['id']
+    s3_client = boto_session.client('s3')
+    bucket = entity['Id']
 
     ##### Remove Bucket policy #####
     try:
         #sendEvent out the S3 permissions first so we can reference them later
-        bucket_policy = s3.get_bucket_policy(Bucket=bucket)['Policy']
+        bucket_policy = s3_client.get_bucket_policy(Bucket=bucket)['Policy']
         text_output = "Bucket policy that will be deleted: \n " + str(bucket_policy) + "\n"
                 
         #Call S3 to delete the bucket policy for the given bucket
-        result = s3.delete_bucket_policy(Bucket=bucket)
+        result = s3_client.delete_bucket_policy(Bucket=bucket)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
@@ -40,16 +39,16 @@ def run_action(rule,entity,params):
     #### Remove Bucket ACLs #####
     try:
         #list bucket ACLs
-        bucket_acls = s3.get_bucket_acl(Bucket=bucket)['Grants']
+        bucket_acls = s3_client.get_bucket_acl(Bucket=bucket)['Grants']
         
         if len(bucket_acls) == 1:
-            text_output = text_output + "Only the CanonicalUser ACL found. Not removing.\n"
+            text_output = text_output + "Only the CanonicalUser ACL found. Skipping.\n"
             return text_output
 
         text_output = text_output + "ACLs that will be removed: \n " + str(bucket_acls[1:]) + "\n"
 
         # Unset the bucket ACLs
-        result = s3.put_bucket_acl(Bucket=bucket,ACL='private')
+        result = s3_client.put_bucket_acl(Bucket=bucket,ACL='private')
     
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:

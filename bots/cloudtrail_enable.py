@@ -15,11 +15,11 @@ import json
 from botocore.exceptions import ClientError
 
 # Create S3 bucket
-def make_bucket(account_id,bucket_name):
+def make_bucket(boto_session,account_id,bucket_name):
 
     try:
-        s3 = boto3.resource('s3', region_name='us-east-1')
-        result = s3.create_bucket(Bucket=bucket_name)
+        s3_resource = boto_session.resource('s3')
+        result = s3_resource.create_bucket(Bucket=bucket_name)
         text_output = "Bucket %s will be used for storing trails\n" % bucket_name
 
     except ClientError as e:
@@ -29,7 +29,7 @@ def make_bucket(account_id,bucket_name):
 
 
 # Add S3 policy
-def add_bucket_policy(account_id,bucket_name):
+def add_bucket_policy(boto_session,account_id,bucket_name):
     bucket_policy = {
         "Version": "2012-10-17",
         "Statement": [
@@ -53,13 +53,13 @@ def add_bucket_policy(account_id,bucket_name):
 
     try:
         # Create an S3 client
-        s3 = boto3.client('s3')
+        s3_client = boto_session.client('s3')
 
         # Convert the policy to a JSON string
         bucket_policy = json.dumps(bucket_policy)
 
         # Set the new policy on the given bucket
-        result = s3.put_bucket_policy(Bucket=bucket_name, Policy=bucket_policy)
+        result = s3_client.put_bucket_policy(Bucket=bucket_name, Policy=bucket_policy)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
@@ -76,20 +76,20 @@ def add_bucket_policy(account_id,bucket_name):
 
 
 # Create trail
-def create_trail(params,bucket_name): 
-    cloudtrail = boto3.client('cloudtrail')
+def create_trail(boto_session,params,bucket_name): 
+    cloudtrail_client = boto_session.client('cloudtrail')
     # Check params for usable values and if not - go to defaults
     try: # Params[0] should be the traffic type. 
         trailName = params[0]
         text_output = "CloudTrail name will be %s and data will be sent to the S3 bucket: %s \n" % (trailName,bucket_name)
     except:
-        trailName = "allRegionTrail"
+        trailName = allRegionTrail
         text_output = "Trail name not set. Defaulting to allRegionTrail.\n"
         
     try:
-        result = cloudtrail.create_trail(
-            Name=trailName, ### REQUIRED
-            S3BucketName=bucket_name, ### REQUIRED
+        result = cloudtrail_client.create_trail(
+            Name=trailName,
+            S3BucketName=bucket_name, 
             S3KeyPrefix = '',
             IncludeGlobalServiceEvents=True, 
             IsMultiRegionTrail=True, 
@@ -103,7 +103,8 @@ def create_trail(params,bucket_name):
             text_output = text_output +  "CloudTrail created successfully. Enabling logging next.\n"
             try:
                 trail_arn = result['TrailARN']
-                response = cloudtrail.start_logging(Name=trail_arn)
+                response = cloudtrail_client.start_logging(Name=trail_arn)
+                
                 responseCode = result['ResponseMetadata']['HTTPStatusCode']
                 if responseCode >= 400:
                     text_output = text_output +  "Unexpected error: %s \n" % str(result)
@@ -119,14 +120,14 @@ def create_trail(params,bucket_name):
     return text_output
 
 
-def run_action(rule,entity,params): 
+def run_action(boto_session,rule,entity,params): 
     account_id = entity['accountNumber']
     bucket_name = "acct%scloudtraillogs" % account_id
 
     try:
-        text_output = make_bucket(account_id,bucket_name) 
-        text_output = text_output + add_bucket_policy(account_id,bucket_name) 
-        text_output = text_output + create_trail(params,bucket_name)
+        text_output = make_bucket(boto_session,account_id,bucket_name) 
+        text_output = text_output + add_bucket_policy(boto_session,account_id,bucket_name) 
+        text_output = text_output + create_trail(boto_session,params,bucket_name)
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e

@@ -3,12 +3,12 @@ import boto3
 ### If an instance is missing a specific tag, try to pull it from the VPC. 
 # Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
 
-def run_action(rule,entity, params):
+def run_action(boto_session,rule,entity, params):
     instance = entity['id']
-    region = entity['region']
-    region = region.replace("_","-")
     vpc_tags = entity['vpc']['tags']
     vpc_id = entity['vpc']['id']
+
+    ec2_client = boto_session.client('ec2')
 
     try:
         key = params[0]
@@ -25,8 +25,7 @@ def run_action(rule,entity, params):
         vpc_value = tag['value']
 
         if key == vpc_key:
-            ec2 = boto3.client('ec2', region_name=region)
-            result = ec2.create_tags(
+            result = ec2_client.create_tags(
                 Resources=[instance],
                 Tags=[
                     {

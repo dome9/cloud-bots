@@ -7,15 +7,12 @@ Limitations: This will fail if there is something still attached to the SG.
 
 import boto3
 
-### DeleteSecurityGroup ###
-def run_action(rule,entity,params):
+def run_action(boto_session,rule,entity,params):
     text_output = str(entity)
-    region = entity['region']
-    region = region.replace("_","-")
     sg_id = entity['id']
     
-    ec2 = boto3.resource('ec2', region_name=region)
-    result = ec2.SecurityGroup(sg_id).delete()
+    ec2_resource = boto_session.resource('ec2')
+    result = ec2_resource.SecurityGroup(sg_id).delete()
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
