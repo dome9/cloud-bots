@@ -139,7 +139,7 @@ Role creation needs to be done via something other than CloudFormation because C
 #### Update trust_policy.json with the account ID where the main function will live
 
 #### There is a small bash script in this directory that you can run (create_role.sh) to create these roles. 
-Usage: ./create_role.sh <aws profile>
+Usage: ./create_role.sh (aws profile)
 
 
 #### Manual Setup:
