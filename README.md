@@ -55,7 +55,7 @@ For some organizations that is enough. However, at a certain scale and cloud mat
 This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
 ## How does it work ?
-![Data Flow](./pictures/data-flow.png?raw=true "Single account data flow")
+![Data Flow](./docs/pictures/data-flow.png?raw=true "Single account data flow")
 
 
 
@@ -266,24 +266,24 @@ ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:7268531848
 ## In Dome9
 
 - Create a bundle that you want to use for auto remediation. 
-![Sample Bundle](./pictures/sample_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/sample_bundle.png?raw=true "Title")
 
 - Edit the bundle (Edit JSON). 
-![Sample Bundle](./pictures/edit_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_bundle.png?raw=true "Title")
 
 - Paste in the text from sample_bundle.json. 
-![Sample Bundle](./pictures/edit_json.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_json.png?raw=true "Title")
 
 - For any other rules that you want to create and add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
-![Rule Tagging](./pictures/tagging_a_rule.png?raw=true "Title")
+![Rule Tagging](./docs/pictures/tagging_a_rule.png?raw=true "Title")
 
 - Test this compliance bundle. 
-![Sample Report](./pictures/sample_report.png?raw=true "Title")
-![Sample Results](./pictures/sample_findings.png?raw=true "Title")
+![Sample Report](./docs/pictures/sample_report.png?raw=true "Title")
+![Sample Results](./docs/pictures/sample_findings.png?raw=true "Title")
 
 - Set the Dome9 compliance bundle to run via continuous compliance. 
-![CC Setup1](./pictures/cc_setup1.png?raw=true "Title")
-![CC Setup2](./pictures/cc_setup2.png?raw=true "Title")
+![CC Setup1](./docs/pictures/cc_setup1.png?raw=true "Title")
+![CC Setup2](./docs/pictures/cc_setup2.png?raw=true "Title")
 
 
 
