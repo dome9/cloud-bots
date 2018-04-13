@@ -7,12 +7,12 @@
 
 ### Clone this GitHub project
 ```bash 
-git clone git@github.com:Dome9/cloud-supervisor2.git 
+git clone git@github.com:Dome9/cloud-bots.git 
 ```
 
 ### Zip the function
 ```bash
-cd cloud-supervisor2
+cd cloud-bots
 zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
 ```
 
@@ -30,19 +30,19 @@ For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip 
 ```bash
 aws cloudformation package    \
 --template-file ./deployment_cft.yaml    \
---output-template-file serverless-output.yaml    \
+--output-template-file cloudbots_cftemplate.yaml    \
 --s3-bucket <YOUR_BUCKET_NAME>
 
 aws cloudformation deploy \
---template-file ./serverless-output.yaml \
---stack-name lambda-remediations \
+--template-file ./cloudbots_cftemplate.yaml \
+--stack-name dome9CloudBots \
 --capabilities CAPABILITY_IAM
 ```
 
 ### Get the outputs from the new stack
 ```bash
 aws cloudformation describe-stacks \
---stack-name lambda-remediations \
+--stack-name dome9CloudBots \
 --query 'Stacks[0].Outputs' \
 --output text
 ```
