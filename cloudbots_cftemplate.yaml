@@ -37,7 +37,7 @@ Resources:
     Type: AWS::SNS::Topic
   RemediationFunction:
     Properties:
-      CodeUri: s3://dome9cftemplates/b25996ca2d4404cbe3d95967d2445211
+      CodeUri: s3://dome9cftemplatescacentral1/89cb29fe38d36202f789f9a61abc884f
       Description: Auto-remediation actions from Dome9 events
       Environment:
         Variables:
