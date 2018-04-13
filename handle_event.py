@@ -94,11 +94,11 @@ def handle_event(message,text_output_array):
 
                         try:
                             credentials_for_event = globals()['all_session_credentials'][event_account_id]
-                            text_output_array.append("Found existing credentials to use from still warm lambda functions. Skipping another STS assume role\n")        
+                            #text_output_array.append("Found existing credentials to use from still warm lambda functions. Skipping another STS assume role\n")        
 
                         except (NameError,KeyError):
                             #If we can't find the credentials, try to generate new ones
-                            text_output_array.append("Session credentials weren't found cached in the function. Trying to generate new ones.\n")
+                            #text_output_array.append("Session credentials weren't found cached in the function. Trying to generate new ones.\n")
 
                             global all_session_credentials
                             all_session_credentials = {}
