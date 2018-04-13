@@ -220,3 +220,24 @@ This will be changed in future releases and is being currently worked on.
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
+
+
+
+| Region        | Button        | 
+| ------------- |:-------------:| 
+|us-east-1|test|
+|us-east-2|test|
+|us-west-1|test|
+|us-west-2|test|
+|ca-central-1|test|
+|eu-central-1|test|
+|eu-west-1|test|
+|eu-west-2|test|
+|eu-west-3|test|
+|ap-northeast-1|test|
+|ap-northeast-2|test|
+|ap-northeast-3|test|
+|ap-southeast-1|test|
+|ap-southeast-2|test|
+|ap-south-1|test|
+|sa-east-1|test|
