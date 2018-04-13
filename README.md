@@ -39,12 +39,12 @@ This approach could reduce the load from the security operators and drastically 
 ## How does it work ?
 
 ### Single account mode:
-![Data Flow](./dos/pictures/data-flow.png?raw=true "Single account mode")
+![Data Flow](./docs/pictures/data-flow.png?raw=true "Single account mode")
 
 
 
 ### Multi account mode:
-![Data Flow](./dos/pictures/cs2_multi_acct_workflow.jpg?raw=true "Multi account mode")
+![Data Flow](./docs/pictures/cs2_multi_acct_workflow.jpg?raw=true "Multi account mode")
 
 
 
@@ -184,24 +184,24 @@ This will be changed in future releases and is being currently worked on.
 ## In Dome9
 
 - Create a bundle that you want to use for auto remediation. 
-![Sample Bundle](./dos/pictures/sample_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/sample_bundle.png?raw=true "Title")
 
 - Edit the bundle (Edit JSON). 
-![Sample Bundle](./dos/pictures/edit_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_bundle.png?raw=true "Title")
 
 - Paste in the text from sample_bundle.json. 
-![Sample Bundle](./dos/pictures/edit_json.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_json.png?raw=true "Title")
 
 - For any other rules that you want to create and add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
-![Rule Tagging](./dos/pictures/tagging_a_rule.png?raw=true "Title")
+![Rule Tagging](./docs/pictures/tagging_a_rule.png?raw=true "Title")
 
 - Test this compliance bundle. 
-![Sample Report](./dos/pictures/sample_report.png?raw=true "Title")
-![Sample Results](./dos/pictures/sample_findings.png?raw=true "Title")
+![Sample Report](./docs/pictures/sample_report.png?raw=true "Title")
+![Sample Results](./docs/pictures/sample_findings.png?raw=true "Title")
 
 - Set the Dome9 compliance bundle to run via continuous compliance. 
-![CC Setup1](./dos/pictures/cc_setup1.png?raw=true "Title")
-![CC Setup2](./dos/pictures/cc_setup2.png?raw=true "Title")
+![CC Setup1](./docs/pictures/cc_setup1.png?raw=true "Title")
+![CC Setup2](./docs/pictures/cc_setup2.png?raw=true "Title")
 
 
 
