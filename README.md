@@ -96,7 +96,7 @@ git clone git@github.com:Dome9/cloud-bots.git
 ### Zip the function
 ```bash
 cd cloud-bots
-zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
+zip -r -X remediation-function.zip bots/ handle_event.py index.py send_events_and_errors.py 
 ```
 
 ### Get the name of a S3 bucket to load the zip into
@@ -210,19 +210,19 @@ Resolving deltas: 100% (247/247), done.
 
 # Zip the function
 [~]$cd cloud-bots
-[cloud-bots]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
-  adding: actions/ (stored 0%)
-  adding: actions/__init__.py (stored 0%)
-  adding: actions/ec2_stop_instance.py (deflated 46%)
-  adding: actions/ec2_tag_instance.py (deflated 49%)
-  adding: actions/ec2_terminate_instance.py (deflated 46%)
-  adding: actions/iam_quarantine_role.py (deflated 67%)
-  adding: actions/iam_quarantine_user.py (deflated 67%)
-  adding: actions/iam_turn_on_password_policy.py (deflated 66%)
-  adding: actions/s3_delete_bucket.py (deflated 42%)
-  adding: actions/s3_delete_permissions.py (deflated 68%)
-  adding: actions/sg_delete.py (deflated 47%)
-  adding: actions/sg_rules_delete.py (deflated 71%)
+[cloud-bots]$zip -r -X remediation-function.zip bots/ handle_event.py index.py send_events_and_errors.py 
+  adding: bots/ (stored 0%)
+  adding: bots/__init__.py (stored 0%)
+  adding: bots/ec2_stop_instance.py (deflated 46%)
+  adding: bots/ec2_tag_instance.py (deflated 49%)
+  adding: bots/ec2_terminate_instance.py (deflated 46%)
+  adding: bots/iam_quarantine_role.py (deflated 67%)
+  adding: bots/iam_quarantine_user.py (deflated 67%)
+  adding: bots/iam_turn_on_password_policy.py (deflated 66%)
+  adding: bots/s3_delete_bucket.py (deflated 42%)
+  adding: bots/s3_delete_permissions.py (deflated 68%)
+  adding: bots/sg_delete.py (deflated 47%)
+  adding: bots/sg_rules_delete.py (deflated 71%)
   adding: handle_event.py (deflated 64%)
   adding: index.py (deflated 52%)
   adding: send_events_and_errors.py (deflated 44%)
