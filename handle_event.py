@@ -139,7 +139,7 @@ def handle_event(message,text_output_array):
                     boto_session = boto3.Session(region_name=region)                     
 
                 ## Run the bot
-                bot_msg = bot_module.run_bot(boto_session,message['rule'],message['entity'],params)
+                bot_msg = bot_module.run_action(boto_session,message['rule'],message['entity'],params)
 
             except Exception as e: 
                 bot_msg = "Error while executing function '%s'.\n Error: %s \n" % (bot,e)
