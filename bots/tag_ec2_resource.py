@@ -28,9 +28,9 @@ import re
 def run_action(boto_session,rule,entity,params):
     instance = entity['id']
 
-    if len(params) == 2: #Standard key value formatting
-        key = params[0]
-        value = params[1]
+    if len(params) == 2: #Standard key value formatting and strip quotes if they're passed in
+        key = params[0].replace('"', '')
+        value = params[1].replace('"', '')
 
     else:
         #Bring the params together to parse and look for quotes
