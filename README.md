@@ -26,7 +26,7 @@ Table of Contents
   * [In Dome9](#in-dome9)
 * [Sample Setup Example](#sample-setup-example)
 
-
+## For a condensed quickstart doc, please see README_QUICKSTART.md
 ## For more technical information, please see README_ADVANCED.md
 
 # Overview
