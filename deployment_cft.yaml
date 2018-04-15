@@ -1,12 +1,29 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  EmailAddress:
+    Description: OPTIONAL - Email address to send output logs to
+    Type: String
+    Default: ''
+  DeploymentMode:
+    Description: Deployment Mode - can be single or multi
+    Type: String
+    Default: single
+    AllowedValues: 
+      - single
+      - multi
+
+Conditions:
+  CreateSubscriber: !Not [!Equals [!Ref EmailAddress, ""]]
+
 Resources:
-#Need to upload zip to S3 first 
   InputTopic:
     Type: "AWS::SNS::Topic"
     Properties: 
       DisplayName: 'd9-findings'
       TopicName: 'd9-findings'
+
   InputTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
@@ -28,6 +45,15 @@ Resources:
     Properties: 
       DisplayName: 'remediationOutput'
       TopicName: 'remediationOutput'
+
+  OutputTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: CreateSubscriber
+    Properties:
+      Endpoint: !Ref EmailAddress
+      Protocol: email
+      TopicArn: !Ref OutputTopic
+
   RemediationFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -81,12 +107,13 @@ Resources:
       Environment:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
-          ACCOUNT_MODE: 'single'
+          ACCOUNT_MODE: !Ref DeploymentMode
       Events:
         d9Findings:
           Type: SNS
           Properties:
             Topic: !Ref InputTopic
+
 Outputs:
   InputTopicARN:
     Description: 'ARN that Dome9 sends events to'
