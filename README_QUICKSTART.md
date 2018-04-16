@@ -39,8 +39,13 @@ You can deploy this stack via the link below. Pick the region that you would lik
 |sa-east-1|[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate.yaml)|
 
 
-Click the link and click Next > Next > Next.
+Click the link and click Next 
 
+In the parameters section either choose if you want to deploy in single or multi mode
+
+If you would like to set up an SNS subscriber for the output topic (recommended) then put an email in the EmailAddress field. 
+
+Click Next > Next
 
 On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names (This is for the role that is created for Lambda to perform the bots).
 
@@ -49,25 +54,8 @@ Next, click on the 'Create Change Set' button at the bottom of the page. Then cl
 From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
 
 
-### Set up a subscriber to the SNS output topic
-To receive the output logs from cloud-bots, we need to set up a subscriber on the remediationOutput topic
-
-- Go to SNS > Topics
-- Click on the ARN for the remediationOutput topic
-- Click 'Crete Subscription'
-- Set the protocol to 'Email'
-- Put your email address in as the endpoint
-
-You will recieve an email that you need to confirm to start recieving email notifications
-
-
-
-
-## If running in multi-account mode
-
-#### In the dome9AutoRemediations lambda function:
-- Update the ACCOUNT_MODE environment variable from 'single' to 'multi'
-- By default, the cross account roles will all need to be named "dome9-auto-remediations". If you want a different name, add a new variable called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role. 
+#### If you're running in multi-account mode
+By default, the cross account roles will all need to be named "dome9-auto-remediations". If you want a different name, add a new variable to the dome9AutoRemediations lambda function called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role.
 
 
 #### Set up cross account roles for EACH account that will be remediated

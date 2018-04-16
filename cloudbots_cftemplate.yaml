@@ -1,4 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  CreateSubscriber:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: EmailAddress
+      - ''
 Outputs:
   InputTopicARN:
     Description: ARN that Dome9 sends events to
@@ -8,6 +14,18 @@ Outputs:
     Description: ARN for the export logs topic
     Value:
       Ref: OutputTopic
+Parameters:
+  DeploymentMode:
+    AllowedValues:
+    - single
+    - multi
+    Default: single
+    Description: Deployment Mode - can be single or multi
+    Type: String
+  EmailAddress:
+    Default: ''
+    Description: OPTIONAL - Email address to send output logs to
+    Type: String
 Resources:
   InputTopic:
     Properties:
@@ -35,13 +53,23 @@ Resources:
       DisplayName: remediationOutput
       TopicName: remediationOutput
     Type: AWS::SNS::Topic
+  OutputTopicSubscription:
+    Condition: CreateSubscriber
+    Properties:
+      Endpoint:
+        Ref: EmailAddress
+      Protocol: email
+      TopicArn:
+        Ref: OutputTopic
+    Type: AWS::SNS::Subscription
   RemediationFunction:
     Properties:
-      CodeUri: s3://dome9cftemplatescacentral1/89cb29fe38d36202f789f9a61abc884f
+      CodeUri: s3://dome9cftemplatessaeast1/5727fc5001770ff91fb0b5a40665fcec
       Description: Auto-remediation actions from Dome9 events
       Environment:
         Variables:
-          ACCOUNT_MODE: single
+          ACCOUNT_MODE:
+            Ref: DeploymentMode
           SNS_TOPIC_ARN:
             Ref: OutputTopic
       Events:
