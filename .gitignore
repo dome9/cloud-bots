@@ -14,3 +14,4 @@ lambda_test_event.json
 /cross_account_role_configs/create_role.sh
 cs2_cftemplate.yaml
 gp.sh
+cloudbots_sam.yaml
