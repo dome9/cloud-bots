@@ -17,7 +17,7 @@ def handle_event(message,text_output_array):
     region = message['entity']['region']
     
     # Some events come through with 'null' as the region. If so, default to us-east-1
-    if region != None:
+    if region != "":
         region = region.replace("_","-")
     else:
         region = 'us-east-1'
