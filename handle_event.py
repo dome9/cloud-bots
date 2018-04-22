@@ -118,8 +118,10 @@ def handle_event(message,text_output_array):
                                 error = e.response['Error']['Code']
                                 print(e)
                                 if error == 'AccessDenied':
-                                    text_output_array.append("Tried and failed to assume a role in the target account. Please verify that the cross account role is createad. \n")
-                                    continue                          
+                                    text_output_array.append("Tried and failed to assume a role in the target account. Please verify that the cross account role is createad. \n")    
+                                else:
+                                    text_output = "Unexpected error: %s \n" % e
+                                continue                     
 
                         boto_session = boto3.Session(
                             region_name=region,         
