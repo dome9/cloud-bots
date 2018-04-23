@@ -47,7 +47,7 @@ def handle_event(message,text_output_array):
         #Check the tag to see if we have AUTO: in it
         pattern = re.compile("^AUTO:\s.+")
         if pattern.match(tag):
-            text_output_array.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation Bot: %s \n" % (rule_name, entity_id, entity_name, tag))
+            text_output_array.append("Rule violation found: %s \nID: %s | Name: %s \nRemediation bot: %s \n" % (rule_name, entity_id, entity_name, tag))
 
             # Pull out only the bot verb to run as a function
             # The format is AUTO: bot_name param1 param2
