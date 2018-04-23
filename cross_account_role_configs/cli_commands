@@ -3,12 +3,12 @@
 # Update trust_policy.json with the account ID where the main function will live
 
 aws iam create-role \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --assume-role-policy-document file://trust_policy.json \
 --profile <aws_account_profile>                   
                   
 aws iam create-policy \
---policy-name CloudSupervisorRemediations \
+--policy-name Dome9CloudBots \
 --policy-document file://remediation_policy.json \
 --query 'Policy.Arn' \
 --profile <aws_account_profile>                   
@@ -16,7 +16,7 @@ aws iam create-policy \
 #take ARN from this for the next command           
 
 aws iam attach-role-policy \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --policy-arn <ARN FROM LAST COMMAND> \
 --profile <aws_account_profile>                   
               

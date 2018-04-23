@@ -64,7 +64,7 @@ Resources:
     Type: AWS::SNS::Subscription
   RemediationFunction:
     Properties:
-      CodeUri: s3://dome9cftemplatessaeast1/54ff4c491a0c996568fa8e12d159be5c
+      CodeUri: s3://dome9cftemplatesuswest2/9c4a999159e8d43c1f9f04a7763d11e1
       Description: Auto-remediation actions from Dome9 events
       Environment:
         Variables:
@@ -78,7 +78,7 @@ Resources:
             Topic:
               Ref: InputTopic
           Type: SNS
-      FunctionName: dome9AutoRemediations
+      FunctionName: dome9CloudBots
       Handler: index.lambda_handler
       Policies:
       - Statement:
@@ -89,7 +89,9 @@ Resources:
           - ec2:CreateSecurityGroup
           - ec2:CreateTags
           - ec2:DeleteSecurityGroup
+          - ec2:DetachInternetGateway
           - ec2:DescribeSecurityGroups
+          - ec2:DescribeInstances
           - ec2:ModifyInstanceAttribute
           - ec2:MonitorInstances
           - ec2:RevokeSecurityGroupEgress
@@ -113,6 +115,7 @@ Resources:
           - s3:PutBucketAcl
           - s3:PutBucketLogging
           - s3:PutBucketPolicy
+          - s3:PutBucketVersioning
           - s3:PutEncryptionConfiguration
           - s3:PutObject
           - sns:Publish
