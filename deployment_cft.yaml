@@ -98,6 +98,7 @@ Resources:
                - s3:PutBucketAcl # For s3_delete_permissions
                - s3:PutBucketLogging # For s3_enable_logging
                - s3:PutBucketPolicy # For create_cloudtrail
+               - s3:PutBucketVersioning # For s3_enable_versioning
                - s3:PutEncryptionConfiguration # For s3_enable_encryption
                - s3:PutObject # For create_cloudtrail
                - sns:Publish # For exporting the logs from CS2 

@@ -35,6 +35,7 @@
                 "s3:PutBucketAcl",
                 "s3:PutBucketLogging",
                 "s3:PutBucketPolicy",
+                "s3:PutBucketVersioning",
                 "s3:PutEncryptionConfiguration",
                 "s3:PutObject",
                 "sns:Publish",
