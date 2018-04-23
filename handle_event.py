@@ -17,11 +17,11 @@ def handle_event(message,text_output_array):
     region = message['entity']['region']
     
     # Some events come through with 'null' as the region. If so, default to us-east-1
-    if region != "":
-        region = region.replace("_","-")
+    if region == None or region == "":
+        region = 'us-east-1'        
     else:
-        region = 'us-east-1'
-
+        region = region.replace("_","-")
+    
     #Make sure that the event that's being referenced is for the account this function is running in.
     event_account_id = message['account']['id']
 
