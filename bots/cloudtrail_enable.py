@@ -83,7 +83,7 @@ def create_trail(boto_session,params,bucket_name):
         trailName = params[0]
         text_output = "CloudTrail name will be %s and data will be sent to the S3 bucket: %s \n" % (trailName,bucket_name)
     except:
-        trailName = allRegionTrail
+        trailName = "allRegionTrail"
         text_output = "Trail name not set. Defaulting to allRegionTrail.\n"
         
     try:
