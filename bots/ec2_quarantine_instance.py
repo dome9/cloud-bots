@@ -31,7 +31,7 @@ def run_action(boto_session,rule,entity,params):
                 ]
             )
         if result['SecurityGroups']: 
-            quarantine_sg_id = [result['SecurityGroups'][0]['GroupId']]
+            quarantine_sg_id = result['SecurityGroups'][0]['GroupId']
             text_output = "Existing quarantine sg_id: %s \n" % quarantine_sg_id
 
         else:
