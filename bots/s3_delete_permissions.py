@@ -11,7 +11,7 @@ from botocore.exceptions import ClientError
 def run_action(boto_session,rule,entity,params):
     # Create an S3 client
     s3_client = boto_session.client('s3')
-    bucket = entity['Id']
+    bucket = entity['id']
 
     ##### Remove Bucket policy #####
     try:
