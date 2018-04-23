@@ -3,6 +3,7 @@
 What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
 Usage: AUTO: rds_quarantine_instance
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
+    Might not work with Aurora since it's in a cluster
 '''
 
 import boto3
@@ -40,8 +41,8 @@ def run_action(boto_session,rule,entity,params):
                     GroupName='quarantine',
                     VpcId=vpc_id 
                     )
-            text_output = "Quarantine SG created %s \n" % result.id
-            quarantine_sg_id = [result.id]
+            text_output = "Quarantine SG created %s \n" % result['id']
+            quarantine_sg_id = [result['id']]
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
