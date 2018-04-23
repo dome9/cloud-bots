@@ -5,7 +5,7 @@
 PROFILE=$1
 
 
-if ! grep -Fxq CCOUNT_ID_WHERE_FUNCTION_IS_RUNNING trust_policy.json 
+if grep -Fxq CCOUNT_ID_WHERE_FUNCTION_IS_RUNNING trust_policy.json 
 then
     echo "Please Update trust_policy.json with the account ID where the main function will live"
     exit
@@ -13,12 +13,12 @@ fi
 
 
 aws iam create-role \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --assume-role-policy-document file://trust_policy.json \
 --profile $PROFILE                   
                   
 ARN=`aws iam create-policy \
---policy-name CloudSupervisorRemediations \
+--policy-name Dome9CloudBots \
 --policy-document file://remediation_policy.json \
 --query 'Policy.Arn' \
 --profile $PROFILE  \
@@ -26,7 +26,7 @@ ARN=`aws iam create-policy \
 
 
 aws iam attach-role-policy \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --policy-arn $ARN \
 --profile $PROFILE                   
               
