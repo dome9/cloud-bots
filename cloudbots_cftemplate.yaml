@@ -64,7 +64,7 @@ Resources:
     Type: AWS::SNS::Subscription
   RemediationFunction:
     Properties:
-      CodeUri: s3://dome9cftemplatessaeast1/5727fc5001770ff91fb0b5a40665fcec
+      CodeUri: s3://dome9cftemplatessaeast1/54ff4c491a0c996568fa8e12d159be5c
       Description: Auto-remediation actions from Dome9 events
       Environment:
         Variables:

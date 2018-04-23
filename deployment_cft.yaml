@@ -57,7 +57,7 @@ Resources:
   RemediationFunction:
     Type: "AWS::Serverless::Function"
     Properties:
-      FunctionName: dome9AutoRemediations
+      FunctionName: dome9CloudBots
       Description: 'Auto-remediation actions from Dome9 events'
       CodeUri: ./remediation-function.zip
       Runtime: python3.6
