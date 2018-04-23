@@ -9,7 +9,7 @@ import boto3
 
 ### DeleteS3Bucket ###
 def run_action(boto_session,rule,entity,params):
-    bucket = entity['Id']
+    bucket = entity['id']
     
     s3_client = boto_session.client('s3')
     result = s3_client.delete_bucket(Bucket=bucket)
