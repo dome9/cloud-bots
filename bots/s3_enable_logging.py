@@ -16,8 +16,6 @@ from botocore.exceptions import ClientError
 ## Turn on S3 bucket logging 
 def run_action(rule,entity,params):
     bucket_name = entity['id']
-    region = entity['region']
-    region = region.replace("_","-")
     accountNumber = entity['accountNumber']
     text_output = ""
     
