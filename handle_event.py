@@ -88,7 +88,7 @@ def handle_event(message,text_output_array):
                         if cross_account_role_name: # This allows users to set their own role name if they have a different naming convention they have to follow
                             role_arn = "arn:aws:iam::" + event_account_id + ":role/" + cross_account_role_name
                         else:
-                            role_arn = "arn:aws:iam::" + event_account_id + ":role/dome9-auto-remediations"
+                            role_arn = "arn:aws:iam::" + event_account_id + ":role/Dome9CloudBots"
 
                         text_output_array.append("Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account %s .\n" % event_account_id) 
 
@@ -109,7 +109,7 @@ def handle_event(message,text_output_array):
                             try:
                                 assumedRoleObject = sts_client.assume_role(
                                     RoleArn=role_arn,
-                                    RoleSessionName="CloudSupervisorAutoRemedation"
+                                    RoleSessionName="CloudBotsAutoRemedation"
                                     )
                                 # From the response that contains the assumed role, get the temporary credentials that can be used to make subsequent API calls
                                 credentials_for_event = all_session_credentials[event_account_id] = assumedRoleObject['Credentials']
