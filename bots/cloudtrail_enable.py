@@ -2,7 +2,7 @@
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
 Pre-set Settings:  
-Bucket name: acct<account_id>cloudtraillogs
+Bucket name: acct<account_id>cloudtraillogs - will be sent to us-east-1
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
@@ -18,8 +18,9 @@ from botocore.exceptions import ClientError
 def make_bucket(boto_session,account_id,bucket_name):
 
     try:
-        s3_resource = boto_session.resource('s3')
-        result = s3_resource.create_bucket(Bucket=bucket_name)
+        boto_session.Session(region="us-east-1")
+        s3_client = boto_session.client('s3')
+        result = s3_client.create_bucket(Bucket=bucket_name)
         text_output = "Bucket %s will be used for storing trails\n" % bucket_name
 
     except ClientError as e:

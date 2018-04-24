@@ -32,7 +32,7 @@ def run_action(boto_session,rule,entity,params):
                 ]
             )
         if result['SecurityGroups']: 
-            quarantine_sg_id = [result['SecurityGroups'][0]['GroupId']]
+            quarantine_sg_id = result['SecurityGroups'][0]['GroupId']
             text_output = "Existing quarantine sg_id: %s \n" % quarantine_sg_id
 
         else:
@@ -41,6 +41,12 @@ def run_action(boto_session,rule,entity,params):
                     GroupName='quarantine',
                     VpcId=vpc_id 
                     )
+
+            #When a SG is created, AWS automatically adds in an outbound rule we need to delete
+            sg = ec2_resource.SecurityGroup(result['id'])
+            delete_outbound_result = sg.revoke_egress(GroupId=result['id'],IpPermissions=[{'IpProtocol':'-1','IpRanges': [{'CidrIp':'0.0.0.0/0'}]}])
+
+
             text_output = "Quarantine SG created %s \n" % result['id']
             quarantine_sg_id = [result['id']]
         
@@ -53,7 +59,7 @@ def run_action(boto_session,rule,entity,params):
     try:
         result = rds_client.modify_db_instance(
             DBInstanceIdentifier=db_name,
-            VpcSecurityGroupIds=quarantine_sg_id,
+            VpcSecurityGroupIds=[quarantine_sg_id],
             ApplyImmediately=True
             )
 
