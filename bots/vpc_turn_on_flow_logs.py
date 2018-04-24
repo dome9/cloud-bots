@@ -19,6 +19,7 @@ def create_log_delivery_policy(boto_session):
     # Create IAM client
     iam_client = boto_session.client('iam')
 
+    print("Creating log delivery policy")
     try:
         # Create a policy
         deny_policy = {
@@ -58,7 +59,7 @@ def create_log_delivery_policy(boto_session):
 def check_for_log_delivery_policy(boto_session,policy_arn):
     # Create IAM client
     iam_client = boto_session.client('iam')
-
+    print("Checking for log delivery policy")
     try:
         #Check to see if the deny policy exists in the account currently
         get_policy_response = iam_client.get_policy(PolicyArn=policy_arn)
@@ -80,6 +81,7 @@ def check_for_log_delivery_policy(boto_session,policy_arn):
 # Try to create the role
 def create_role(boto_session,policy_arn):
     iam_client = boto_session.client('iam')
+    print("Creating role")
 
     trust_policy = {
       "Version": "2012-10-17",
@@ -118,7 +120,8 @@ def create_role(boto_session,policy_arn):
 def add_policy_to_role(boto_session,policy_arn):        
     # Create IAM client
     iam_client = boto_session.client('iam')
-    
+    print("adding policy to new role")
+
     try:
         attach_policy_response = iam_client.attach_role_policy(
             RoleName="vpcFlowLogDelivery",
@@ -131,9 +134,10 @@ def add_policy_to_role(boto_session,policy_arn):
 
     return text_output
 
-def create_logs(boto_session,role_id,vpc_id,traffic_type.region):
+def create_logs(boto_session,role_id,vpc_id,traffic_type):
     ec2_client = boto_session.client('ec2')
 
+    print("creating vpc flow loggging")
     #Resource IDs need to be in a list - not string
     vpc_ids = []
     vpc_ids.append(vpc_id)
@@ -169,6 +173,7 @@ def run_action(boto_session,rule,entity,params):
     # Setup variables
     vpc_id = entity['id']
     account_id = entity['accountNumber']
+
     policy_arn = "arn:aws:iam::" + account_id + ":policy/vpcFlowLogDelivery"
     role_id = "arn:aws:iam::" + account_id + ":role/vpcFlowLogDelivery"
 
@@ -176,19 +181,20 @@ def run_action(boto_session,rule,entity,params):
     try: # Params[0] should be the traffic type. 
         traffic_type = params[0].upper()
         if traffic_type not in ('ALL', 'ACCEPT', 'REJECT'):
-            traffic_type = "ALL"
             text_output = "Traffic_type is set to %s and the only accepted values are ALL, ACCEPT, REJECT. Defaulting to ALL\n." % traffic_type
+            traffic_type = "ALL"
         else:
             text_output = "%s traffic will be logged. Starting log creation\n" % traffic_type
 
     except: #If there's no params passed at all, we default to ALL
+        text_output = "No params passed. Defaulting to logging ALL traffic\n"
         traffic_type = "ALL" ## Set to all if not specified
 
     try:
         text_output = text_output + check_for_log_delivery_policy(boto_session,policy_arn) # Check for the policy to deliver logs from VPC to CloudWatch
         text_output = text_output + create_role(boto_session,policy_arn) # Check for role / create it if it doesn't exist
         text_output = text_output + add_policy_to_role(boto_session,policy_arn)
-        text_output = text_output + create_logs(boto_session,role_id,vpc_id,traffic_type,region) # Create the flow logs
+        text_output = text_output + create_logs(boto_session,role_id,vpc_id,traffic_type) # Create the flow logs
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
