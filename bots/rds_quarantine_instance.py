@@ -36,19 +36,19 @@ def run_action(boto_session,rule,entity,params):
             text_output = "Existing quarantine sg_id: %s \n" % quarantine_sg_id
 
         else:
-            result = ec2_resource.create_security_group(
+            result = ec2_client.create_security_group(
                     Description='Quarantine Security Group. No ingress or egress rules should be attached.',
                     GroupName='quarantine',
                     VpcId=vpc_id 
                     )
 
             #When a SG is created, AWS automatically adds in an outbound rule we need to delete
-            sg = ec2_resource.SecurityGroup(result['id'])
-            delete_outbound_result = sg.revoke_egress(GroupId=result['id'],IpPermissions=[{'IpProtocol':'-1','IpRanges': [{'CidrIp':'0.0.0.0/0'}]}])
+            security_group = ec2_resource.SecurityGroup(result['GroupId'])
+            delete_outbound_result = security_group.revoke_egress(GroupId=result['GroupId'],IpPermissions=[{'IpProtocol':'-1','IpRanges': [{'CidrIp':'0.0.0.0/0'}]}])
 
 
-            text_output = "Quarantine SG created %s \n" % result['id']
-            quarantine_sg_id = [result['id']]
+            text_output = "Quarantine SG created %s \n" % result['GroupId']
+            quarantine_sg_id = result['GroupId']
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
