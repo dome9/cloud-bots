@@ -74,6 +74,7 @@ Resources:
                - ec2:CreateSecurityGroup # For instance_quarantine
                - ec2:CreateTags # For ec2_tag_instance
                - ec2:DeleteSecurityGroup # For sg_delete
+               - ec2:DeleteInternetGateway # For igw_delete
                - ec2:DetachInternetGateway # For igw_delete
                - ec2:DescribeSecurityGroups # For instance_quarantine
                - ec2:DescribeInstances # For igw_delete
