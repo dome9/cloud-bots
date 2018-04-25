@@ -15,14 +15,30 @@ import json
 from botocore.exceptions import ClientError
 
 # Create S3 bucket
-def make_bucket(boto_session,account_id,bucket_name):
+def make_bucket(boto_session,region,account_id,bucket_name):
+    s3_client = boto_session.client('s3')
 
     try:
-        boto_session.Session(region="us-east-1")
-        s3_client = boto_session.client('s3')
-        result = s3_client.create_bucket(Bucket=bucket_name)
-        text_output = "Bucket %s will be used for storing trails\n" % bucket_name
-
+        if region == "us-east-1":
+            result = s3_client.create_bucket(Bucket=bucket_name)
+        elif region == "eu-west-1":
+            region = "EU"
+            result = s3_client.create_bucket(
+                Bucket=bucket_name,
+                CreateBucketConfiguration={'LocationConstraint': region}
+                )
+        else:
+            result = s3_client.create_bucket(
+                Bucket=bucket_name,
+                CreateBucketConfiguration={'LocationConstraint': region}
+                )
+        
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = text_output = "Bucket %s was created for storing trails\n" % bucket_name
+   
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
 
@@ -125,8 +141,11 @@ def run_action(boto_session,rule,entity,params):
     account_id = entity['accountNumber']
     bucket_name = "acct%scloudtraillogs" % account_id
 
+    region = entity['region']
+    region = region.replace("_","-")
+
     try:
-        text_output = make_bucket(boto_session,account_id,bucket_name) 
+        text_output = make_bucket(boto_session,region,account_id,bucket_name) 
         text_output = text_output + add_bucket_policy(boto_session,account_id,bucket_name) 
         text_output = text_output + create_trail(boto_session,params,bucket_name)
         
