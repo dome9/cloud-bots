@@ -2,7 +2,7 @@
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
 Pre-set Settings:  
-Bucket name: acct<account_id>cloudtraillogs - will be sent to us-east-1
+Bucket name: acct<account_id>cloudtraillogs 
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
