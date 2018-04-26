@@ -235,6 +235,7 @@ This will be changed in future releases and is being currently worked on.
 
 
 # Actions
+
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
 Pre-set Settings:  
@@ -257,7 +258,7 @@ Limitations: none
 
 ## ec2_tag_instance_from_vpc
 What is does: If an instance is missing a specific tag, try to pull it from the VPC. 
-# Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
+Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
 
 ## ec2_terminate_instance
 What it does: Terminates an ec2 instance  
@@ -294,9 +295,8 @@ Sample PasswordPolicy:
 
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 
-### Delete IGW
-From the boto3 docs: The VPC must not contain any running instances with Elastic IP addresses or public IPv4 addresses.
-Because of this, all instances with a public IP will be turned off in the VPC before the IGW can be detached
+### igw_delete
+What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.
 
 Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
 
@@ -305,7 +305,7 @@ Limitations: VPCs have lots of interconnected services. This is currently just f
 What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
 Usage: AUTO: rds_quarantine_instance
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
-    Might not work with Aurora since it's in a cluster
+(Might not work with Aurora since it's in a cluster)
 
 
 ## s3_delete_bucket
@@ -314,7 +314,7 @@ Usage: AUTO: s3_delete_bucket
 Limitations: none  
 
 ## s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket  
+What it does: Deletes all ACLs and bucket policies from a bucket
 Usage: AUTO: s3_delete_permissions  
 Limitations: none  
 
@@ -344,7 +344,7 @@ Usage: AUTO: tag_ec2_resource <key> <value>
 Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"
 Limitations: none
 
-## THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * Image
 * Instance
 * InternetGateway
@@ -361,8 +361,7 @@ Limitations: none
 
 ## vpc_turn_on_flow_logs
 What it does: Turns on flow logs for a VPC
-Settings: 
-Log Group Name: vpcFlowLogs
+Settings: Log Group Name: vpcFlowLogs
 If traffic type to be logged isn't specified, it defaults to all.
 Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
 Limitations: none 
