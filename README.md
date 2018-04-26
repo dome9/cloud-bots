@@ -25,6 +25,7 @@ Table of Contents
   * [Outside of Dome9](#outside-of-dome9)
   * [In Dome9](#in-dome9)
 * [Sample Setup Example](#sample-setup-example)
+* [Actions](#actions)
 
 ## For a condensed quickstart doc, please see README_QUICKSTART.md
 ## For more technical information, please see README_ADVANCED.md
@@ -233,7 +234,141 @@ This will be changed in future releases and is being currently worked on.
 
 
 
+# Actions
+## cloudtrail_enable
+What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
+Pre-set Settings:  
+Bucket name: acct<account_id>cloudtraillogs 
+IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
+IncludeGlobalServiceEvents: True
+EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
+Usage: AUTO: cloudtrail_enable 
+Limitations: none 
 
+## ec2_quarantine_instance
+What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
+Usage: AUTO: ec2_quarantine_instance
+Limitations: None
+
+## ec2_stop_instance
+What it does: Stops an ec2 instance  
+Usage: AUTO: ec2_stop_instance  
+Limitations: none  
+
+## ec2_tag_instance_from_vpc
+What is does: If an instance is missing a specific tag, try to pull it from the VPC. 
+# Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
+
+## ec2_terminate_instance
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
+
+## iam_quarantine_role
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
+Usage: AUTO: iam_quarantine_role  
+Limitations: none 
+
+## iam_quarantine_user
+What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
+Usage: AUTO: iam_quarantine_user  
+Limitations: none  
+
+## iam_turn_on_password_policy
+What it does: Sets all settings in an account password policy  
+Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
+Limitations: ALL variables need to be set at the same time  
+
+Sample PasswordPolicy:
+{
+   MinimumPasswordLength=int,
+   RequireSymbols=True|False,
+   RequireNumbers=True|False,
+   RequireUppercaseCharacters=True|False,
+   RequireLowercaseCharacters=True|False,
+   AllowUsersToChangePassword=True|False,
+   MaxPasswordAge=int,
+   PasswordReusePrevention=int,
+   HardExpiry=True|False
+}
+
+Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
+
+### Delete IGW
+From the boto3 docs: The VPC must not contain any running instances with Elastic IP addresses or public IPv4 addresses.
+Because of this, all instances with a public IP will be turned off in the VPC before the IGW can be detached
+
+Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+
+
+## rds_quarantine_instance
+What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
+Usage: AUTO: rds_quarantine_instance
+Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
+    Might not work with Aurora since it's in a cluster
+
+
+## s3_delete_bucket
+What it does: Deletes an S3 bucket  
+Usage: AUTO: s3_delete_bucket  
+Limitations: none  
+
+## s3_delete_permissions
+What it does: Deletes all ACLs and bucket policies from a bucket  
+Usage: AUTO: s3_delete_permissions  
+Limitations: none  
+
+## s3_enable_encryption
+What it does: Turns on AES-256 encryption on the target bucket  
+Usage: AUTO: s3_enable_encryption  
+Limitations: none  
+
+## s3_enable_versioning
+What it does: Turns on versioning for an S3 bucket
+Usage: AUTO: s3_enable_versioning
+Limitations: none 
+
+## sg_delete
+What it does: Deletes a security group  
+Usage: AUTO: sg_delete  
+Limitations: This will fail if there is something still attached to the SG.  
+
+## sg_rules_delete
+What it does: Deletes all ingress and egress rules from a SG  
+Usage: AUTO: sg_rules_delete  
+Limitations: none 
+
+## tag_ec2_resource
+What it does: Tags an ec2 instance  
+Usage: AUTO: tag_ec2_resource <key> <value>  
+Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"
+Limitations: none
+
+## THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+* Image
+* Instance
+* InternetGateway
+* NetworkAcl
+* NetworkInterface
+* PlacementGroup
+* RouteTable
+* SecurityGroup
+* Snapshot
+* Subnet
+* Volume
+* Vpc
+* VpcPeeringConnection
+
+## vpc_turn_on_flow_logs
+What it does: Turns on flow logs for a VPC
+Settings: 
+Log Group Name: vpcFlowLogs
+If traffic type to be logged isn't specified, it defaults to all.
+Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
+Limitations: none 
+
+log delivery policy name is set as: vpcFlowLogDelivery
+log relivery role is set as: vpcFlowLogDelivery
 
 
 
