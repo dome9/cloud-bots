@@ -7,8 +7,8 @@ If traffic type to be logged isn't specified, it defaults to all.
 Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
 Limitations: none 
 
-#log delivery policy name is set as: vpcFlowLogDelivery
-#log relivery role is set as: vpcFlowLogDelivery
+log delivery policy name is set as: vpcFlowLogDelivery
+log relivery role is set as: vpcFlowLogDelivery
 '''
 
 import boto3
