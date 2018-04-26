@@ -5,11 +5,12 @@ Because of this, all instances with a public IP will be turned off in the VPC be
 
 Limitations: 
 VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+'''
 
 import boto3  
 from time import sleep
 from botocore.exceptions import ClientError
-'''
+
 
 def run_action(boto_session,rule,entity,params):
     vpc_id = entity['id']
