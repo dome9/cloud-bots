@@ -291,11 +291,8 @@ Limitations: VPCs have lots of interconnected services. This is currently just f
 
 ## rds_quarantine_instance
 What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
-
 Usage: AUTO: rds_quarantine_instance
-
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
-
 (Might not work with Aurora since it's in a cluster)
 
 
@@ -306,9 +303,7 @@ Limitations: none
 
 ## s3_delete_permissions
 What it does: Deletes all ACLs and bucket policies from a bucket
-
 Usage: AUTO: s3_delete_permissions  
-
 Limitations: none  
 
 ## s3_enable_encryption
@@ -318,9 +313,7 @@ Limitations: none
 
 ## s3_enable_versioning
 What it does: Turns on versioning for an S3 bucket
-
 Usage: AUTO: s3_enable_versioning
-
 Limitations: none 
 
 ## sg_delete
