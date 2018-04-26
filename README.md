@@ -283,7 +283,7 @@ Limitations: ALL variables need to be set at the same time
 
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 
-### igw_delete
+## igw_delete
 What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.
 
 Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
