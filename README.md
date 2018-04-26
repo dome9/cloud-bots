@@ -281,19 +281,6 @@ What it does: Sets all settings in an account password policy
 Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
 Limitations: ALL variables need to be set at the same time  
 
-Sample PasswordPolicy:
-{
-   MinimumPasswordLength=int,
-   RequireSymbols=True|False,
-   RequireNumbers=True|False,
-   RequireUppercaseCharacters=True|False,
-   RequireLowercaseCharacters=True|False,
-   AllowUsersToChangePassword=True|False,
-   MaxPasswordAge=int,
-   PasswordReusePrevention=int,
-   HardExpiry=True|False
-}
-
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 
 ### igw_delete
