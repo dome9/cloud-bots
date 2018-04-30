@@ -213,24 +213,50 @@ This will be changed in future releases and is being currently worked on.
 ## In Dome9
 
 - Create a bundle that you want to use for auto remediation. 
-![Sample Bundle](./docs/pictures/sample_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/sample_bundle.png?raw=true)
 
 - Edit the bundle (Edit JSON). 
-![Sample Bundle](./docs/pictures/edit_bundle.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_bundle.png?raw=true)
 
 - Paste in the text from sample_bundle.json. 
-![Sample Bundle](./docs/pictures/edit_json.png?raw=true "Title")
+![Sample Bundle](./docs/pictures/edit_json.png?raw=true)
 
 - For any other rules that you want to create and add remediation to, add the remediation tag to the "Compliance Section" of the rule. 
-![Rule Tagging](./docs/pictures/tagging_a_rule.png?raw=true "Title")
+![Rule Tagging](./docs/pictures/tagging_a_rule.png?raw=true)
 
 - Test this compliance bundle. 
-![Sample Report](./docs/pictures/sample_report.png?raw=true "Title")
-![Sample Results](./docs/pictures/sample_findings.png?raw=true "Title")
+![Sample Report](./docs/pictures/sample_report.png?raw=true)
+![Sample Results](./docs/pictures/sample_findings.png?raw=true)
 
 - Set the Dome9 compliance bundle to run via continuous compliance. 
-![CC Setup1](./docs/pictures/cc_setup1.png?raw=true "Title")
-![CC Setup2](./docs/pictures/cc_setup2.png?raw=true "Title")
+![CC Setup1](./docs/pictures/cc_setup1.png?raw=true)
+![CC Setup2](./docs/pictures/cc_setup2.png?raw=true)
+
+# Updating the stack
+
+Updating your current CloudBots stack is very straightforward. In the UI, navigate to CloudFormation for the region that CloudBots is set up in. 
+
+* Select the dome9CloudBots stack and then select Actions > Update Stack
+* Select "Specify an Amazon S3 template URL" and copy the link from the table below that corresponds to the region you're in. 
+* Click next/update all the way through and it'll deploy the new version of the template.
+
+| Region        | CFT Link        | 
+| ------------- |:-------------:| 
+|us-east-1|https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate|
+|us-east-2|https://s3-us-east-2.amazonaws.com/dome9cftemplatesuseast2/cloudbots_cftemplate|
+|us-west-1|https://s3-us-west-1.amazonaws.com/dome9cftemplatesuswest1/cloudbots_cftemplate|
+|us-west-2|https://s3-us-west-2.amazonaws.com/dome9cftemplatesuswest2/cloudbots_cftemplate|
+|ca-central-1|https://s3-ca-central-1.amazonaws.com/dome9cftemplatescacentral1/cloudbots_cftemplate|
+|eu-central-1|https://s3-eu-central-1.amazonaws.com/dome9cftemplateseucentral1/cloudbots_cftemplate|
+|eu-west-1|https://s3-eu-west-1.amazonaws.com/dome9cftemplateseuwest1/cloudbots_cftemplate|
+|eu-west-2|https://s3-eu-west-2.amazonaws.com/dome9cftemplateseuwest2/cloudbots_cftemplate|
+|eu-west-3|https://s3-eu-west-3.amazonaws.com/dome9cftemplateseuwest3/cloudbots_cftemplate|
+|ap-northeast-1|https://s3-ap-northeast-1.amazonaws.com/dome9cftemplatesapnortheast1/cloudbots_cftemplate|
+|ap-northeast-2|https://s3-ap-northeast-2.amazonaws.com/dome9cftemplatesapnortheast2/cloudbots_cftemplate|
+|ap-southeast-1|https://s3-ap-southeast-1.amazonaws.com/dome9cftemplatesapsoutheast1/cloudbots_cftemplate|
+|ap-southeast-2|https://s3-ap-southeast-2.amazonaws.com/dome9cftemplatesapsoutheast2/cloudbots_cftemplate|
+|ap-south-1|https://s3-ap-south-1.amazonaws.com/dome9cftemplatesapsouth1/cloudbots_cftemplate|
+|sa-east-1|https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate|
 
 
 
