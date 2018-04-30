@@ -28,6 +28,7 @@
                 "iam:GetPolicy",
                 "iam:PassRole",
                 "iam:UpdateAccountPasswordPolicy",
+                "iam:UpdateLoginProfile",
                 "rds:ModifyDBInstance",
                 "s3:CreateBucket",
                 "s3:DeleteBucket",
