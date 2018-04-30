@@ -3,7 +3,10 @@
 # Usage: ./create_role.sh <AWS Profile>
 
 PROFILE=$1
-
+if [[ $1 -eq 0 ]] ; then
+    echo 'Usage: ./create_role.sh <AWS Profile>'
+    exit 0
+fi
 
 if grep -Fxq CCOUNT_ID_WHERE_FUNCTION_IS_RUNNING trust_policy.json 
 then
