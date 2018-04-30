@@ -14,3 +14,4 @@ lambda_test_event.json
 cs2_cftemplate.yaml
 gp.sh
 cloudbots_sam.yaml
+cloudbots_cftemplate.yaml
