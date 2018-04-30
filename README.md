@@ -85,29 +85,19 @@ You can deploy this stack via the link below. Pick the region that you would lik
 
 **If you want to deploy this via CLI, please see README_ADVANCED.md**
 
-Click the link and click Next > Next > Next.
+* Click the link and click Next
 
+* In the parameters section, set the Deployment Mode as single or multi depending on if this will be run across multiple accounts or not. (you can change this later if needed)
 
-On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names (This is for the role that is created for Lambda to perform the bots).
+* In the email address field, put in one of the subscriber emails we saved in step 1. 
 
-Next, click on the 'Create Change Set' button at the bottom of the page. Then click 'Execute' 
+* Click on Next > Next.
 
-From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
+* On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names (This is for the role that is created for Lambda to perform the bots).
 
+* Next, click on the 'Create Change Set' button at the bottom of the page. Then click 'Execute' 
 
-### OPTIONAL: Set up a subscriber to the SNS output topic
-Since the Lambda output is exported to SNS, you can send it from there to wherever you please. 
-
-- If you want to send the events to Slack, please follow this guide: https://github.com/alpalwal/D9SnsToSlack
-
-- To get email alerts instead, you can do it from the CLI:
-```bash
-aws sns subscribe \
---topic-arn <OUTPUT_TOPIC_ARN> \
---protocol email \
---notification-endpoint <your email>
-```
-
+* From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
 
 
 
