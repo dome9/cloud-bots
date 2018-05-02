@@ -271,6 +271,12 @@ Defaults:
     Role name: CloudTrail_CloudWatchLogs_Role
     Log delivery policy name: CloudWatchLogsAllowDelivery
 
+## cloudwatch_create_metric_filter
+What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark
+Usage: cloudwatch_create_metric_filter <filter1> <filter2> .... 
+Limitations: Cloudtrail needs to be set up to send the logs to a CloudWatchLogs group first.   
+Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges
+
 ## config_enable
 What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
 Usage: AUTO: config_enable  
