@@ -271,6 +271,16 @@ Defaults:
     Role name: CloudTrail_CloudWatchLogs_Role
     Log delivery policy name: CloudWatchLogsAllowDelivery
 
+## config_enable
+What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
+Usage: AUTO: config_enable  
+Limitations: none  
+Defaults: 
+    name = default
+    allSupported = True
+    includeGlobalResourceTypes = True
+    file deliveryFrequency(to S3) = One_Hour
+
 ## ec2_quarantine_instance
 What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
 Usage: AUTO: ec2_quarantine_instance
