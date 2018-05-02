@@ -22,7 +22,7 @@ def create_log_delivery_policy(boto_session):
     print("Creating log delivery policy")
     try:
         # Create a policy
-        deny_policy = {
+        delivery_policy = {
             "Version": "2012-10-17",
             "Statement": [
             {
@@ -41,7 +41,7 @@ def create_log_delivery_policy(boto_session):
 
         create_policy_response = iam_client.create_policy(
             PolicyName='vpcFlowLogDelivery',
-            PolicyDocument=json.dumps(deny_policy)
+            PolicyDocument=json.dumps(delivery_policy)
         )
 
         responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
