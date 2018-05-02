@@ -1,11 +1,12 @@
 '''
 ## cloudtrail_send_to_cloudwatch
-What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
+What it does: Makes CloudTrail output logs to CloudWatchLogs. If the log group doesn't exist alredy, it'll reate a new one. 
 Usage: AUTO: cloudtrail_send_to_cloudwatch <log_group_name>  
 Limitations: none  
-Defaults: If no log group name is set, it'll default to CloudTrail/DefaultLogGroup
-Role name: CloudTrail_CloudWatchLogs_Role
-Log delivery policy name: CloudWatchLogsAllowDelivery
+Defaults: 
+    If no log group name is set, it'll default to CloudTrail/DefaultLogGroup
+    Role name: CloudTrail_CloudWatchLogs_Role
+    Log delivery policy name: CloudWatchLogsAllowDelivery
 '''
 
 import boto3

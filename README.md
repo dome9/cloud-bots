@@ -262,6 +262,15 @@ EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2)
 Usage: AUTO: cloudtrail_enable 
 Limitations: none 
 
+## cloudtrail_send_to_cloudwatch
+What it does: Makes CloudTrail output logs to CloudWatchLogs. If the log group doesn't exist alredy, it'll reate a new one. 
+Usage: AUTO: cloudtrail_send_to_cloudwatch <log_group_name>  
+Limitations: none  
+Defaults: 
+    If no log group name is set, it'll default to CloudTrail/DefaultLogGroup
+    Role name: CloudTrail_CloudWatchLogs_Role
+    Log delivery policy name: CloudWatchLogsAllowDelivery
+
 ## ec2_quarantine_instance
 What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
 Usage: AUTO: ec2_quarantine_instance
@@ -299,10 +308,37 @@ Limitations: ALL variables need to be set at the same time
 
 Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
 
+## iam_user_force_password_change
+What it does: Updates the setting for an IAM user so that they need to change their console password the next time they log in.  
+Usage: AUTO: iam_user_force_password_change
+Limitations: none  
+
 ## igw_delete
 What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.
 
 Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+
+## mark_for_stop_ec2_resource
+What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.   
+Usage: AUTO: mark_for_stop_ec2_resource
+Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that the failure was found. 
+From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(-7, 'days') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
+Limitations: none
+
+# THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+* Image
+* Instance
+* InternetGateway
+* NetworkAcl
+* NetworkInterface
+* PlacementGroup
+* RouteTable
+* SecurityGroup
+* Snapshot
+* Subnet
+* Volume
+* Vpc
+* VpcPeeringConnection
 
 
 ## rds_quarantine_instance
@@ -373,27 +409,6 @@ Limitations: none
 log delivery policy name is set as: vpcFlowLogDelivery
 log relivery role is set as: vpcFlowLogDelivery
 
-## mark_for_stop_ec2_resource
-What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.   
-Usage: AUTO: mark_for_stop_ec2_resource
-Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that the failure was found. 
-From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(-7, 'days') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
-Limitations: none
-
-# THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
-* Image
-* Instance
-* InternetGateway
-* NetworkAcl
-* NetworkInterface
-* PlacementGroup
-* RouteTable
-* SecurityGroup
-* Snapshot
-* Subnet
-* Volume
-* Vpc
-* VpcPeeringConnection
 
 
 ## Questions / Comments

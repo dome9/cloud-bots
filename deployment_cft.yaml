@@ -70,6 +70,10 @@ Resources:
              Action:
                - cloudtrail:CreateTrail # For create_cloudtrail
                - cloudtrail:StartLogging # For create_cloudtrail
+               - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
+               - config:PutConfigurationRecorder # For config_enable
+               - config:PutDeliveryChannel # For config_enable
+               - config:StartConfigurationRecorder # For config_enable
                - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                - ec2:CreateSecurityGroup # For instance_quarantine
                - ec2:CreateTags # For ec2_tag_instance
@@ -92,6 +96,8 @@ Resources:
                - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                - iam:UpdateLoginProfile # For iam_user_force_password_change
+               - logs:PutMetricFilter # For cloudwatch_create_metric_filter
+               - logs:CreateLogGroup # For cloudtrail_send_to_cloudwatch
                - rds:ModifyDBInstance # For rds_quarantine_instance
                - s3:CreateBucket # For create_cloudtrail
                - s3:DeleteBucket # For s3_delete_bucket
