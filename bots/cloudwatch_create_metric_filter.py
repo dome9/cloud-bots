@@ -1,9 +1,10 @@
 '''
 ## cloudwatch_create_metric_filter
-What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark
+What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark. A metric alarm and SNS subscripion is created as well
 Usage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> .... 
 Limitations: Cloudtrail needs to be set up to send the logs to a CloudWatchLogs group first.   
 Default: SNS topic name is CloudTrailMetricFilterAlerts
+Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges
 '''
 
 import boto3
