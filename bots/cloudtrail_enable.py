@@ -6,8 +6,10 @@ Bucket name: acct<account_id>cloudtraillogs
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
-Usage: AUTO: cloudtrail_enable 
+Default trail name if unset: allRegionTrail
+Usage: AUTO: cloudtrail_enable <trail_name(optional)>
 Limitations: none 
+
 '''
 
 import boto3
