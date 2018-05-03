@@ -342,7 +342,7 @@ Note: This is meant to be used in conjunction with a more aggressive action like
 From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(-7, 'days') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
 Limitations: none
 
-# THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * Image
 * Instance
 * InternetGateway
