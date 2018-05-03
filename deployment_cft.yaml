@@ -71,6 +71,7 @@ Resources:
                - cloudtrail:CreateTrail # For create_cloudtrail
                - cloudtrail:StartLogging # For create_cloudtrail
                - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
+               - cloudwatch:PutMetricAlarm # For cloudtrail_send_to_cloudwatch
                - config:PutConfigurationRecorder # For config_enable
                - config:PutDeliveryChannel # For config_enable
                - config:StartConfigurationRecorder # For config_enable
@@ -112,6 +113,8 @@ Resources:
                - s3:PutEncryptionConfiguration # For s3_enable_encryption
                - s3:PutObject # For create_cloudtrail
                - sns:Publish # For exporting the logs from CS2 
+               - sns:CreateTopic # For cloudwatch_create_metric_filter 
+               - sns:Subscribe # For cloudwatch_create_metric_filter 
                - sts:GetCallerIdentity # For checking what account this is running in
                - sts:AssumeRole # For multi_account
              Resource: '*'

@@ -8,6 +8,7 @@
                 "cloudtrail:CreateTrail",
                 "cloudtrail:StartLogging",
                 "cloudtrail:UpdateTrail",
+                "cloudwatch:PutMetricAlarm",
                 "config:PutConfigurationRecorder",
                 "config:PutDeliveryChannel",
                 "config:StartConfigurationRecorder",
@@ -49,6 +50,8 @@
                 "s3:PutEncryptionConfiguration",
                 "s3:PutObject",
                 "sns:Publish",
+                "sns:CreateTopic",
+                "sns:Subscribe",
                 "sts:GetCallerIdentity",
                 "sts:AssumeRole"
             ],
