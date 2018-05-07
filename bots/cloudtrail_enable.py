@@ -7,13 +7,15 @@ IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
 Default trail name if unset: allRegionTrail
-Usage: AUTO: cloudtrail_enable <trail_name(optional)>
+Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>
+Note: Trail_name and bucket_name are optional and don't need to be set. 
 Limitations: none 
 
 '''
 
 import boto3
 import json
+import re
 from botocore.exceptions import ClientError
 
 # Create S3 bucket
@@ -39,7 +41,7 @@ def make_bucket(boto_session,region,account_id,bucket_name):
         if responseCode >= 400:
             text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output = "Bucket %s was created for storing trails\n" % bucket_name
+            text_output = "Bucket %s was created for storing trails\n" % bucket_name
    
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
@@ -95,19 +97,12 @@ def add_bucket_policy(boto_session,account_id,bucket_name):
 
 
 # Create trail
-def create_trail(boto_session,params,bucket_name): 
+def create_trail(boto_session,trail_name,bucket_name): 
     cloudtrail_client = boto_session.client('cloudtrail')
-    # Check params for usable values and if not - go to defaults
-    try: # Params[0] should be the traffic type. 
-        trailName = params[0]
-        text_output = "CloudTrail name will be %s and data will be sent to the S3 bucket: %s \n" % (trailName,bucket_name)
-    except:
-        trailName = "allRegionTrail"
-        text_output = "Trail name not set. Defaulting to allRegionTrail.\n"
-        
+
     try:
         result = cloudtrail_client.create_trail(
-            Name=trailName,
+            Name=trail_name,
             S3BucketName=bucket_name, 
             S3KeyPrefix = '',
             IncludeGlobalServiceEvents=True, 
@@ -117,9 +112,9 @@ def create_trail(boto_session,params,bucket_name):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output +  "CloudTrail created successfully. Enabling logging next.\n"
+            text_output = "CloudTrail created successfully. Enabling logging next.\n"
             try:
                 trail_arn = result['TrailARN']
                 response = cloudtrail_client.start_logging(Name=trail_arn)
@@ -141,17 +136,40 @@ def create_trail(boto_session,params,bucket_name):
 
 def run_action(boto_session,rule,entity,params): 
     account_id = entity['accountNumber']
-    bucket_name = "acct%scloudtraillogs" % account_id
 
     region = entity['region']
     region = region.replace("_","-")
+    text_output = ""
 
+    env_variables = {} # Go through the params and pull out the key values that are optional for cloudtrail settings
+    for param in params:
+        name, var = param.partition("=")[::2]
+        env_variables[name.strip()] = var
+
+    # Check params for usable values and if not - go to defaults
+    try: # Params[0] should be the traffic type. 
+        trail_name = env_variables['trail_name']
+        text_output = text_output + "CloudTrail name will be %s \n" % trail_name
+    except:
+        trail_name = "allRegionTrail"
+        text_output = text_output +  "Trail name not set. Defaulting to allRegionTrail.\n"
+        
     try:
-        text_output = make_bucket(boto_session,region,account_id,bucket_name) 
-        text_output = text_output + add_bucket_policy(boto_session,account_id,bucket_name) 
-        text_output = text_output + create_trail(boto_session,params,bucket_name)
+        bucket_name = env_variables['bucket_name']
+        text_output = text_output +  "Sending trails to bucket: %s \n" % bucket_name
+    except:
+        try:
+            bucket_name = "acct%scloudtraillogs" % account_id
+            text_output = text_output + "No target bucket defined in params. Creating a local bucket instead with bucket name %s \n" % bucket_name
+            text_output = text_output + make_bucket(boto_session,region,account_id,bucket_name) 
+            text_output = text_output + add_bucket_policy(boto_session,account_id,bucket_name) 
+        except ClientError as e:
+            text_output = text_output +  "Unexpected error: %s \n" % e
+    
+    try:
+        text_output = text_output + create_trail(boto_session,trail_name,bucket_name)
         
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output

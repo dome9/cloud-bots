@@ -255,11 +255,12 @@ Updating your current CloudBots stack is very straightforward. In the UI, naviga
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
 Pre-set Settings:  
-Bucket name: acct<account_id>cloudtraillogs 
+Default bucket name: acct<account_id>cloudtraillogs 
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
-Usage: AUTO: cloudtrail_enable 
+Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>
+Note: Trail_name and bucket_name are optional and don't need to be set. 
 Limitations: none 
 
 ## cloudtrail_send_to_cloudwatch
