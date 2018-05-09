@@ -56,6 +56,10 @@ If you would like to set up an SNS subscriber for the output topic (recommended)
 
 From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
 
+**If you set up an SNS Subscriber**
+Go to your email and confirm the subscription. SNS seems to have some odd behaviors if you leave the subscription for a while before confirming. 
+
+
 <br>
 <br>
 
