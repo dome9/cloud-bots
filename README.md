@@ -27,7 +27,8 @@ Table of Contents
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
 
-## For a condensed quickstart doc, please see README_QUICKSTART.md (https://github.com/Dome9/cloud-bots/blob/master/README_QUICKSTART.md)
+## For a condensed quickstart doc, please see [README_QUICKSTART.md](../blob/master/README_QUICKSTART.md)
+
 ## For more technical information, please see README_ADVANCED.md
 
 # Overview
