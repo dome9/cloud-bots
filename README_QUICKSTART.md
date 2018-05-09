@@ -39,7 +39,8 @@ You can deploy this stack via the link below. Pick the region that you would lik
 |sa-east-1|[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate.yaml)|
 
 
-
+<br>
+<br>
 
 **Click the link and click Next** 
 
@@ -49,16 +50,14 @@ If you would like to set up an SNS subscriber for the output topic (recommended)
 
 **Click Next > Next**
 
-**On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names** 
+**On the 4th page, you'll need to check the 2 boxes that allow this template to create IAM resources with custom names** (This is for the role that is created for Lambda to perform the bots)
 
-This is for the role that is created for Lambda to perform the bots
-
-**Next, click on the 'Create Change Set' button**
-
-at the bottom of the page. Then click 'Execute' 
+**Next, click on the 'Create Change Set' button** at the bottom of the page. Then click 'Execute' 
 
 From here, the stack will deploy. If there are no errors, go to the 'Outputs' tab and grab the two ARNs that were output. You'll need them later. 
 
+<br>
+<br>
 
 
 
