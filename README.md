@@ -1,6 +1,12 @@
 <link rel="shortcut icon" type="image/x-icon" href="docs/pictures/favicon.ico">
 
-![logo](./docs/pictures/logo.png?raw=true "logo")
+```   
+     |                  |   |         |         
+,---.|    ,---..   .,---|   |---.,---.|--- ,---.
+|    |    |   ||   ||   |---|   ||   ||    `---.
+`---'`---'`---'`---'`---'   `---'`---'`---'`---'                                                
+```
+
 
 # Cloud-Bots
 Auto remediation & automation bots for AWS.
