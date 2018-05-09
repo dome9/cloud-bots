@@ -181,7 +181,7 @@ The rule in the sample bundle will remove rules from the default security group 
 
 All available remediation bots are in the bots folder. 
 
-#### Tag Syntax: AUTO: <bot_name> <params>
+#### Tag Syntax: `AUTO: <bot_name> <optional space delimeted params>`
     Ex: AUTO: ec2_stop_instance
 
 ### Test this compliance bundle. 
