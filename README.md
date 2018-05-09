@@ -29,7 +29,7 @@ Table of Contents
 
 ## For a condensed quickstart doc, please see [README_QUICKSTART.md](../blob/master/README_QUICKSTART.md)
 
-## For more technical information, please see README_ADVANCED.md
+## For more technical information, please see [README_ADVANCED.md](../blob/master/README_ADVANCED.md)
 
 # Overview
 ## What is this ?
