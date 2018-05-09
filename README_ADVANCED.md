@@ -62,8 +62,8 @@ Save these ARNs for the next step and the Dome9 Continuous Compliance setup
 ## Outside of Dome9
 ```
 # Clone this GitHub project
-[~]$git clone git@github.com:Dome9/cloud-supervisor2.git 
-Cloning into 'cloud-supervisor2'...
+[~]$git clone git@github.com:Dome9/cloud-bots.git 
+Cloning into 'cloud-bots'...
 remote: Counting objects: 390, done.
 remote: Compressing objects: 100% (52/52), done.
 remote: Total 390 (delta 42), reused 55 (delta 22), pack-reused 315
@@ -72,8 +72,8 @@ Resolving deltas: 100% (247/247), done.
 
 
 # Zip the function
-[~]$cd cloud-supervisor2
-[cloud-supervisor2]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
+[~]$cd cloud-bots
+[cloud-bots]$zip -r -X remediation-function.zip actions/ handle_event.py index.py send_events_and_errors.py 
   adding: actions/ (stored 0%)
   adding: actions/__init__.py (stored 0%)
   adding: actions/ec2_stop_instance.py (deflated 46%)
@@ -92,7 +92,7 @@ Resolving deltas: 100% (247/247), done.
 
 
 # Deploy the fucnction via CloudFormation template
-[cloud-supervisor2]$aws cloudformation package    \
+[cloud-bots]$aws cloudformation package    \
 > --template-file ./deployment_cft.yaml    \
 > --output-template-file serverless-output.yaml    \
 > --s3-bucket remediationuploadsdome 
@@ -100,10 +100,10 @@ Resolving deltas: 100% (247/247), done.
 Uploading to 87666a89b6af585e6726fd3d2e472a52  9851 / 9851.0  (100.00%)
 Successfully packaged artifacts and wrote output template to file serverless-output.yaml.
 Execute the following command to deploy the packaged template
-aws cloudformation deploy --template-file /Users/ale/cloud-supervisor2/serverless-output.yaml --stack-name <YOUR STACK NAME>
+aws cloudformation deploy --template-file /Users/ale/cloud-bots/serverless-output.yaml --stack-name <YOUR STACK NAME>
 
 
-[cloud-supervisor2]$aws cloudformation deploy \
+[cloud-bots]$aws cloudformation deploy \
 > --template-file ./serverless-output.yaml \
 > --stack-name lambda-remediations \
 > --capabilities CAPABILITY_IAM 
@@ -113,13 +113,13 @@ Successfully created/updated stack - lambda-remediations
 
 
 # Get the outputs from the new stack
-[cloud-supervisor2]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
+[cloud-bots]$aws cloudformation describe-stacks --stack-name lambda-remediations --query 'Stacks[0].Outputs' --output text 
 ARN for the export logs topic   OutputTopicARN  arn:aws:sns:us-west-2:726853184812:remediationOutput
 ARN that Dome9 sends events to  InputTopicARN   arn:aws:sns:us-west-2:726853184812:d9-findings
 
 
 # OPTIONAL: Set up a subscriber to the SNS output topic
-[cloud-supervisor2]$aws sns subscribe --topic-arn arn:aws:sns:us-west-2:726853184812:remediationOutput --protocol email --notification-endpoint alex@dome9.com 
+[cloud-bots]$aws sns subscribe --topic-arn arn:aws:sns:us-west-2:726853184812:remediationOutput --protocol email --notification-endpoint alex@dome9.com 
 
 {
     "SubscriptionArn": "pending confirmation"

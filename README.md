@@ -34,7 +34,7 @@ Table of Contents
 
 # Overview
 ## What is this ?
-Cloud-Supervisor 2 is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
+Cloud-Bots is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
 
 ## Why and when would I need it ?
 Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
@@ -143,29 +143,43 @@ Role creation needs to be done via something other than CloudFormation because C
 #### Create the cross-account role
 ```bash
 aws iam create-role \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --assume-role-policy-document file://trust_policy.json \
---profile <aws_account_profile>                                      
+--profile <aws_account_profile>                                        
 ```
 
 #### Create the IAM policy for the role
 ```bash
 aws iam create-policy \
---policy-name CloudSupervisorRemediations \
+--policy-name Dome9CloudBots \
 --policy-document file://remediation_policy.json \
 --query 'Policy.Arn' \
---profile <aws_account_profile>                   
+--profile <aws_account_profile>                      
+```
+
+####take ARN from this for the next command           
+```bash
+aws iam create-role \
+--role-name Dome9CloudBots \
+--assume-role-policy-document file://trust_policy.json \
+--profile <aws_account_profile>     
 ```
 
 #### Link the new policy and role
 Take ARN from create-policy for the next command           
 ```bash
 aws iam attach-role-policy \
---role-name dome9-auto-remediations \
+--role-name Dome9CloudBots \
 --policy-arn <ARN FROM LAST COMMAND> \
---profile <aws_account_profile>                   
+--profile <aws_account_profile>                     
 ```              
+              
+                  
+               
 
+
+             
+              
 
 
 
