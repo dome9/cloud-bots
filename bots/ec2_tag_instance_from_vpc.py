@@ -44,5 +44,7 @@ def run_action(boto_session,rule,entity, params):
 
     if not instance_tagged:
         text_output = text_output + "Did not find the \"%s\" key in the VPC tags. Please check the VPC and try again.\n" % key
+        text_output = text_output + "Tags that were found in VPC: %s" % str(vpc_tags) 
+
 
     return text_output
