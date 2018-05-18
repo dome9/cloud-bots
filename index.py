@@ -16,7 +16,8 @@ def lambda_handler(event, context):
 
     raw_message = event['Records'][0]['Sns']['Message']
     message = json.loads(raw_message)
-
+    print(message) #log the input for troubleshooting
+    
     timestamp = "ReportTime: " + str(message['reportTime']) + "\n"
 
     text_output_array.append(timestamp)
