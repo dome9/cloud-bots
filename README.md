@@ -38,7 +38,7 @@ Cloud-Bots is an **automatic remediation solution for AWS** built on top of Dome
 
 ## Why and when would I need it ?
 Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
-For some organizations that is enough. However, at a certain scale and cloud matureness level- organizations prefer to move towards automatic-remediation approach, in which the system takes specific automated remediation bots in regards to specific violations.</br>
+For some organizations that is enough. However, at a certain scale and cloud matureness level- organizations prefer to move towards automatic-remediation approach, in which the system takes specific automated remediation bots in regards to specific violations.<br/>
 This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
 ## How does it work ?
