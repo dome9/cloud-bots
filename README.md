@@ -1,14 +1,14 @@
 <link rel="shortcut icon" type="image/x-icon" href="docs/pictures/favicon.ico">
 
 ```   
-     |                  |   |         |         
-,---.|    ,---..   .,---|   |---.,---.|--- ,---.
-|    |    |   ||   ||   |---|   ||   ||    `---.
-`---'`---'`---'`---'`---'   `---'`---'`---'`---'                                                
+     |                  ||         |         
+,---.|    ,---..   .,---||---.,---.|--- ,---.
+|    |    |   ||   ||   ||   ||   ||    `---.
+`---'`---'`---'`---'`---'`---'`---'`---'`---'                                                
 ```
 
 
-# Cloud-Bots
+# CloudBots
 Auto remediation & automation bots for AWS.
 
 This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine to remediate issues that are uncovered. 
