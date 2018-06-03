@@ -448,6 +448,7 @@ log relivery role is set as: vpcFlowLogDelivery
 
 # Release Notes
 - 6/3/18: Updated mark_for_stop_ec2_resource to take in a target mark for stop time instead of just marking the current time the event was triggered. This will allow you to manage less remediation rules since the logic of when you want to stop is done during the 'marking' bot instead of the 'action' bot. Example AUTO: mark_for_stop_ec2_resource 3h
+- 6/3/18: Added in README_DEVELOPER_GUIDE to help others create their own bots. 
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
