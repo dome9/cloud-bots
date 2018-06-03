@@ -27,6 +27,7 @@ Table of Contents
   * [In Dome9](#in-dome9)
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
+* [Release Notes](#release-notes)
 
 ## For a condensed quickstart doc, please see [README_QUICKSTART.md](https://github.com/Dome9/cloud-bots/blob/master/README_QUICKSTART.md)
 
@@ -354,9 +355,10 @@ Limitations: VPCs have lots of interconnected services. This is currently just f
 
 ## mark_for_stop_ec2_resource
 What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.   
-Usage: AUTO: mark_for_stop_ec2_resource
-Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that the failure was found. 
-From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(-7, 'days') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
+Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>
+Example: AUTO: mark_for_stop_ec2_resource 3h
+Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that we want to tigger the remediation bot. 
+From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(1, 'minutes') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
 Limitations: none
 
 THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
@@ -444,6 +446,8 @@ log delivery policy name is set as: vpcFlowLogDelivery
 log relivery role is set as: vpcFlowLogDelivery
 
 
+# Release Notes
+- 6/3/18: Updated mark_for_stop_ec2_resource to take in a target mark for stop time instead of just marking the current time the event was triggered. This will allow you to manage less remediation rules since the logic of when you want to stop is done during the 'marking' bot instead of the 'action' bot. Example AUTO: mark_for_stop_ec2_resource 3h
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
