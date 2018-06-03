@@ -26,7 +26,7 @@ If the event occurs in a different account than the one that the function is run
 
 If the event contains a bot that we want to call, it will look for the corresponding file in the bots/ folder and invoke the bot.
 
-## Bot/<action>
+## Bots
 
 ### Sample event
 ```javascript
@@ -84,8 +84,8 @@ def run_action(boto_session,rule,entity,params):
 # rule is from the rule object above
 # entity is from the entity object above
 # params is from rule > Compliance tags and is the remaining text after AUTO: <bot>. 
-# Example: "AUTO: tag_ec2_resource myKey myValue"
-# Params would be ["myKey", "myValue"]
+#   Example: "AUTO: tag_ec2_resource myKey myValue"
+#   Params would be ["myKey", "myValue"]
 
     instance = entity['id']
     ec2_client = boto_session.client('ec2')
@@ -107,3 +107,5 @@ def run_action(boto_session,rule,entity,params):
     return text_output 
 ```
 
+### Calling the new bot
+Once you create the new bot, put the file in the bots directory. Handle_event will automatically pick it up and try to call it if the bot is defined in the event. 
