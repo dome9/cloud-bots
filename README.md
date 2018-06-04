@@ -291,36 +291,35 @@ Defaults:
     Log delivery policy name: CloudWatchLogsAllowDelivery  
  
 ## cloudwatch_create_metric_filter
-What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark. A metric alarm and SNS subscripion is created as well
-Usage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> .... 
-Limitations: Cloudtrail needs to be set up to send the logs to a CloudWatchLogs group first.   
-Default: SNS topic name is CloudTrailMetricFilterAlerts
-Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges
+What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark. A metric alarm and SNS subscripion is created as well  
+Usage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> ....   
+Limitations: Cloudtrail needs to be set up to send the logs to a CloudWatchLogs group first.     
+Default: SNS topic name is CloudTrailMetricFilterAlerts  
+Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges  
 
 ## config_enable
-What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
-Usage: AUTO: config_enable  
+What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders.   
+Usage: AUTO: config_enable    
 Limitations: none  
 Defaults: 
-    name = default
-    allSupported = True
-    includeGlobalResourceTypes = True
-    file deliveryFrequency(to S3) = One_Hour
+    name = default  
+    allSupported = True  
+    includeGlobalResourceTypes = True  
+    file deliveryFrequency(to S3) = One_Hour  
 
 ## ec2_quarantine_instance
-What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
-Usage: AUTO: ec2_quarantine_instance
-Limitations: None
+What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world  
+Usage: AUTO: ec2_quarantine_instance  
+Limitations: None  
 
 ## ec2_stop_instance
-What it does: Stops an ec2 instance  
-Usage: AUTO: ec2_stop_instance  
+What it does: Stops an ec2 instance    
+Usage: AUTO: ec2_stop_instance   
 Limitations: none  
 
 ## ec2_tag_instance_from_vpc
-What is does: If an instance is missing a specific tag, try to pull it from the VPC. 
-
-Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
+What is does: If an instance is missing a specific tag, try to pull it from the VPC.  
+Tag format: AUTO: ec2_tag_instance_from_vpc <Key>  
 
 ## ec2_terminate_instance
 What it does: Terminates an ec2 instance  
@@ -330,7 +329,7 @@ Limitations: none
 ## iam_quarantine_role
 What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
 Usage: AUTO: iam_quarantine_role  
-Limitations: none 
+Limitations: none  
 
 ## iam_quarantine_user
 What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
@@ -342,27 +341,26 @@ What it does: Sets all settings in an account password policy
 Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
 Limitations: ALL variables need to be set at the same time  
 
-Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True
+Sample tag: AUTO: iam_turn_on_password_policy MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True RequireUppercaseCharacters:True RequireLowercaseCharacters:True AllowUsersToChangePassword:True MaxPasswordAge:5 PasswordReusePrevention:5 HardExpiry:True  
 
 ## iam_user_force_password_change
 What it does: Updates the setting for an IAM user so that they need to change their console password the next time they log in.  
-Usage: AUTO: iam_user_force_password_change
+Usage: AUTO: iam_user_force_password_change  
 Limitations: none  
 
 ## igw_delete
-What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.
-
-Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.  
+Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc.  
 
 ## mark_for_stop_ec2_resource
-What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.   
-Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>
-Example: AUTO: mark_for_stop_ec2_resource 3h
-Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that we want to tigger the remediation bot. 
+What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>     
+Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>  
+Example: AUTO: mark_for_stop_ec2_resource 3h  
+Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that we want to tigger the remediation bot.  
 From there, a rule like "Instance should not have tags with [ key='marked_for_stop' and value before(1, 'minutes') ]" can be ran to check how long an instance has had the 'mark for stop' tag. 
-Limitations: none
+Limitations: none  
 
-THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
+THIS WORKS ACROSS ALL EC2 RELATED SERVICES:  
 * Image
 * Instance
 * InternetGateway
@@ -379,10 +377,10 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 
 
 ## rds_quarantine_instance
-What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
-Usage: AUTO: rds_quarantine_instance
-Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
-(Might not work with Aurora since it's in a cluster)
+What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world  
+Usage: AUTO: rds_quarantine_instance  
+Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail  
+(Might not work with Aurora since it's in a cluster)  
 
 
 ## s3_delete_bucket
@@ -391,7 +389,7 @@ Usage: AUTO: s3_delete_bucket
 Limitations: none  
 
 ## s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket
+What it does: Deletes all ACLs and bucket policies from a bucket  
 Usage: AUTO: s3_delete_permissions  
 Limitations: none  
 
@@ -401,9 +399,9 @@ Usage: AUTO: s3_enable_encryption
 Limitations: none  
 
 ## s3_enable_versioning
-What it does: Turns on versioning for an S3 bucket
-Usage: AUTO: s3_enable_versioning
-Limitations: none 
+What it does: Turns on versioning for an S3 bucket  
+Usage: AUTO: s3_enable_versioning  
+Limitations: none  
 
 ## sg_delete
 What it does: Deletes a security group  
@@ -413,13 +411,13 @@ Limitations: This will fail if there is something still attached to the SG.
 ## sg_rules_delete
 What it does: Deletes all ingress and egress rules from a SG  
 Usage: AUTO: sg_rules_delete  
-Limitations: none 
+Limitations: none  
 
 ## tag_ec2_resource
 What it does: Tags an ec2 instance  
 Usage: AUTO: tag_ec2_resource <key> <value>  
-Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"
-Limitations: none
+Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"  
+Limitations: none  
 
 THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * Image
@@ -437,14 +435,14 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * VpcPeeringConnection
 
 ## vpc_turn_on_flow_logs
-What it does: Turns on flow logs for a VPC
-Settings: Log Group Name: vpcFlowLogs
-If traffic type to be logged isn't specified, it defaults to all.
-Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
-Limitations: none 
+What it does: Turns on flow logs for a VPC  
+Settings: Log Group Name: vpcFlowLogs  
+If traffic type to be logged isn't specified, it defaults to all.  
+Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>  
+Limitations: none  
 
-log delivery policy name is set as: vpcFlowLogDelivery
-log relivery role is set as: vpcFlowLogDelivery
+log delivery policy name is set as: vpcFlowLogDelivery  
+log relivery role is set as: vpcFlowLogDelivery  
 
 
 # Release Notes
