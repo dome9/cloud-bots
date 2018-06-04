@@ -276,19 +276,20 @@ Default bucket name: acct<account_id>cloudtraillogs
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
 IncludeGlobalServiceEvents: True
 EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
-Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>
-Note: Trail_name and bucket_name are optional and don't need to be set. 
-Limitations: none 
+
+Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>  
+Note: Trail_name and bucket_name are optional and don't need to be set.   
+Limitations: none   
 
 ## cloudtrail_send_to_cloudwatch
 What it does: Makes CloudTrail output logs to CloudWatchLogs. If the log group doesn't exist alredy, it'll reate a new one. 
-Usage: AUTO: cloudtrail_send_to_cloudwatch <log_group_name>  
-Limitations: none  
+Usage: AUTO: cloudtrail_send_to_cloudwatch <log_group_name>    
+Limitations: none    
 Defaults: 
-    If no log group name is set, it'll default to CloudTrail/DefaultLogGroup
-    Role name: CloudTrail_CloudWatchLogs_Role
-    Log delivery policy name: CloudWatchLogsAllowDelivery
-
+    If no log group name is set, it'll default to CloudTrail/DefaultLogGroup  
+    Role name: CloudTrail_CloudWatchLogs_Role  
+    Log delivery policy name: CloudWatchLogsAllowDelivery  
+ 
 ## cloudwatch_create_metric_filter
 What it does: Creates CloudWatch Metric Filters to match the CIS Benchmark. A metric alarm and SNS subscripion is created as well
 Usage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> .... 
