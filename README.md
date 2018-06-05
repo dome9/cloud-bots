@@ -20,6 +20,7 @@ Table of Contents
   * [What is this ?](#what-is-this-)
   * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
   * [How does it work ?](#how-does-it-work-)
+  * [FAQ](#faq)
 * [Setup Steps](#setup-steps)
   * [Decide on deployment mode](#decide-on-deployment-mode)
   * [Outside of Dome9 Easy mode](#outside-of-dome9)
@@ -60,6 +61,38 @@ This approach could reduce the load from the security operators and drastically 
 - Lambda reads the message tags and looks for a tag that matches AUTO: <anything>
 - If any of those AUTO tags match a remediation that we have built out, it'll call that bot.
 - All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS
+
+## FAQ
+
+#### Where does the function live?
+The function can exist in any region you want in your account. Only one is needed per account though. 
+
+#### How many do I need?
+In multi-account mode, only one function is required.
+In single account mode, one function is required per account.
+
+In either mode, there's no need for one function per region or antyhing like that. The max is one function per account.  
+
+Every cloud-bot lives in the same function. There aren't multiple functions for the different bots.  
+
+
+#### Does this use the original Dome9 role?
+No. The Dome9-connect role is only for Dome9 to collect data from your AWS accounts. The CloudBots function needs its own execution role to run the remediation actions, but it's completely separate from the Dome9 role. 
+
+#### Where does the AUTO: <bot> syntax come from? 
+AUTO: is used to signal to CloudBots that a remediation action needs to be triggered. The bot name correlates to a file name in the bots/ folder. 
+
+#### Why isn't it in the remediation field of the rule? 
+By putting the bot syntax in the "Compliance Section" field, multiple actions can be triggered from one rule since the Compliance Section is passed through the event as an array.  
+
+#### How do I add on new "bots"?
+Any new bot needs to go into the bots folder in the function. From there, you call it with the AUTO: syntax.  
+For example, a delete user bot would be named delete_user.py and put in the bots folder.  
+It would be triggered with "AUTO: delete_user"  
+
+#### What languages are supported?
+Currently only python is supported  
+
 
 
 # Setup Steps

@@ -73,6 +73,30 @@ If the event contains a bot that we want to call, it will look for the correspon
 }
 ```
 
+### Required event structure
+Here is the minimum information that CloudBots needs to run:
+```javascript
+{
+  "bundle": {
+    "name": "Mysecurity checks"
+  },
+  "reportTime": "2018-03-20T05:40:42.043Z",
+  "rule": {
+    "name": "Instance should fail",
+    "complianceTags": "AUTO: tag_ec2_resource myKey myValue"
+  },
+  "status": "Failed",
+  "account": {
+    "id": "621958466464"
+  },
+  "entity": {
+    "id": "i-0028f9751d334c93a",
+    "name": "TestInstance",
+    "region": "us_west_2"
+  }
+}
+```
+
 ### Sample bot
 ```python
 import boto3 #Required
