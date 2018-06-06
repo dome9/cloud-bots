@@ -1,12 +1,8 @@
 '''
 s3_enable_logging
-What it does: Turns on server access logging
+What it does: Turns on server access logging. The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error. This bot will create a bucket to log to as well.
 Usage: AUTO: s3_enable_logging 
 Limitations: none
-Requirements: 
-    The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error. 
-    The target bucket must have write_object and read_bucket_permissions S3 logging ACLs or it'll throw a InvalidTargetBucketForLogging error.
-    This will check for a bucket called <accountNumber>S3accesslogs<region> and create one if it doesn't exist. 
 '''
 
 import boto3
