@@ -433,6 +433,15 @@ What it does: Turns on AES-256 encryption on the target bucket
 Usage: AUTO: s3_enable_encryption  
 Limitations: none  
 
+## s3_enable_logging
+What it does: Turns on server access logging  
+Usage: AUTO: s3_enable_logging  
+Limitations: none  
+Requirements:  
+    The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error.  
+    The target bucket must have write_object and read_bucket_permissions S3 logging ACLs or it'll throw a InvalidTargetBucketForLogging error.  
+    This will check for a bucket called <accountNumber>S3accesslogs<region> and create one if it doesn't exist.  
+
 ## s3_enable_versioning
 What it does: Turns on versioning for an S3 bucket  
 Usage: AUTO: s3_enable_versioning  
@@ -483,6 +492,7 @@ log relivery role is set as: vpcFlowLogDelivery
 # Release Notes
 - 6/3/18: Updated mark_for_stop_ec2_resource to take in a target mark for stop time instead of just marking the current time the event was triggered. This will allow you to manage less remediation rules since the logic of when you want to stop is done during the 'marking' bot instead of the 'action' bot. Example AUTO: mark_for_stop_ec2_resource 3h
 - 6/3/18: Added in README_DEVELOPER_GUIDE to help others create their own bots. 
+- 6/6/18: Re:added s3_enable_logging with new capabilities. Now it can create region specific buckets since buckets can only log to other buckets in the same region.  
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)

@@ -106,6 +106,7 @@ Resources:
                - s3:GetBucketAcl # For s3_delete_permissions
                - s3:GetBucketPolicy # For s3_delete_permissions
                - s3:GetObject
+               - s3:HeadBucket # For s3_enable_logging
                - s3:PutBucketAcl # For s3_delete_permissions
                - s3:PutBucketLogging # For s3_enable_logging
                - s3:PutBucketPolicy # For create_cloudtrail
