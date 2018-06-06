@@ -34,6 +34,8 @@ Table of Contents
 
 ## For more technical information, please see [README_ADVANCED.md](https://github.com/Dome9/cloud-bots/blob/master/README_ADVANCED.md)
 
+## For more information on creating your own bots, please see [README_DEVELOPER_GUIDE.md](https://github.com/Dome9/cloud-bots/blob/master/README_DEVELOPER_GUIDE.md)
+
 # Overview
 ## What is this ?
 Cloud-Bots is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
