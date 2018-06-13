@@ -66,16 +66,16 @@ This approach could reduce the load from the security operators and drastically 
 
 ## FAQ
 
-#### Where can I see this in action? 
+### Where can I see this in action? 
 Here are two videos on CloudBots:  
 - [Initial Setup](https://www.youtube.com/watch?v=HTRAq8g6dnk)
 - [Remediating an exposed S3 bucket](https://www.youtube.com/watch?v=Fb3gjFlxXjA)
 
 
-#### Where does the function live?
+### Where does the function live?
 The function can exist in any region you want in your account. Only one is needed per account though. 
 
-#### How many do I need?
+### How many do I need?
 In multi-account mode, only one function is required.
 In single account mode, one function is required per account.
 
@@ -84,21 +84,21 @@ In either mode, there's no need for one function per region or antyhing like tha
 Every cloud-bot lives in the same function. There aren't multiple functions for the different bots.  
 
 
-#### Does this use the original Dome9 role?
+### Does this use the original Dome9 role?
 No. The Dome9-connect role is only for Dome9 to collect data from your AWS accounts. The CloudBots function needs its own execution role to run the remediation actions, but it's completely separate from the Dome9 role. 
 
-#### Where does the AUTO: <bot> syntax come from? 
+## Where does the AUTO: <bot> syntax come from? 
 AUTO: is used to signal to CloudBots that a remediation action needs to be triggered. The bot name correlates to a file name in the bots/ folder. 
 
-#### Why isn't it in the remediation field of the rule? 
+### Why isn't it in the remediation field of the rule? 
 By putting the bot syntax in the "Compliance Section" field, multiple actions can be triggered from one rule since the Compliance Section is passed through the event as an array.  
 
-#### How do I add on new "bots"?
+### How do I add on new "bots"?
 Any new bot needs to go into the bots folder in the function. From there, you call it with the AUTO: syntax.  
 For example, a delete user bot would be named delete_user.py and put in the bots folder.  
 It would be triggered with "AUTO: delete_user"  
 
-#### What languages are supported?
+### What languages are supported?
 Currently only python is supported  
 
 
