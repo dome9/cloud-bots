@@ -66,6 +66,12 @@ This approach could reduce the load from the security operators and drastically 
 
 ## FAQ
 
+#### Where can I see this in action? 
+Here are two videos on CloudBots:
+- Initial Setup: https://www.youtube.com/watch?v=HTRAq8g6dnk  
+- Remediating an exposed S3 bucket: https://www.youtube.com/watch?v=Fb3gjFlxXjA  
+
+
 #### Where does the function live?
 The function can exist in any region you want in your account. Only one is needed per account though. 
 
