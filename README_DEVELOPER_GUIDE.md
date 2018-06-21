@@ -77,9 +77,6 @@ If the event contains a bot that we want to call, it will look for the correspon
 Here is the minimum information that CloudBots needs to run:
 ```javascript
 {
-  "bundle": {
-    "name": "Mysecurity checks"
-  },
   "reportTime": "2018-03-20T05:40:42.043Z",
   "rule": {
     "name": "Instance should fail",
