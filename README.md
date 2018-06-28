@@ -26,6 +26,7 @@ Table of Contents
   * [Outside of Dome9 Easy mode](#outside-of-dome9)
   * [Outside of Dome9](#outside-of-dome9)
   * [In Dome9](#in-dome9)
+  * [Updating the stack](#updating-the-stack)
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
 * [Release Notes](#release-notes)
