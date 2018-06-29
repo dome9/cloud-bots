@@ -81,10 +81,12 @@ Resources:
                - ec2:DeleteSecurityGroup # For sg_delete
                - ec2:DeleteInternetGateway # For igw_delete
                - ec2:DetachInternetGateway # For igw_delete
+               - ec2:DescribeAddresses # For ec2_release_eips
                - ec2:DescribeSecurityGroups # For instance_quarantine
                - ec2:DescribeInstances # For igw_delete
                - ec2:ModifyInstanceAttribute # For instance_quarantine
                - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
+               - ec2:ReleaseAddress # For ec2_release_eips
                - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
                - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
                - ec2:StopInstances # For ec2_stop_instance
