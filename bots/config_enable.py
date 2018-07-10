@@ -123,7 +123,11 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
         s3_client.head_bucket(Bucket=target_bucket_name)
         text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
 
-    except ClientError:
+    except ClientError as e:
+        if e.response['Error']['Code'] == "403":
+            text_output = "Bucket %s already exists. Skipping\n" % target_bucket_name
+            return text_output
+
         # The bucket does not exist or you have no access. Create it    
         print("Creating S3 bucket")
         try: ## Currently getting an illegallocationconstraintexception on us-east-1. Still working on it
