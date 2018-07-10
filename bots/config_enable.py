@@ -125,22 +125,24 @@ def create_bucket(s3_client,region,target_bucket_name,accountNumber):
         return text_output
 
     except ClientError:
+
         # The bucket does not exist or you have no access. Create it    
         print("Creating S3 bucket")
         try:
             if region == "us-east-1":
                 result = s3_client.create_bucket(
-                    Bucket=target_bucket_name)
+                        Bucket=target_bucket_name
+                    )
             elif region == "eu-west-1":
                 region = "EU"
                 result = s3_client.create_bucket(
-                    Bucket=target_bucket_name,
-                    CreateBucketConfiguration={'LocationConstraint': region}
+                        Bucket=target_bucket_name,
+                        CreateBucketConfiguration={'LocationConstraint': region}
                     )
             else:
                 result = s3_client.create_bucket(
-                    Bucket=target_bucket_name,
-                    CreateBucketConfiguration={'LocationConstraint': region}
+                        Bucket=target_bucket_name,
+                        CreateBucketConfiguration={'LocationConstraint': region}
                     )
             
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -150,7 +152,12 @@ def create_bucket(s3_client,region,target_bucket_name,accountNumber):
                 text_output = "Config logs bucket created %s \n" % target_bucket_name
        
         except ClientError as e:
-            text_output = "Unexpected error: %s \n" % e
+            error = e.response['Error']['Code']
+            if error == 'BucketAlreadyOwnedByYou':
+                text_output = "Bucket %s already owned by this account. Skipping\n" % target_bucket_name
+                return text_output
+            else:
+                text_output = "Unexpected error: %s \n" % e
 
 
         ### ATTACH BUCKET POLICY
