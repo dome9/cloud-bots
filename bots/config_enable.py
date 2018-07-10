@@ -117,30 +117,28 @@ def start_config_recorder(config_client):
     return text_output
 
 
-def create_bucket(s3_client,region,target_bucket_name,accountNumber):
+def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber):
     #This will work across regions so we only need one bucket. 
     try:
         s3_client.head_bucket(Bucket=target_bucket_name)
-        text_output = "Bucket %s already exists. Skipping\n" % target_bucket_name
-        return text_output
+        text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
 
     except ClientError:
-
         # The bucket does not exist or you have no access. Create it    
         print("Creating S3 bucket")
-        try:
+        try: ## Currently getting an illegallocationconstraintexception on us-east-1. Still working on it
             if region == "us-east-1":
-                result = s3_client.create_bucket(
+                result = s3_resource.create_bucket(
                         Bucket=target_bucket_name
                     )
             elif region == "eu-west-1":
                 region = "EU"
-                result = s3_client.create_bucket(
+                result = s3_resource.create_bucket(
                         Bucket=target_bucket_name,
                         CreateBucketConfiguration={'LocationConstraint': region}
                     )
             else:
-                result = s3_client.create_bucket(
+                result = s3_resource.create_bucket(
                         Bucket=target_bucket_name,
                         CreateBucketConfiguration={'LocationConstraint': region}
                     )
@@ -154,8 +152,11 @@ def create_bucket(s3_client,region,target_bucket_name,accountNumber):
         except ClientError as e:
             error = e.response['Error']['Code']
             if error == 'BucketAlreadyOwnedByYou':
-                text_output = "Bucket %s already owned by this account. Skipping\n" % target_bucket_name
-                return text_output
+                text_output = "Bucket %s already owned by this account. Checking bucket policy next\n" % target_bucket_name
+            elif error == 'BucketAlreadyExists':
+                text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
+            elif error == 'OperationAborted':
+                text_output = "Another bucket creation is in progress. Skipping.\n"
             else:
                 text_output = "Unexpected error: %s \n" % e
 
@@ -253,6 +254,7 @@ def run_action(boto_session,rule,entity,params):
     config_client = boto_session.client('config')
     iam_client = boto_session.client('iam')
     s3_client = boto_session.client('s3')
+    s3_resource = boto_session.resource('s3')
 
     text_output = "Setting up config for %s \n" % region
 
@@ -260,7 +262,7 @@ def run_action(boto_session,rule,entity,params):
     text_output = text_output + create_role(iam_client) # Create a role for AWS Config
     text_output = text_output + add_policy_to_role(iam_client) # Attach the service policy to the role
     text_output = text_output + create_config_recorder(config_client,accountNumber) # Set up the config recorders 
-    text_output = text_output + create_bucket(s3_client,region,target_bucket_name,accountNumber) # Create a bucket for config to store logs in if it's not already there
+    text_output = text_output + create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber) # Create a bucket for config to store logs in if it's not already there
     text_output = text_output + put_delivery_channel(config_client,target_bucket_name) # Tell config to send the logs to the bucket
     text_output = text_output + start_config_recorder(config_client) # Turn it on
 
