@@ -1,10 +1,12 @@
 '''
 ## config_enable
 What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
-Usage: AUTO: config_enable  
+Usage: AUTO: config_enable bucket_name=mybucketlogs bucket_region=us-west-1 include_global_resource_types_region=us-west-1
 Limitations: none  
 Defaults: 
     name = default
+    bucket_name = accountNumber + "awsconfiglogs"
+    bucket_region = us-west-1
     allSupported = True
     includeGlobalResourceTypes = True
     file deliveryFrequency(to S3) = One_Hour
@@ -70,11 +72,22 @@ def add_policy_to_role(iam_client):
 
     return text_output
 
-def create_config_recorder(config_client,accountNumber):    
+def create_config_recorder(config_client,accountNumber,region,include_global_resource_types_region):    
     print("Creating ConfigurationRecorder")
 
     role_id = "arn:aws:iam::" + accountNumber + ":role/AWSConfigRole"
-
+ 
+    if region == include_global_resource_types_region:
+        include_resource_types = True
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to true\n"
+    elif include_global_resource_types_region == "Null":
+        ## include_global_resource_types_region is not set. Default to true
+        include_resource_types = True
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to true\n"
+    else:
+        include_resource_types = False
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to false\n"
+            
     try:
         result = config_client.put_configuration_recorder(
         ConfigurationRecorder={
@@ -82,19 +95,19 @@ def create_config_recorder(config_client,accountNumber):
             'roleARN': role_id,
             'recordingGroup': {
                 'allSupported': True,
-                'includeGlobalResourceTypes': True,
+                'includeGlobalResourceTypes': include_resource_types,
                 }
             }
         )
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = text_output + "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "AWS Config recorder created\n"
+            text_output = text_output + "AWS Config recorder created\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -119,6 +132,7 @@ def start_config_recorder(config_client):
 
 def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber):
     #This will work across regions so we only need one bucket. 
+    text_output = ""
     try:
         s3_client.head_bucket(Bucket=target_bucket_name)
         text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
@@ -251,8 +265,51 @@ def run_action(boto_session,rule,entity,params):
     region = entity['region']
     region = region.replace("_","-")
     accountNumber = entity['accountNumber']
+    text_output = ""
+    ### Params handling ###
+    # 3 optional variables - bucket_name, bucket_region, include_global_resource_types_region
+    if len(params) > 0:
+        for i in params:
+            try:
+                key_value = i.split("=")
+                key = key_value[0]
+                value = key_value[1]
 
-    target_bucket_name = accountNumber + "awsconfiglogs" 
+                if key == "bucket_name":
+                    target_bucket_name = value
+                    text_output = text_output + "S3 Bucket name will be %s \n" % target_bucket_name
+
+                elif key == "bucket_region":
+                    target_bucket_region = value
+                    text_output = text_output + "S3 Bucket region will be %s \n" % target_bucket_region
+                    
+                elif key == "include_global_resource_types_region":
+                    include_global_resource_types_region = value
+                    text_output = text_output + "Include global_logs_region will be set as %s \n" % include_global_resource_types_region
+
+            except:
+                print("Params formatting doesn't match required formatting. Using defaults.")
+                break
+
+    #### IF VARIABLE ISN'T SET - FALL BACK
+    try:
+        print ("Target_bucket_name: %s" % target_bucket_name)
+    except NameError:
+        target_bucket_name = accountNumber + "awsconfiglogs"
+        text_output = text_output +  "S3 Bucket name not set. Defaulting to %s.\n" % target_bucket_name
+
+    try:
+        print("Target bucket region: %s" % target_bucket_region) 
+    except NameError:    
+        target_bucket_region = "us-west-1"
+        text_output = text_output +  "S3 Bucket region not set. Defaulting to %s.\n" % target_bucket_region
+
+    try:
+        print("Include global logs region: %s" % include_global_resource_types_region)
+    except NameError:    
+        text_output = text_output +  "All regions will have 'includeGlobalResourceTypes' set to true.\n" 
+        include_global_resource_types_region = "Null"
+
 
     #The clients will be reused so we'll set them up just once
     config_client = boto_session.client('config')
@@ -265,8 +322,8 @@ def run_action(boto_session,rule,entity,params):
     #Do work
     text_output = text_output + create_role(iam_client) # Create a role for AWS Config
     text_output = text_output + add_policy_to_role(iam_client) # Attach the service policy to the role
-    text_output = text_output + create_config_recorder(config_client,accountNumber) # Set up the config recorders 
-    text_output = text_output + create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber) # Create a bucket for config to store logs in if it's not already there
+    text_output = text_output + create_config_recorder(config_client,accountNumber,region,include_global_resource_types_region) # Set up the config recorders 
+    text_output = text_output + create_bucket(s3_client,s3_resource,target_bucket_region,target_bucket_name,accountNumber) # Create a bucket for config to store logs in if it's not already there
     text_output = text_output + put_delivery_channel(config_client,target_bucket_name) # Tell config to send the logs to the bucket
     text_output = text_output + start_config_recorder(config_client) # Turn it on
 
