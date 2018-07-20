@@ -340,14 +340,18 @@ Default: SNS topic name is CloudTrailMetricFilterAlerts
 Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges  
 
 ## config_enable
-What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders.   
-Usage: AUTO: config_enable    
+What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
+Usage: AUTO: config_enable bucket_name=mybucketlogs bucket_region=us-west-1 include_global_resource_types_region=us-west-1
 Limitations: none  
-Defaults: 
-    name = default  
-    allSupported = True  
-    includeGlobalResourceTypes = True  
-    file deliveryFrequency(to S3) = One_Hour  
+Variables (and their defaults): 
+    bucket_name = accountNumber + "awsconfiglogs"
+    bucket_region = us-west-1
+    allSupported = True
+    includeGlobalResourceTypes = True (if you want to change this, use the variable include_global_resource_types_region=<desired_region>)  
+
+Defaults (not changable currently via variable):
+    file deliveryFrequency(to S3) is set to One_Hour
+    config_name = default  
 
 ## ec2_release_eips
 What it does: Disassociates and releases all EIPs on an instance
