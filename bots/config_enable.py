@@ -3,13 +3,15 @@
 What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
 Usage: AUTO: config_enable bucket_name=mybucketlogs bucket_region=us-west-1 include_global_resource_types_region=us-west-1
 Limitations: none  
-Defaults: 
-    name = default
+Variables (and their defaults): 
     bucket_name = accountNumber + "awsconfiglogs"
     bucket_region = us-west-1
     allSupported = True
-    includeGlobalResourceTypes = True
-    file deliveryFrequency(to S3) = One_Hour
+    includeGlobalResourceTypes = True (if you want to change this, use the variable include_global_resource_types_region=<desired_region>)
+
+Defaults (not changable currently via variable):
+    file deliveryFrequency(to S3) is set to One_Hour
+    config_name = default
 '''
 
 import boto3
