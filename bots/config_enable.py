@@ -288,7 +288,7 @@ def run_action(boto_session,rule,entity,params):
                     text_output = text_output + "Include global_logs_region will be set as %s \n" % include_global_resource_types_region
 
             except:
-                print("Params formatting doesn't match required formatting. Using defaults.")
+                text_output = text_output + "Params formatting doesn't match required formatting. Using defaults."
                 break
 
     #### IF VARIABLE ISN'T SET - FALL BACK
