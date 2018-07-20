@@ -66,7 +66,7 @@ Go to your email and confirm the subscription. SNS seems to have some odd behavi
 
 
 ### If you're running in multi-account mode
-By default, the cross account roles will all need to be named "dome9-auto-remediations". If you want a different name, add a new variable to the dome9AutoRemediations lambda function called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role.
+By default, the cross account roles will all need to be named "Dome9CloudBots". If you want a different name, add a new variable to the dome9AutoRemediations lambda function called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role.
 
 
 #### Set up cross account roles for EACH account that will be remediated
