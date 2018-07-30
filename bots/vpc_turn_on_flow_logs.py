@@ -6,6 +6,7 @@ Log Group Name: vpcFlowLogs
 If traffic type to be logged isn't specified, it defaults to all.
 Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
 Limitations: none 
+Sample GSL: VPC should have hasFlowLogs=true
 
 log delivery policy name is set as: vpcFlowLogDelivery
 log relivery role is set as: vpcFlowLogDelivery
