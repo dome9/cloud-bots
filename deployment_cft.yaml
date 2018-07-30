@@ -75,6 +75,7 @@ Resources:
                - config:PutConfigurationRecorder # For config_enable
                - config:PutDeliveryChannel # For config_enable
                - config:StartConfigurationRecorder # For config_enable
+               - ec2:AssociateIamInstanceProfile # For ec2_attach_instance_role
                - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                - ec2:CreateSecurityGroup # For instance_quarantine
                - ec2:CreateTags # For ec2_tag_instance
@@ -91,7 +92,7 @@ Resources:
                - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
                - ec2:StopInstances # For ec2_stop_instance
                - ec2:TerminateInstances # For ec2_terminate_instance
-               - iam:AttachRolePolicy
+               - iam:AttachRolePolicy # For ec2_update_instance_role and others
                - iam:AttachUserPolicy # For iam_quarantine_user
                - iam:CreatePolicy
                - iam:CreateRole # For vpc_turn_on_flow_logs
