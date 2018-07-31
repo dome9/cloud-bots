@@ -496,15 +496,11 @@ Settings: Log Group Name: vpcFlowLogs
 If traffic type to be logged isn't specified, it defaults to all.  
 Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>  
 Limitations: none  
+Sample GSL: VPC should have hasFlowLogs=true
 
 log delivery policy name is set as: vpcFlowLogDelivery  
 log relivery role is set as: vpcFlowLogDelivery  
 
-
-# Release Notes
-- 6/3/18: Updated mark_for_stop_ec2_resource to take in a target mark for stop time instead of just marking the current time the event was triggered. This will allow you to manage less remediation rules since the logic of when you want to stop is done during the 'marking' bot instead of the 'action' bot. Example AUTO: mark_for_stop_ec2_resource 3h
-- 6/3/18: Added in README_DEVELOPER_GUIDE to help others create their own bots. 
-- 6/6/18: Re:added s3_enable_logging with new capabilities. Now it can create region specific buckets since buckets can only log to other buckets in the same region.  
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
