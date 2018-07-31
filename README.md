@@ -353,6 +353,14 @@ Defaults (not changable currently via variable):
     file deliveryFrequency(to S3) is set to One_Hour
     config_name = default  
 
+## ec2_attach_instance_role
+What it does: Attaches an instance role to an EC2 instance. This role needs be passed in through the params.    
+Usage: AUTO: ec2_update_instance_role role_arn=<role_arn>  
+
+If you have a role that is the same across accounts, and don't want to pass in an account specific ARN, add "$ACCOUNT_ID" to the role ARN and the function will automatically pull in the current account ID of the finding.   
+Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instance-profile/ec2SSM  
+Sample GSL: Instance should have roles
+
 ## ec2_release_eips
 What it does: Disassociates and releases all EIPs on an instance
 Usage: AUTO: ec2_release_eips
@@ -376,6 +384,12 @@ Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
 What it does: Terminates an ec2 instance  
 Usage: AUTO: ec2_terminate_instance  
 Limitations: none  
+
+## ec2_update_instance_role  
+What it does: Updates an EXISTING EC2 instance role by attaching another policy to the role. This policy needs be passed in through the params.  
+Usage: AUTO: ec2_update_instance_role policy_arn=<policy_arn>  
+Example: AUTO: ec2_update_instance_role policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
+Sample GSL: Instance where roles should have roles with [ managedPolicies contain [ name='AmazonEC2RoleforSSM' ] ]  
 
 ## iam_quarantine_role
 What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
