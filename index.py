@@ -16,9 +16,12 @@ def lambda_handler(event, context):
 
     raw_message = event['Records'][0]['Sns']['Message']
     print(raw_message) #CW Logs prints JSON prettier. Printing this for easier recreation. 
-    message = json.loads(raw_message)
-    print(message) #log the input for troubleshooting
     
+    try:
+        message = json.loads(raw_message)
+    except: # If the event comes through as a dict, take it as it comes
+        message = raw_message
+
     timestamp = "ReportTime: " + str(message['reportTime']) + "\n"
 
     text_output_array.append(timestamp)
