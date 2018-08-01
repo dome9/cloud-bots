@@ -8,7 +8,7 @@ Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instan
 Sample GSL: Instance should have roles
 '''
 
-import boto38
+import boto3
 from botocore.exceptions import ClientError
  
 def run_action(boto_session,rule,entity,params):
