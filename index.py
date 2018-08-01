@@ -41,7 +41,7 @@ def lambda_handler(event, context):
         sendEvent(text_output_array,SNS_TOPIC_ARN)
 
     if not SNS_TOPIC_ARN:
-        print("SNS topic out was not defined!")
+        print("SNS output topic ARN was not defined!")
 
     print(text_output_array)
     return
