@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     text_output_array = ["-------------------------\n"]
 
     raw_message = event['Records'][0]['Sns']['Message']
-    print(message) #CW Logs prints JSON prettier. Printing this for easier recreation. 
+    print(raw_message) #CW Logs prints JSON prettier. Printing this for easier recreation. 
     message = json.loads(raw_message)
     print(message) #log the input for troubleshooting
     
