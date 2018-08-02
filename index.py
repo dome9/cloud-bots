@@ -36,7 +36,6 @@ def lambda_handler(event, context):
         text_output_array.append("Handle_event failed\n")
         text_output_array.append(str(e))
 
-    
     if SNS_TOPIC_ARN != '' and post_to_sns:
         sendEvent(text_output_array,SNS_TOPIC_ARN)
 
