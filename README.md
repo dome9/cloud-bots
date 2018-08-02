@@ -291,21 +291,21 @@ Updating your current CloudBots stack is very straightforward. In the UI, naviga
 
 | Region        | CFT Link        | 
 | ------------- |:-------------:| 
-|us-east-1|https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate|
-|us-east-2|https://s3-us-east-2.amazonaws.com/dome9cftemplatesuseast2/cloudbots_cftemplate|
-|us-west-1|https://s3-us-west-1.amazonaws.com/dome9cftemplatesuswest1/cloudbots_cftemplate|
-|us-west-2|https://s3-us-west-2.amazonaws.com/dome9cftemplatesuswest2/cloudbots_cftemplate|
-|ca-central-1|https://s3-ca-central-1.amazonaws.com/dome9cftemplatescacentral1/cloudbots_cftemplate|
-|eu-central-1|https://s3-eu-central-1.amazonaws.com/dome9cftemplateseucentral1/cloudbots_cftemplate|
-|eu-west-1|https://s3-eu-west-1.amazonaws.com/dome9cftemplateseuwest1/cloudbots_cftemplate|
-|eu-west-2|https://s3-eu-west-2.amazonaws.com/dome9cftemplateseuwest2/cloudbots_cftemplate|
-|eu-west-3|https://s3-eu-west-3.amazonaws.com/dome9cftemplateseuwest3/cloudbots_cftemplate|
-|ap-northeast-1|https://s3-ap-northeast-1.amazonaws.com/dome9cftemplatesapnortheast1/cloudbots_cftemplate|
-|ap-northeast-2|https://s3-ap-northeast-2.amazonaws.com/dome9cftemplatesapnortheast2/cloudbots_cftemplate|
-|ap-southeast-1|https://s3-ap-southeast-1.amazonaws.com/dome9cftemplatesapsoutheast1/cloudbots_cftemplate|
-|ap-southeast-2|https://s3-ap-southeast-2.amazonaws.com/dome9cftemplatesapsoutheast2/cloudbots_cftemplate|
-|ap-south-1|https://s3-ap-south-1.amazonaws.com/dome9cftemplatesapsouth1/cloudbots_cftemplate|
-|sa-east-1|https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate|
+|us-east-1|https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate.yaml|
+|us-east-2|https://s3-us-east-2.amazonaws.com/dome9cftemplatesuseast2/cloudbots_cftemplate.yaml|
+|us-west-1|https://s3-us-west-1.amazonaws.com/dome9cftemplatesuswest1/cloudbots_cftemplate.yaml|
+|us-west-2|https://s3-us-west-2.amazonaws.com/dome9cftemplatesuswest2/cloudbots_cftemplate.yaml|
+|ca-central-1|https://s3-ca-central-1.amazonaws.com/dome9cftemplatescacentral1/cloudbots_cftemplate.yaml|
+|eu-central-1|https://s3-eu-central-1.amazonaws.com/dome9cftemplateseucentral1/cloudbots_cftemplate.yaml|
+|eu-west-1|https://s3-eu-west-1.amazonaws.com/dome9cftemplateseuwest1/cloudbots_cftemplate.yaml|
+|eu-west-2|https://s3-eu-west-2.amazonaws.com/dome9cftemplateseuwest2/cloudbots_cftemplate.yaml|
+|eu-west-3|https://s3-eu-west-3.amazonaws.com/dome9cftemplateseuwest3/cloudbots_cftemplate.yaml|
+|ap-northeast-1|https://s3-ap-northeast-1.amazonaws.com/dome9cftemplatesapnortheast1/cloudbots_cftemplate.yaml|
+|ap-northeast-2|https://s3-ap-northeast-2.amazonaws.com/dome9cftemplatesapnortheast2/cloudbots_cftemplate.yaml|
+|ap-southeast-1|https://s3-ap-southeast-1.amazonaws.com/dome9cftemplatesapsoutheast1/cloudbots_cftemplate.yaml|
+|ap-southeast-2|https://s3-ap-southeast-2.amazonaws.com/dome9cftemplatesapsoutheast2/cloudbots_cftemplate.yaml|
+|ap-south-1|https://s3-ap-south-1.amazonaws.com/dome9cftemplatesapsouth1/cloudbots_cftemplate.yaml|
+|sa-east-1|https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate.yaml|
 
 
 
