@@ -12,6 +12,7 @@
                 "config:PutConfigurationRecorder",
                 "config:PutDeliveryChannel",
                 "config:StartConfigurationRecorder",
+                "ec2:AssociateIamInstanceProfile",
                 "ec2:CreateFlowLogs",
                 "ec2:CreateSecurityGroup",
                 "ec2:CreateTags",
