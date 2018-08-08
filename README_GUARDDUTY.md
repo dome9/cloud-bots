@@ -94,6 +94,8 @@ Go to your email and confirm the subscription. SNS seems to have some odd behavi
 Usage: ./enable_guard_duty.sh <lambda_arn> <aws_profile_name>  
 Example: ./enable_guard_duty.sh arn:aws:lambda:us-west-2:936643454293:function:Dome9CloudBots sandbox
 
+If no profile name is included, it defaults to 'default'.
+
 This shell script will configure Guard Duty and let the data be sent to the correct lambda function.  
 This runs as a shell script since CloudFormation runs per-region and this would be a hassle to manually put in each region. 
 
