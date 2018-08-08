@@ -126,6 +126,7 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
           ACCOUNT_MODE: !Ref DeploymentMode
+          GD_ACTIONS: ""
       Events:
         d9Findings:
           Type: SNS
