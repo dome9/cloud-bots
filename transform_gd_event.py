@@ -69,7 +69,16 @@ def transform_gd_event(unformatted_message):
 
         # Instance type
         if unformatted_message["detail"]["resource"]["resourceType"] == "Instance":
-            formatted_message["entity"]["id"] = unformatted_message["detail"]["resource"]["instanceDetails"]["instanceId"]
+            instance_id = unformatted_message["detail"]["resource"]["instanceDetails"]["instanceId"]
+            formatted_message["entity"]["id"] = instance_id
+
+            # Stop trying to parse event/run bot if it's from GD's "Generate Sample Findings"
+            if instance_id == "i-99999999":
+              text_output = "Guard Duty sample event found. Instance ID from the finding is i-99999999. Skipping\n"
+              found_action = False
+              return found_action, text_output, formatted_message
+
+
             try:
                 formatted_message["entity"]["vpc"] = {"id": unformatted_message["detail"]["resource"]["instanceDetails"]["networkInterfaces"][0]["vpcId"]}
             except:
@@ -84,8 +93,18 @@ def transform_gd_event(unformatted_message):
 
         # Access Key type
         elif unformatted_message["detail"]["resource"]["resourceType"] == "AccessKey":
-            formatted_message["entity"]["id"] = unformatted_message["detail"]["resource"]["accessKeyDetails"]["accessKeyId"]
+            access_key_id = unformatted_message["detail"]["resource"]["accessKeyDetails"]["accessKeyId"]
+            formatted_message["entity"]["id"] = access_key_id
+
             formatted_message["entity"]["name"] = unformatted_message["detail"]["resource"]["accessKeyDetails"]["userName"]
+
+            # Stop trying to parse event/run bot if it's from GD's "Generate Sample Findings"
+            if access_key_id == "GeneratedFindingAccessKeyId":
+              text_output = "Guard Duty sample event found. Access Key ID from the finding is \"GeneratedFindingAccessKeyId\". Skipping\n"
+              found_action = False
+              return found_action, text_output, formatted_message
+
+
             
         else:
             text_output = "Unknown resource type found: %s. Current known resources are AccessKeys and Instance. Skipping.\n" % unformatted_message["detail"]["resource"]["resourceType"]
