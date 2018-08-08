@@ -377,8 +377,10 @@ Usage: AUTO: ec2_stop_instance
 Limitations: none  
 
 ## ec2_tag_instance_from_vpc
-What is does: If an instance is missing a specific tag, try to pull it from the VPC.  
-Tag format: AUTO: ec2_tag_instance_from_vpc <Key>  
+### This bot was created for a customer and most likely won't be used outside of that edge case
+What it does: If an instance is missing a specific tag, try to pull it from the VPC. 
+Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
+Limitations: none  
 
 ## ec2_terminate_instance
 What it does: Terminates an ec2 instance  

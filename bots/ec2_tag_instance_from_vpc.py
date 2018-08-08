@@ -1,7 +1,12 @@
-import boto3
+'''
+## ec2_tag_instance_from_vpc
+### This bot was created for a customer and most likely won't be used outside of that edge case
+What it does: If an instance is missing a specific tag, try to pull it from the VPC. 
+Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
+Limitations: none  
+'''
 
-### If an instance is missing a specific tag, try to pull it from the VPC. 
-# Tag format: AUTO: ec2_tag_instance_from_vpc <Key>
+import boto3
 
 def run_action(boto_session,rule,entity, params):
     instance = entity['id']
