@@ -8,7 +8,7 @@
 
 * [Setup Steps](#setup-steps)
   * [Lambda Deployment](#lambda-deployment)
-  * [Guard Duty Configuration](#guard-duty-configuration)
+  * [GuardDuty Configuration](#guard-duty-configuration)
   * [Testing](#testing)
   * [Troubleshooting](#troubleshooting)
 * [Sample Setup Example](#sample-setup-example)
@@ -51,7 +51,7 @@ If you would like to set up an SNS subscriber for the output topic (recommended)
 <br> 
 
 ### In the GuardDutyRules section
-Add in the mapping (in JSON format) for the different Guard Duty findings you want to auto-rememdiate and what actions you want to run when the event occurs.
+Add in the mapping (in JSON format) for the different GuardDuty findings you want to auto-rememdiate and what actions you want to run when the event occurs.
 
 If you don't want to auto-remediate a particular event or finding, just leave it out of the object or leave the bot syntax empty. 
 
@@ -63,7 +63,7 @@ Syntax:
 }
 ```
 
-For a full list of Guard Duty findings, please check [gd_sample_actions.json](https://github.com/Dome9/cloud-bots/blob/master/gd_sample_actions.json)
+For a full list of GuardDuty findings, please check [gd_sample_actions.json](https://github.com/Dome9/cloud-bots/blob/master/gd_sample_actions.json)
 
 Sample:
 ```javascript
@@ -87,7 +87,7 @@ Go to your email and confirm the subscription. SNS seems to have some odd behavi
 <br>
 <br>
 
-## Guard Duty Configuration
+## GuardDuty Configuration
 
 ### Run ./enable_guard_duty.sh
 
@@ -96,7 +96,7 @@ Example: ./enable_guard_duty.sh arn:aws:lambda:us-west-2:936643454293:function:D
 
 If no profile name is included, it defaults to 'default'.
 
-This shell script will configure Guard Duty and let the data be sent to the correct lambda function.  
+This shell script will configure GuardDuty and let the data be sent to the correct lambda function.  
 This runs as a shell script since CloudFormation runs per-region and this would be a hassle to manually put in each region. 
 
 If you don't want to enable GD in a certain region, remove the region name from line 3 of the script. 
@@ -112,20 +112,20 @@ For each region defined it will:
 
 ## Testing
 
-Testing with Guard Duty can be a pain. There are two ways you can test this to make sure it's working.
+Testing with GuardDuty can be a pain. There are two ways you can test this to make sure it's working.
 
 ### Generate Sample Events
 
-In AWS, go to the Guard Duty console > Settings and click on "Generate Sample Findings".  
+In AWS, go to the GuardDuty console > Settings and click on "Generate Sample Findings".  
 This will create some sample findings that will trigger the lambda function. You will get emails with this line:  
-"Guard Duty sample event found. Instance ID from the finding is i-99999999. Skipping"  
+"GuardDuty sample event found. Instance ID from the finding is i-99999999. Skipping"  
 
 If you don't get an email, then start troubleshooting, but give CloudWatch ~10 minutes to catch the events and send it to lambda. It's usually a quick(ish) process but not always. 
 
 
 ### Generate Real Events
 
-AWS has a project up on their GitHub page that can be used to generate Guard Duty findings:  
+AWS has a project up on their GitHub page that can be used to generate GuardDuty findings:  
 https://github.com/awslabs/amazon-guardduty-tester
 
 It takes ~10 minutes to create the CloudFormation stack for this and then another 5 or so to log in and generate the findings. This is the best way to be sure that the events will trigger and auto-remediate though. 
@@ -135,7 +135,7 @@ It takes ~10 minutes to create the CloudFormation stack for this and then anothe
 
 If things aren't working as expected, try troubleshooting in this order:
 - Make sure the CloudBots CloudFormation stack created without errors
-- Pick a random region and check to see that Guard Duty is enabled
+- Pick a random region and check to see that GuardDuty is enabled
 - Check that there is a CloudWatch Events rule called "GuardDutyFindings" and that it has an SNS topic as a target
 - Go to the SNS topic and verify that it has a lambda function as a subscriber
 - Add another subscriber to the topic that sends emails to your inbox. This can help verify if events are making it from GD all the way to SNS or if the issue is down stream in the function
