@@ -11,6 +11,7 @@ serverless-output.yaml
 broken_out_handle_event.py
 lambda_test_event.json
 /events/
+/.vscode/
 cs2_cftemplate.yaml
 gp.sh
 cloudbots_sam.yaml
