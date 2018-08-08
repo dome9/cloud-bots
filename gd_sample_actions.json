@@ -1,0 +1,59 @@
+If using CloudBots with GuardDuty findings, an environment variable is required to tell CloudBots what to do with specific findings. 
+The variable key needs to be "GD_ACTIONS".
+The value needs to be the object below. You can paste it in as-is or just define the events you want to run actions for. 
+For any event you want to run actions for, give the ation a name such as "Quarantine instance for later troubleshooting".
+In the "bot" value, put the required syntax in for the bot you want to run. If you leave the other events in the obeject, but don't define a bot (no AUTO: <bot>), they'll just be skipped. 
+
+Example:
+
+{
+    "Backdoor:EC2/XORDDOS": "AUTO: ec2_stop_instance",
+    "Backdoor:EC2/Spambot": "AUTO: ec2_quarantine_instance"
+}
+
+================Full Object=============
+
+{
+    "Backdoor:EC2/XORDDOS": "",
+    "Backdoor:EC2/Spambot": "",
+    "Backdoor:EC2/C&CActivity.B!DNS": "",
+    "Behavior:EC2/NetworkPortUnusual": "",
+    "Behavior:EC2/TrafficVolumeUnusual": "",
+    "CryptoCurrency:EC2/BitcoinTool.B!DNS": "",
+    "PenTest:IAMUser/KaliLinux": "",
+    "Persistence:IAMUser/NetworkPermissions": "",
+    "Persistence:IAMUser/ResourcePermissions": "",
+    "Persistence:IAMUser/UserPermissions": "",
+    "Recon:EC2/PortProbeUnprotectedPort": "",
+    "Recon:IAMUser/TorIPCaller": "",
+    "Recon:IAMUser/MaliciousIPCaller.Custom": "",
+    "Recon:IAMUser/MaliciousIPCaller": "",
+    "Recon:EC2/Portscan": "",
+    "Recon:IAMUser/NetworkPermissions": "",
+    "Recon:IAMUser/ResourcePermissions": "",
+    "Recon:IAMUser/UserPermissions": "",
+    "ResourceConsumption:IAMUser/ComputeResources": "",
+    "Stealth:IAMUser/PasswordPolicyChange": "",
+    "Stealth:IAMUser/CloudTrailLoggingDisabled": "",
+    "Stealth:IAMUser/LoggingConfigurationModified": "",
+    "Trojan:EC2/BlackholeTraffic": "",
+    "Trojan:EC2/DropPoint": "",
+    "Trojan:EC2/BlackholeTraffic!DNS": "",
+    "Trojan:EC2/DriveBySourceTraffic!DNS": "",
+    "Trojan:EC2/DropPoint!DNS": "",
+    "Trojan:EC2/DGADomainRequest.B": "",
+    "Trojan:EC2/DGADomainRequest.C!DNS": "",
+    "Trojan:EC2/DNSDataExfiltration": "",
+    "Trojan:EC2/PhishingDomainRequest!DNS": "",
+    "UnauthorizedAccess:IAMUser/TorIPCaller": "",
+    "UnauthorizedAccess:IAMUser/MaliciousIPCaller.Custom": "",
+    "UnauthorizedAccess:IAMUser/ConsoleLoginSuccess.B": "",
+    "UnauthorizedAccess:IAMUser/MaliciousIPCaller": "",
+    "UnauthorizedAccess:IAMUser/UnusualASNCaller": "",
+    "UnauthorizedAccess:EC2/TorIPCaller": "",
+    "UnauthorizedAccess:EC2/MaliciousIPCaller.Custom": "",
+    "UnauthorizedAccess:EC2/SSHBruteForce": "",
+    "UnauthorizedAccess:EC2/RDPBruteForce": "",
+    "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration": "",
+    "UnauthorizedAccess:IAMUser/ConsoleLogin": ""
+    }
