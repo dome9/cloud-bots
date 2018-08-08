@@ -361,9 +361,9 @@ If you have a role that is the same across accounts, and don't want to pass in a
 Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instance-profile/ec2SSM  
 Sample GSL: Instance should have roles
 
-## ec2_release_eips
-What it does: Disassociates and releases all EIPs on an instance
-Usage: AUTO: ec2_release_eips
+## ec2_release_eips  
+What it does: Disassociates and releases all EIPs on an instance  
+Usage: AUTO: ec2_release_eips  
 Limitations: none  
 
 ## ec2_quarantine_instance
