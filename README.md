@@ -1,5 +1,3 @@
-<link rel="shortcut icon" type="image/x-icon" href="docs/pictures/favicon.ico">
-
 ```   
      |                  ||         |         
 ,---.|    ,---..   .,---||---.,---.|--- ,---.
@@ -11,7 +9,7 @@
 # CloudBots
 Auto remediation & automation bots for AWS.
 
-This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine to remediate issues that are uncovered. 
+This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine or AWS GuardDuty to remediate issues that are uncovered. 
 
 
 Table of Contents
@@ -30,6 +28,8 @@ Table of Contents
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
 * [Release Notes](#release-notes)
+
+## For a GuardDuty quickstart doc, please see [README_GUARDDUTY.md](https://github.com/Dome9/cloud-bots/blob/master/README_GUARDDUTY.md)
 
 ## For a condensed quickstart doc, please see [README_QUICKSTART.md](https://github.com/Dome9/cloud-bots/blob/master/README_QUICKSTART.md)
 
