@@ -200,7 +200,7 @@ aws iam create-policy \
 --profile <aws_account_profile>                      
 ```
 
-####take ARN from this for the next command           
+#### Take the ARN from this for the next command           
 ```bash
 aws iam create-role \
 --role-name Dome9CloudBots \
