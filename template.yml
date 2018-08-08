@@ -13,6 +13,10 @@ Parameters:
     AllowedValues: 
       - single
       - multi
+  GuardDutyRules:
+    Description: Configuration for what will be triggered when certain Guard Duty events happen
+    Type: String
+    Default: ''
 
 Conditions:
   CreateSubscriber: !Not [!Equals [!Ref EmailAddress, ""]]
@@ -126,7 +130,7 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
           ACCOUNT_MODE: !Ref DeploymentMode
-          GD_ACTIONS: ""
+          GD_ACTIONS: !Ref GuardDutyRules
       Events:
         d9Findings:
           Type: SNS
