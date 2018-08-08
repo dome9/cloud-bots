@@ -29,7 +29,7 @@ aws s3 mb s3://<NEW_BUCKET_NAME>
 For YOUR_BUCKET_NAME, put in the name of a bucket that remediation-function.zip can be uploaded to. 
 ```bash
 aws cloudformation package    \
---template-file ./deployment_cft.yaml    \
+--template-file ./template.yml    \
 --output-template-file cloudbots_cftemplate.yaml    \
 --s3-bucket <YOUR_BUCKET_NAME>
 
@@ -93,7 +93,7 @@ Resolving deltas: 100% (247/247), done.
 
 # Deploy the fucnction via CloudFormation template
 [cloud-bots]$aws cloudformation package    \
-> --template-file ./deployment_cft.yaml    \
+> --template-file ./template.yml    \
 > --output-template-file serverless-output.yaml    \
 > --s3-bucket remediationuploadsdome 
 
