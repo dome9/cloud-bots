@@ -14,7 +14,7 @@ Parameters:
       - single
       - multi
   GuardDutyRules:
-    Description: Configuration for what will be triggered when certain Guard Duty events happen
+    Description: Configuration for what will be triggered when certain Guard Duty events happen. Leave empty if you're not using GuardDuty directly with CloudBots
     Type: String
     Default: ''
 
