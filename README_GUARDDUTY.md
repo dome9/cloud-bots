@@ -120,7 +120,7 @@ In AWS, go to the GuardDuty console > Settings and click on "Generate Sample Fin
 This will create some sample findings that will trigger the lambda function. You will get emails with this line:  
 "GuardDuty sample event found. Instance ID from the finding is i-99999999. Skipping"  
 
-If you don't get an email, then start troubleshooting, but give CloudWatch ~10 minutes to catch the events and send it to lambda. It's usually a quick(ish) process but not always. 
+CloudBots is configured to skip the sample findings so it doesn't hammer your inbox with sample events. You can see if the events were properly handled by checking out the CloudWatch Logs for the CloudBots function
 
 
 ### Generate Real Events
