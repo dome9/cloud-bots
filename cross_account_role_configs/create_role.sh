@@ -3,7 +3,7 @@
 # Usage: ./create_role.sh <AWS Profile>
 
 PROFILE=$1
-if [[ $1 -eq 0 ]] ; then
+if [[ -z $1 ]] ; then
     echo 'Usage: ./create_role.sh <AWS Profile>'
     exit 0
 fi
