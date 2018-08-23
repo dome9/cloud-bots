@@ -115,8 +115,15 @@ Set the format to be JSON - Full Entity
 
 ### ********* NOTE: ********** 
 Currently Continuous Compliance sends a 'diff' for the SNS notifications. Because of this, if you have ran the bundle before, only new issues will be sent to SNS. 
-If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to clone the bundle and set the new (never-ran) bundle as the thing that is being tested in the CC config. This works because if it's never ran, then every existing issue is considered 'new' and will be sent to SNS. 
-This will be changed in future releases and is being currently worked on. 
+If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to use the "send all events" button to force a re-send. 
+
+For the compliance policy you have set up, look for a button on the right hand side with an arrow pointing up.  
+![Send all events button](./docs/pictures/send_all_events_button.png?raw=true "Send all events button")
+
+In this page, select SNS as the delivery method and your notification policy as the place to send the events.  
+This can also be useful for rolling out new bots and/or testing since you can re-send the same event more than once.  
+![Send all events page](./docs/pictures/send_all_events_page.png?raw=true "Send all events page")
+
 
 
 ### From here, you should be good to go!
