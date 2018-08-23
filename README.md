@@ -160,7 +160,7 @@ This is the default mode. Nothing needs to be changed.
 In multi account mode, the function will run in the local account but will also try to assume a role into another account if the event was from a different account than the one the function is running in. Each account that will have remediation bots will need a cross-account role to the master account. 
 
 #### Setup for Multi-account mode in AWS:
-In the dome9AutoRemediations lambda function:
+In the Dome9CloudBots lambda function:
 - Update the ACCOUNT_MODE environment variable from 'single' to 'multi'
 - By default, the cross account roles will all need to be named "Dome9CloudBots". If you want a different name, add a new variable called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role. 
 
