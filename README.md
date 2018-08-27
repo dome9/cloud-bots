@@ -101,6 +101,10 @@ It would be triggered with "AUTO: delete_user"
 ### What languages are supported?
 Currently only python is supported  
 
+### How are the permissions segregated between Dome9 and CloudBots?
+Dome9's cross account role is completely separate from the CloudBots permissions and cross account roles. Dome9 permissions are in yellow, while the CloudBots permissions are in bold.  This is done so that the most sensitive permissions stay within the customer environments and are never given to a third party. 
+
+![Permissions model](./docs/pictures/cloudbots_permissions.png?raw=true "Permissions model")
 
 
 # Setup Steps
