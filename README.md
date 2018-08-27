@@ -87,7 +87,7 @@ Every cloud-bot lives in the same function. There aren't multiple functions for 
 ### Does this use the original Dome9 role?
 No. The Dome9-connect role is only for Dome9 to collect data from your AWS accounts. The CloudBots function needs its own execution role to run the remediation actions, but it's completely separate from the Dome9 role. 
 
-## Where does the AUTO: <bot> syntax come from? 
+### Where does the AUTO: <bot> syntax come from? 
 AUTO: is used to signal to CloudBots that a remediation action needs to be triggered. The bot name correlates to a file name in the bots/ folder. 
 
 ### Why isn't it in the remediation field of the rule? 
