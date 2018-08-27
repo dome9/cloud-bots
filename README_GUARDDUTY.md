@@ -9,6 +9,7 @@
 * [Setup Steps](#setup-steps)
   * [Lambda Deployment](#lambda-deployment)
   * [GuardDuty Configuration](#guard-duty-configuration)
+  * [Multi Account](#multi-account)
   * [Testing](#testing)
   * [Troubleshooting](#troubleshooting)
 * [Sample Setup Example](#sample-setup-example)
@@ -108,6 +109,88 @@ For each region defined it will:
 - Update the SNS policy to allow delivery from CW
 - Set up a target lambda function as a SNS subscriber 
 - Update the lambda function invocation policy to allow SNS to trigger it
+
+
+## Muilti Account
+
+Setting up multiple accounts to work with a single deployment of CloudBots is very straightforward because GD easily sends events across accounts.  
+
+At a high level, GuardDuty events from other accounts still have the same structure as standard GD events, but it's tagged with the source ID from the account the event occurred in. CloudBots will see that the event occurred in an account outside of the one that it's running in and will then assume a role via cross-account role to run the remediation. 
+
+
+### Steps to set up multi-account GuardDuty
+** Link to multi-account script from AWS
+** Steps to link up a new account
+
+
+### Steps to set up CloudBots to run in multi-account mode
+
+#### Setup for Multi-account mode in AWS:
+In the Dome9CloudBots lambda function:
+- Update the ACCOUNT_MODE environment variable from 'single' to 'multi'
+- By default, the cross account roles will all need to be named "Dome9CloudBots". If you want a different name, add a new variable called "CROSS_ACCOUNT_ROLE_NAME" and set the value to the new name for the role. 
+
+
+#### Set up cross account roles for EACH account that will be remediated
+
+```bash
+cd cross_account_role_configs
+```
+
+Role creation needs to be done via something other than CloudFormation because CFTs don't output consistent role names
+
+#### Update trust_policy.json with the account ID where the main function will live
+
+#### There is a small bash script in this directory that you can run (create_role.sh) to create these roles. 
+```bash 
+./create_role.sh <aws profile>
+```
+
+
+#### Manual Setup:
+
+#### Create the cross-account role
+```bash
+aws iam create-role \
+--role-name Dome9CloudBots \
+--assume-role-policy-document file://trust_policy.json \
+--profile <aws_account_profile>                                        
+```
+
+#### Create the IAM policy for the role
+```bash
+aws iam create-policy \
+--policy-name Dome9CloudBots \
+--policy-document file://remediation_policy.json \
+--query 'Policy.Arn' \
+--profile <aws_account_profile>                      
+```
+
+#### Take the ARN from this for the next command           
+```bash
+aws iam create-role \
+--role-name Dome9CloudBots \
+--assume-role-policy-document file://trust_policy.json \
+--profile <aws_account_profile>     
+```
+
+#### Link the new policy and role
+Take ARN from create-policy for the next command           
+```bash
+aws iam attach-role-policy \
+--role-name Dome9CloudBots \
+--policy-arn <ARN FROM LAST COMMAND> \
+--profile <aws_account_profile>                     
+```              
+              
+                  
+               
+
+
+             
+              
+
+
 
 
 ## Testing
