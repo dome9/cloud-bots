@@ -7,7 +7,7 @@ Example: AUTO: sg_single_rule_delete strict=false protocol=TCP scope=0.0.0.0/0 d
 Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0' and port<=22 and portTo>=22]
 
 Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?
-Currently the way this is being addressed is using the 'strict' parameter. If it's set as true, CloudBots will only look for the specific port in question. If it's nested within a larger port scopem, it'll be skipped. 
+Currently the way this is being addressed is using the 'strict' parameter. If it's set as true, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
 If you set strict to false, then the whole rule that the problematic port is nested in will be removed. 
 '''
 
