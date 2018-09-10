@@ -119,8 +119,11 @@ At a high level, GuardDuty events from other accounts still have the same struct
 
 
 ### Steps to set up multi-account GuardDuty
-** Link to multi-account script from AWS
-** Steps to link up a new account
+
+This repo from AWS can be used to link multiple accounts together for GuardDuty findings.  
+https://github.com/aws-samples/amazon-guardduty-multiaccount-scripts  
+
+If you don't use this, you can manually invite accounts to each other, but this needs to be done for each region you're using GD in, and for every account. The script is going to be the faster way for anything over a couple accounts.  
 
 
 ### Steps to set up CloudBots to run in multi-account mode
