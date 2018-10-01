@@ -528,16 +528,22 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * VpcPeeringConnection
 
 ## vpc_turn_on_flow_logs
-What it does: Turns on flow logs for a VPC  
-Settings: Log Group Name: vpcFlowLogs  
-If traffic type to be logged isn't specified, it defaults to all.  
-Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>  
-Limitations: none  
+What it does: Turns on flow logs for a VPC
+Settings: 
+Log Group Name: vpcFlowLogs
+If traffic type to be logged isn't specified, it defaults to all.
+Usage: AUTO: vpc_turn_on_flow_logs traffic_type=<all|accept|reject> destination=<logs|s3> s3_arn=arn:aws:s3:::my-bucket/my-logs/
+Example: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=logs
+Example: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=s3 s3_arn=arn:aws:s3:::my-bucket/my-logs/
+
+Limitations: none 
 Sample GSL: VPC should have hasFlowLogs=true
 
-log delivery policy name is set as: vpcFlowLogDelivery  
-log relivery role is set as: vpcFlowLogDelivery  
+To specify a subfolder in the bucket, use the following ARN format: bucket_ARN/subfolder_name/ . 
+For example, to specify a subfolder named my-logs in a bucket named my-bucket , use the following ARN: arn:aws:s3:::my-bucket/my-logs/
 
+log delivery policy name is set as: vpcFlowLogDelivery
+log relivery role is set as: vpcFlowLogDelivery
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)

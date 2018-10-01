@@ -4,9 +4,15 @@ What it does: Turns on flow logs for a VPC
 Settings: 
 Log Group Name: vpcFlowLogs
 If traffic type to be logged isn't specified, it defaults to all.
-Usage: AUTO: vpc_turn_on_flow_logs <all|accept|reject>
+Usage: AUTO: vpc_turn_on_flow_logs traffic_type=<all|accept|reject> destination=<logs|s3> s3_arn=arn:aws:s3:::my-bucket/my-logs/
+Example: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=logs
+Example: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=s3 s3_arn=arn:aws:s3:::my-bucket/my-logs/
+
 Limitations: none 
 Sample GSL: VPC should have hasFlowLogs=true
+
+To specify a subfolder in the bucket, use the following ARN format: bucket_ARN/subfolder_name/ . 
+For example, to specify a subfolder named my-logs in a bucket named my-bucket , use the following ARN: arn:aws:s3:::my-bucket/my-logs/
 
 log delivery policy name is set as: vpcFlowLogDelivery
 log relivery role is set as: vpcFlowLogDelivery
@@ -14,6 +20,7 @@ log relivery role is set as: vpcFlowLogDelivery
 
 import boto3
 import json
+import re
 from botocore.exceptions import ClientError
 
 def create_log_delivery_policy(boto_session):
@@ -135,7 +142,7 @@ def add_policy_to_role(boto_session,policy_arn):
 
     return text_output
 
-def create_logs(boto_session,role_id,vpc_id,traffic_type):
+def create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn):
     ec2_client = boto_session.client('ec2')
 
     print("creating vpc flow loggging")
@@ -144,16 +151,28 @@ def create_logs(boto_session,role_id,vpc_id,traffic_type):
     vpc_ids.append(vpc_id)
 
     try:
-        response = ec2_client.create_flow_logs(
-            DeliverLogsPermissionArn=role_id,
-            LogGroupName='vpcFlowLogs',
-            ResourceIds=vpc_ids,
-            ResourceType='VPC',
-            TrafficType=traffic_type
-        )
+        if destination == "logs":
+            response = ec2_client.create_flow_logs(
+                DeliverLogsPermissionArn=role_id,
+                LogGroupName='vpcFlowLogs',
+                ResourceIds=vpc_ids,
+                ResourceType='VPC',
+                TrafficType=traffic_type,
+                LogDestinationType='cloud-watch-logs'
+            )
+
+        elif destination == "s3" and bucket_arn != None:
+            response = ec2_client.create_flow_logs(
+                DeliverLogsPermissionArn=role_id,
+                ResourceIds=vpc_ids,
+                ResourceType='VPC',
+                TrafficType=traffic_type,
+                LogDestinationType='s3',
+                LogDestination=bucket_arn
+            )            
 
         if response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "VPC Flow Logs successfully created. FlowLogID: %s \n" % response['FlowLogIds']
+            text_output =  "VPC Flow Logs successfully created.\n"
         else:
             text_output = "Unexpected error: %s \n" % e
     
@@ -174,30 +193,66 @@ def run_action(boto_session,rule,entity,params):
     # Setup variables
     vpc_id = entity['id']
     account_id = entity['accountNumber']
-
+    bucket_arn = False
     policy_arn = "arn:aws:iam::" + account_id + ":policy/vpcFlowLogDelivery"
     role_id = "arn:aws:iam::" + account_id + ":role/vpcFlowLogDelivery"
 
-    ## Set to pull traffic type from params but default to all
-    try: # Params[0] should be the traffic type. 
-        traffic_type = params[0].upper()
-        if traffic_type not in ('ALL', 'ACCEPT', 'REJECT'):
-            text_output = "Traffic_type is set to %s and the only accepted values are ALL, ACCEPT, REJECT. Defaulting to ALL\n." % traffic_type
-            traffic_type = "ALL"
-        else:
-            text_output = "%s traffic will be logged. Starting log creation\n" % traffic_type
+    ## Set up params. We need a role ARN to come through in the params.
+    text_output = ""
+    usage = "Usage: AUTO: vpc_turn_on_flow_logs traffic_type=<all|accept|reject> destination=<logs|s3> s3_arn=arn:aws:s3:::my-bucket/my-logs/\nExample: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=logs\nExample: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=s3 s3_arn=arn:aws:s3:::my-bucket/my-logs/\n"
+    
+    if len(params) > 1:
+        try:
+            for param in params:
+                key_value = param.split("=")
+                key = key_value[0]
+                value = key_value[1]
 
-    except: #If there's no params passed at all, we default to ALL
-        text_output = "No params passed. Defaulting to logging ALL traffic\n"
-        traffic_type = "ALL" ## Set to all if not specified
+                if key == "destination":     
+                    if value.lower() == "logs":
+                        destination = "logs"
+                        text_output = text_output + "Flow logs will be sent to CW Logs\n"
+                    elif value.lower() == "s3":
+                        destination = "s3"
+                        text_output = text_output + "Flow logs will be sent to S3\n"
+                    else: 
+                        destination = "logs"
+                        text_output = text_output + "Destination value doesn't match logs or S3. Defaulting to logs\n"
+                
+                if key == "traffic_type":     
+                    if value.upper() == "ALL":
+                        traffic_type = "ALL"
+                        text_output = text_output + "The traffic_type to be logged is ALL\n"
+                    elif value.upper() == "ACCEPT":
+                        traffic_type = "ACCEPT"
+                        text_output = text_output + "The traffic_type to be logged is ACCEPT\n"
+                    elif value.upper() == "REJECT":
+                        traffic_type = "REJECT"
+                        text_output = text_output + "The traffic_type to be logged is REJECT\n"
+                    else: 
+                        text_output = text_output + "Traffic_type not set to ALL, ACCEPT, or REJECT. Those are the only three supported traffic_types. Skipping\n" + usage
+                        return text_output
+
+                if key == "s3_arn":     
+                    arn_pattern = re.compile("^arn:aws:s3:::")
+                    if arn_pattern.match(value):
+                        bucket_arn = value
+                        text_output = text_output + "Bucket destination: %s \n" % bucket_arn
+                    else:
+                        text_output = text_output + "s3_arn doesn't match expected pattern arn:aws:s3:::my-bucket/my-logs/. Skipping.\n" + usage   
+
+        except:
+            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
+            return text_output
 
     try:
         text_output = text_output + check_for_log_delivery_policy(boto_session,policy_arn) # Check for the policy to deliver logs from VPC to CloudWatch
         text_output = text_output + create_role(boto_session,policy_arn) # Check for role / create it if it doesn't exist
         text_output = text_output + add_policy_to_role(boto_session,policy_arn)
-        text_output = text_output + create_logs(boto_session,role_id,vpc_id,traffic_type) # Create the flow logs
+        text_output = text_output + create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn) # Create the flow logs
         
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
     
     return text_output
+
