@@ -1,14 +1,14 @@
 '''
 ## sg_single_rule_delete
 What it does: Deletes a single rule on a security group
-Usage: AUTO: sg_single_rule_delete strict=<true|false> protocol=<TCP|UDP|ALL> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>
+Usage: AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>
 
-Example: AUTO: sg_single_rule_delete strict=false protocol=TCP scope=0.0.0.0/0 direction=inbound port=22
+Example: AUTO: sg_single_rule_delete split=false protocol=TCP scope=0.0.0.0/0 direction=inbound port=22
 Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0' and port<=22 and portTo>=22]
 
 Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?
-Currently the way this is being addressed is using the 'strict' parameter. If it's set as true, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
-If you set strict to false, then the whole rule that the problematic port is nested in will be removed. 
+Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
+If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
 '''
 
 import boto3
@@ -19,7 +19,7 @@ from botocore.exceptions import ClientError
 def run_action(boto_session,rule,entity,params):
     ## Set up params. We need a role ARN to come through in the params.
     text_output = ""
-    usage = "AUTO: sg_single_rule_delete strict=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
+    usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
     
     if len(params) == 5:
         try:
@@ -28,15 +28,15 @@ def run_action(boto_session,rule,entity,params):
                 key = key_value[0]
                 value = key_value[1]
 
-                if key == "strict":     
+                if key == "split":     
                     if value.lower() == "true":
-                        strict = True
-                        text_output = text_output + "Strict matching for the port to be remediated is set to True\n"
+                        split = True
+                        text_output = text_output + "Split matching for the port to be remediated is set to True\n"
                     elif value.lower() == "false":
-                        strict = False
-                        text_output = text_output + "Strict matching for the port to be remediated is set to False\n"
+                        split = False
+                        text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
                     else: 
-                        text_output = text_output + "Strict value doesn't match true or false. Defaulting to true\n"
+                        text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
                 
                 if key == "protocol":     
                     if value.lower() == "tcp":
@@ -45,11 +45,8 @@ def run_action(boto_session,rule,entity,params):
                     elif value.lower() == "udp":
                         protocol = "UDP"
                         text_output = text_output + "The protocol to be removed is UDP\n"
-                    elif value.lower() == "all":
-                        protocol = "ALL"
-                        text_output = text_output + "The protocol to be removed is \"ALL\"\n"
                     else: 
-                        text_output = text_output + "Protocol not set to TCP, UDP, or ALL. Those are the only three currently supported protocols. Skipping\n" + usage
+                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only three currently supported protocols. Skipping\n" + usage
                         return text_output
 
                 if key == "scope":     
@@ -89,15 +86,24 @@ def run_action(boto_session,rule,entity,params):
 
     rule_direction = direction + "Rules" ## The objects are nested in entity['inboundRules'] or outboundRules but we want to heave the direction variable alone for logging later. 
     found_rule = False
+    rule_to_delete = False
     for rule in entity[rule_direction]:
-        if scope == rule['scope'] and protocol == rule['protocol']: 
+        if scope == rule['scope'] and protocol == rule['protocol']: # Scope and protocol match - now check the ports that are open
             # 2/3 of the conditions are good. Check for scope now. 
-            if strict == True and port == rule['port'] and port == rule['portTo']:
+            if port == rule['port'] and port == rule['portTo']: # The port to delete is the only one open for the rule and will be deleted
+                split == False # We can just do the normal port delete if there's only 1 port defined in the SG rule. No need to try to split it. 
                 rule_to_delete = rule
                 break
 
-            if strict == False and rule['port'] <= port and rule['portTo'] >= port:
+            if split == True and rule['port'] <= port and rule['portTo'] >= port: # The port to delete is within a range of ports and will need to be extracted. 
                 rule_to_delete = rule
+                # If port 22 is the issue, and the rule in question defines port 20-30:
+                # lower_port_number = 20
+                # lower_port_number_to = 21
+                # upper_port_number = 23
+                # upper_port_number_to = 30
+                lower_port_number = rule['port'] 
+                upper_port_number_to = rule['portTo']
                 break
 
     if rule_to_delete:
@@ -112,43 +118,154 @@ def run_action(boto_session,rule,entity,params):
     # Client for making changes / set up parameters
     sg_id = entity['id']
     portTo = rule['portTo']
+
     ec2_resource = boto_session.resource('ec2')
     sg = ec2_resource.SecurityGroup(sg_id)
 
-    if protocol == "ALL":
-        protocol = "-1" # This is what AWS calls the protocol for "all"
+    # With or without split, we'll need to first remove the old rule before adding in the split one. 
+    if split == False:
+        if direction == "inbound":
+            result = sg.revoke_ingress(
+                CidrIp=scope,
+                FromPort=port,
+                ToPort=portTo,
+                GroupId=sg_id,
+                IpProtocol=protocol
+            )
 
-    if direction == "inbound":
-        result = sg.revoke_ingress(
-            CidrIp=scope,
-            FromPort=port,
-            GroupId=sg_id,
-            IpProtocol=protocol,
-            ToPort=portTo
-        )
+        if direction == "outbound":
+            result = sg.revoke_egress(
+                IpPermissions=[
+                    {
+                        'FromPort': port,
+                        'ToPort': portTo,
+                        'IpProtocol': protocol,
+                        'IpRanges': [
+                            {
+                                'CidrIp': scope
+                            }
+                        ]   
+                    }
+                ]
+            )
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (port,portTo)
+        
 
-    if direction == "outbound":
-        result = sg.revoke_egress(
-            IpPermissions=[
-                {
-                    'FromPort': port,
-                    'ToPort': portTo,
-                    'IpProtocol': protocol,
-                    'IpRanges': [
-                        {
-                            'CidrIp': scope
-                        }
-                    ]   
-                }
-            ]
-        )
 
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
-    else:
-        text_output = text_output + "Security Group rule successfully deleted\n"
+    if split == True:
+        if direction == "inbound":
+            result = sg.revoke_ingress(
+                CidrIp=scope,
+                FromPort=lower_port_number,
+                ToPort=upper_port_number_to,
+                GroupId=sg_id,
+                IpProtocol=protocol
+            )
+
+        if direction == "outbound":
+            result = sg.revoke_egress(
+                IpPermissions=[
+                    {
+                        'FromPort': lower_port_number,
+                        'ToPort': upper_port_number_to,
+                        'IpProtocol': protocol,
+                        'IpRanges': [
+                            {
+                                'CidrIp': scope
+                            }
+                        ]   
+                    }
+                ]
+            )            
+
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (lower_port_number,upper_port_number_to)
+        
+
     
+    # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are needed. One for the lower section and one for the upper. 
+    if split == True:
+        lower_port_number_to = port - 1
+        upper_port_number = port + 1
+        
+        if direction == "inbound":
+            result = sg.authorize_ingress(
+                CidrIp=scope,
+                FromPort=lower_port_number,
+                ToPort=lower_port_number_to,
+                GroupId=sg_id,
+                IpProtocol=protocol
+            )
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(result)
+            else:
+                text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (lower_port_number,lower_port_number_to)
+
+
+            result = sg.authorize_ingress(
+                CidrIp=scope,
+                FromPort=upper_port_number,
+                ToPort=upper_port_number_to,
+                GroupId=sg_id,
+                IpProtocol=protocol
+            )
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(result)
+            else:
+                text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (upper_port_number,upper_port_number_to)
+            
+
+        if direction == "outbound":
+            result = sg.authorize_egress(
+                IpPermissions=[
+                    {
+                        'FromPort': lower_port_number,
+                        'ToPort': lower_port_number_to,
+                        'IpProtocol': protocol,
+                        'IpRanges': [
+                            {
+                                'CidrIp': scope
+                            }
+                        ]   
+                    }
+                ]
+            )
+            
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(result)
+            else:
+                text_output = text_output + "Security Group egress rule from port %s to port %s successfully added\n" % (lower_port_number,lower_port_number_to)
+                        
+            result = sg.authorize_egress(
+                IpPermissions=[
+                    {
+                        'FromPort': upper_port_number,
+                        'ToPort': upper_port_number_to,
+                        'IpProtocol': protocol,
+                        'IpRanges': [
+                            {
+                                'CidrIp': scope
+                            }
+                        ]   
+                    }
+                ]
+            )
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(result)
+            else:
+                text_output = text_output + "Security Group egress rule from port %s to port %s successfully added\n" % (upper_port_number,upper_port_number_to)
+                        
     return text_output
 
 
