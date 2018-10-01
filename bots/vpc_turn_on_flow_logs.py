@@ -15,7 +15,7 @@ To specify a subfolder in the bucket, use the following ARN format: bucket_ARN/s
 For example, to specify a subfolder named my-logs in a bucket named my-bucket , use the following ARN: arn:aws:s3:::my-bucket/my-logs/
 
 log delivery policy name is set as: vpcFlowLogDelivery
-log relivery role is set as: vpcFlowLogDelivery
+log delivery role is set as: vpcFlowLogDelivery
 '''
 
 import boto3
