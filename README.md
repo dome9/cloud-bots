@@ -27,6 +27,7 @@ Table of Contents
   * [Updating the stack](#updating-the-stack)
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
+* [Release Notes](#release-notes)
 
 ## For a GuardDuty quickstart doc, please see [README_GUARDDUTY.md](https://github.com/Dome9/cloud-bots/blob/master/README_GUARDDUTY.md)
 
@@ -544,6 +545,23 @@ For example, to specify a subfolder named my-logs in a bucket named my-bucket , 
 
 log delivery policy name is set as: vpcFlowLogDelivery
 log delivery role is set as: vpcFlowLogDelivery
+
+
+## Release Notes
+
+#### 10/1/18
+Updated sg_single_rule_delete to support deleting just a single port from a wider scope of rules (ex: deleting just port 22 from ports 10-30).  
+2 new permissions are required to support this bot:  
+ec2:AuthorizeSecurityGroupEgress  
+ec2:AuthorizeSecurityGroupIngress   
+
+Updated vpc_turn_on_flow_logs to support sending logs to S3 instead of CloudWatch logs
+
+#### 10/2/18
+Created a new folder called optional_bots. This will not be packaged with the standard Lambda function and will need to be added in manually as required.  
+Bots that are extremely impactful (s3_delete_bucket, ec2_terminate_instance, etc.) will live here as well as edge case bots that were made for specific customers (ec2_tag_instance_from_vpc).  
+
+
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
