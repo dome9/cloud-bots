@@ -323,12 +323,12 @@ Updating your current CloudBots stack is very straightforward. In the UI, naviga
 # Actions
 
 ## cloudtrail_enable
-What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
+What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it.  
 Pre-set Settings:  
-Default bucket name: acct<account_id>cloudtraillogs 
-IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)
-IncludeGlobalServiceEvents: True
-EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2) 
+Default bucket name: acct<account_id>cloudtraillogs  
+IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)  
+IncludeGlobalServiceEvents: True  
+EnableLogFileValidation: True (CIS for AWS V 1.1.0 Section 2.2)   
 
 Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>  
 Note: Trail_name and bucket_name are optional and don't need to be set.   
@@ -497,15 +497,15 @@ Usage: AUTO: sg_rules_delete
 Limitations: none  
 
 ## sg_single_rule_delete
-What it does: Deletes a single rule on a security group
-Usage: AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>
+What it does: Deletes a single rule on a security group  
+Usage: AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>  
 
-Example: AUTO: sg_single_rule_delete split=false protocol=TCP scope=0.0.0.0/0 direction=inbound port=22
-Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0' and port<=22 and portTo>=22]
+Example: AUTO: sg_single_rule_delete split=false protocol=TCP scope=0.0.0.0/0 direction=inbound port=22  
+Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0' and port<=22 and portTo>=22]  
 
-Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?
-Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
-If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
+Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?  
+Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped.   
+If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30).   
 
 ## tag_ec2_resource
 What it does: Tags an ec2 instance  
