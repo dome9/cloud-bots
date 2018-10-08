@@ -387,17 +387,6 @@ What it does: Stops an ec2 instance
 Usage: AUTO: ec2_stop_instance   
 Limitations: none  
 
-## ec2_tag_instance_from_vpc
-### This bot was created for a customer and most likely won't be used outside of that edge case
-What it does: If an instance is missing a specific tag, try to pull it from the VPC. 
-Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
-Limitations: none  
-
-## ec2_terminate_instance
-What it does: Terminates an ec2 instance  
-Usage: AUTO: ec2_terminate_instance  
-Limitations: none  
-
 ## ec2_update_instance_role  
 What it does: Updates an EXISTING EC2 instance role by attaching another policy to the role. This policy needs be passed in through the params.  
 Usage: AUTO: ec2_update_instance_role policy_arn=<policy_arn>  
@@ -459,12 +448,6 @@ What it does: Attaches the RDS instance a SG with no rules so it can't communica
 Usage: AUTO: rds_quarantine_instance  
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)  
-
-
-## s3_delete_bucket
-What it does: Deletes an S3 bucket  
-Usage: AUTO: s3_delete_bucket  
-Limitations: none  
 
 ## s3_delete_permissions
 What it does: Deletes all ACLs and bucket policies from a bucket  
@@ -545,6 +528,29 @@ For example, to specify a subfolder named my-logs in a bucket named my-bucket , 
 
 log delivery policy name is set as: vpcFlowLogDelivery
 log delivery role is set as: vpcFlowLogDelivery
+
+
+# Optional Bots
+
+These bots are not packaged with the core Lambda function because they're extremely impactful or edge-case bots that won't be normally used.  
+If you want to use these bots, they will need to be manually added to the function. All of the code is in the optional_bots directory.  
+
+
+## ec2_tag_instance_from_vpc
+### This bot was created for a customer and most likely won't be used outside of that edge case
+What it does: If an instance is missing a specific tag, try to pull it from the VPC. 
+Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
+Limitations: none  
+
+## ec2_terminate_instance
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
+
+## s3_delete_bucket
+What it does: Deletes an S3 bucket  
+Usage: AUTO: s3_delete_bucket  
+Limitations: none  
 
 
 ## Release Notes
