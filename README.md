@@ -366,10 +366,10 @@ Defaults (not changable currently via variable):
 
 ## ec2_attach_instance_role
 What it does: Attaches an instance role to an EC2 instance. This role needs be passed in through the params.    
-Usage: AUTO: ec2_update_instance_role role_arn=<role_arn>  
+Usage: AUTO: ec2_attach_instance_role role_arn=<role_arn>  
 
 If you have a role that is the same across accounts, and don't want to pass in an account specific ARN, add "$ACCOUNT_ID" to the role ARN and the function will automatically pull in the current account ID of the finding.   
-Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instance-profile/ec2SSM  
+Example: AUTO: ec2_attach_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instance-profile/ec2SSM  
 Sample GSL: Instance should have roles
 
 ## ec2_release_eips  
