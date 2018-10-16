@@ -387,6 +387,11 @@ What it does: Stops an ec2 instance
 Usage: AUTO: ec2_stop_instance   
 Limitations: none  
 
+## ec2_terminate_instance
+What it does: Terminates an ec2 instance  
+Usage: AUTO: ec2_terminate_instance  
+Limitations: none  
+
 ## ec2_update_instance_role  
 What it does: Updates an EXISTING EC2 instance role by attaching another policy to the role. This policy needs be passed in through the params.  
 Usage: AUTO: ec2_update_instance_role policy_arn=<policy_arn>  
@@ -542,11 +547,6 @@ What it does: If an instance is missing a specific tag, try to pull it from the 
 Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
 Limitations: none  
 
-## ec2_terminate_instance
-What it does: Terminates an ec2 instance  
-Usage: AUTO: ec2_terminate_instance  
-Limitations: none  
-
 ## s3_delete_bucket
 What it does: Deletes an S3 bucket  
 Usage: AUTO: s3_delete_bucket  
@@ -565,7 +565,7 @@ Updated vpc_turn_on_flow_logs to support sending logs to S3 instead of CloudWatc
 
 #### 10/2/18
 Created a new folder called optional_bots. This will not be packaged with the standard Lambda function and will need to be added in manually as required.  
-Bots that are extremely impactful (s3_delete_bucket, ec2_terminate_instance, etc.) will live here as well as edge case bots that were made for specific customers (ec2_tag_instance_from_vpc).  
+Bots that are extremely impactful (s3_delete_bucket, etc.) will live here as well as edge case bots that were made for specific customers (ec2_tag_instance_from_vpc).  
 
 
 
