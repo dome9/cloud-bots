@@ -172,7 +172,7 @@ def create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn)
             )            
 
         if response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "VPC Flow Logs successfully created.\n"
+            text_output =  "VPC Flow Logs successfully created. The destination is %s \n" % destination
         else:
             text_output = "Unexpected error: %s \n" % e
     
