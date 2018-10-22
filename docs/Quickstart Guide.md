@@ -1,10 +1,4 @@
-```   
-     |                  ||         |         
-,---.|    ,---..   .,---||---.,---.|--- ,---.
-|    |    |   ||   ||   ||   ||   ||    `---.
-`---'`---'`---'`---'`---'`---'`---'`---'`---'                                                
-```
-
+# Quickstart Guide
 
 * [Setup Steps](#setup-steps)
   * [Decide on deployment mode](#decide-on-deployment-mode)
@@ -12,9 +6,6 @@
   * [Outside of Dome9](#outside-of-dome9)
   * [In Dome9](#in-dome9)
 * [Sample Setup Example](#sample-setup-example)
-
-
-# Setup Steps
 
 ## Outside of Dome9
 

@@ -1,9 +1,9 @@
-# Supporting docs for initial setup
+# Advanced
+(Supporting docs for initial setup)
 
 
 
-
-## CS2 Setup without using the CFT Launch Button
+## CloudBots Setup without using the CFT Launch Button
 
 ### Clone this GitHub project
 ```bash 

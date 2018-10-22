@@ -1,10 +1,5 @@
-```   
-     |                  ||         |         
-,---.|    ,---..   .,---||---.,---.|--- ,---.
-|    |    |   ||   ||   ||   ||   ||    `---.
-`---'`---'`---'`---'`---'`---'`---'`---'`---'                                                
-```
-
+# GuardDuty
+Setup Steps
 
 * [Setup Steps](#setup-steps)
   * [Lambda Deployment](#lambda-deployment)
@@ -14,8 +9,6 @@
   * [Troubleshooting](#troubleshooting)
 * [Sample Setup Example](#sample-setup-example)
 
-
-# Setup Steps
 
 ## Lambda Deployment
 
