@@ -30,6 +30,7 @@ You can deploy this stack via the link below. Pick the region that you would lik
 |sa-east-1|[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate.yaml)|
 
 
+
 <br>
 <br>
 
