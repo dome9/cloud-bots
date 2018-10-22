@@ -109,11 +109,11 @@ Currently Continuous Compliance sends a 'diff' for the SNS notifications. Becaus
 If you want to have the first auto-remediation run to include all pre-existing issues, you'll need to use the "send all events" button to force a re-send. 
 
 For the compliance policy you have set up, look for a button on the right hand side with an arrow pointing up.  
-![Send all events button](./docs/pictures/send_all_events_button.png?raw=true "Send all events button")
+![Send all events button](https://github.com/Dome9/cloud-bots/blob/master/docs/pictures/send_all_events_button.png?raw=true "Send all events button")
 
 In this page, select SNS as the delivery method and your notification policy as the place to send the events.  
 This can also be useful for rolling out new bots and/or testing since you can re-send the same event more than once.  
-![Send all events page](./docs/pictures/send_all_events_page.png?raw=true "Send all events page")
+![Send all events page](https://github.com/Dome9/cloud-bots/blob/master/docs/pictures/send_all_events_page.png?raw=true "Send all events page")
 
 
 
