@@ -36,7 +36,7 @@ This approach could reduce the load from the security operators and drastically 
 
 ### Where can I see this in action? 
 Here are two videos on CloudBots:  
-- [Initial Setup](https://www.youtube.com/watch?v=HTRAq8g6dnk)
+- [Initial Setup](https://www.youtube.com/watch?v=HTRAq8g6dnk)  
 - [Remediating an exposed S3 bucket](https://www.youtube.com/watch?v=Fb3gjFlxXjA)
 
 
