@@ -1,11 +1,3 @@
-```   
-     |                  ||         |         
-,---.|    ,---..   .,---||---.,---.|--- ,---.
-|    |    |   ||   ||   ||   ||   ||    `---.
-`---'`---'`---'`---'`---'`---'`---'`---'`---'                                                
-```
-
-
 # CloudBots
 Auto remediation & automation bots for AWS.
 
@@ -15,16 +7,16 @@ This solution is meant to be used in conjunction with Dome9's Continuous Complia
 Table of Contents
 =================
 * [Overview](#overview)
-  * [What is this ?](#what-is-this-)
-  * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
-  * [How does it work ?](#how-does-it-work-)
-  * [FAQ](#faq)
+    * [What is this ?](#what-is-this-)
+    * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
+    * [How does it work ?](#how-does-it-work-)
+    * [FAQ](#faq)
 * [Setup Steps](#setup-steps)
-  * [Decide on deployment mode](#decide-on-deployment-mode)
-  * [Outside of Dome9 Easy mode](#outside-of-dome9)
-  * [Outside of Dome9](#outside-of-dome9)
-  * [In Dome9](#in-dome9)
-  * [Updating the stack](#updating-the-stack)
+    * [Decide on deployment mode](#decide-on-deployment-mode)
+    * [Outside of Dome9 Easy mode](#outside-of-dome9)
+    * [Outside of Dome9](#outside-of-dome9)
+    * [In Dome9](#in-dome9)
+    * [Updating the stack](#updating-the-stack)
 * [Sample Setup Example](#sample-setup-example)
 * [Actions](#actions)
 * [Release Notes](#release-notes)
