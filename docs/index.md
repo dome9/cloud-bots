@@ -29,13 +29,6 @@ Table of Contents
 * [Actions](#actions)
 * [Release Notes](#release-notes)
 
-## For a GuardDuty quickstart doc, please see [README_GUARDDUTY.md](https://github.com/Dome9/cloud-bots/blob/master/README_GUARDDUTY.md)
-
-## For a condensed quickstart doc, please see [README_QUICKSTART.md](https://github.com/Dome9/cloud-bots/blob/master/README_QUICKSTART.md)
-
-## For more technical information, please see [README_ADVANCED.md](https://github.com/Dome9/cloud-bots/blob/master/README_ADVANCED.md)
-
-## For more information on creating your own bots, please see [README_DEVELOPER_GUIDE.md](https://github.com/Dome9/cloud-bots/blob/master/README_DEVELOPER_GUIDE.md)
 
 # Overview
 ## What is this ?
