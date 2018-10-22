@@ -4,33 +4,16 @@ Auto remediation & automation bots for AWS.
 This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine or AWS GuardDuty to remediate issues that are uncovered. 
 
 
-Table of Contents
-=================
-* [Overview](#overview)
-    * [What is this ?](#what-is-this-)
-    * [Why and when would I need it ?](#why-and-when-would-i-need-it-)
-    * [How does it work ?](#how-does-it-work-)
-    * [FAQ](#faq)
-* [Setup Steps](#setup-steps)
-    * [Decide on deployment mode](#decide-on-deployment-mode)
-    * [Outside of Dome9 Easy mode](#outside-of-dome9)
-    * [Outside of Dome9](#outside-of-dome9)
-    * [In Dome9](#in-dome9)
-    * [Updating the stack](#updating-the-stack)
-* [Sample Setup Example](#sample-setup-example)
-* [Release Notes](#release-notes)
-
-
 # Overview
-## What is this ?
+## What is this?
 Cloud-Bots is an **automatic remediation solution for AWS** built on top of Dome9's Continuous Compliance capabilities
 
-## Why and when would I need it ?
+## Why and when would I need it?
 Dome9 Compliance Engine continuously scans the relevant cloud account (AWS,Azure,GCP) for policy violations, and then alert and report.<br/>
 For some organizations that is enough. However, at a certain scale and cloud matureness level- organizations prefer to move towards automatic-remediation approach, in which the system takes specific automated remediation bots in regards to specific violations.<br/>
 This approach could reduce the load from the security operators and drastically reduce the time to resolve security issues.
 
-## How does it work ?
+## How does it work?
 
 ### Single account mode:
 ![Data Flow](./docs/pictures/data-flow.png?raw=true "Single account mode")
@@ -254,7 +237,7 @@ This can also be useful for rolling out new bots and/or testing since you can re
 
 ### From here, you should be good to go!
 
-## In Dome9
+## Setup Screenshots
 
 - Create a bundle that you want to use for auto remediation. 
 ![Sample Bundle](./docs/pictures/sample_bundle.png?raw=true)
