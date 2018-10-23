@@ -11,6 +11,15 @@ Auto remediation & automation bots for AWS.
 
 This solution is meant to be used in conjunction with Dome9's Continuous Compliance Engine or AWS GuardDuty to remediate issues that are uncovered. 
 
+################################  
+################################  
+################################  
+################################  
+## THE DOCS ARE MOVING! PLEASE SEE [OUR NEW DOCS](https://cloudbots.readthedocs.io/en/latest/) HERE
+################################  
+################################  
+################################  
+################################  
 
 Table of Contents
 =================
@@ -29,13 +38,15 @@ Table of Contents
 * [Actions](#actions)
 * [Release Notes](#release-notes)
 
-## For a GuardDuty quickstart doc, please see [README_GUARDDUTY.md](https://github.com/Dome9/cloud-bots/blob/master/README_GUARDDUTY.md)
-
-## For a condensed quickstart doc, please see [README_QUICKSTART.md](https://github.com/Dome9/cloud-bots/blob/master/README_QUICKSTART.md)
-
-## For more technical information, please see [README_ADVANCED.md](https://github.com/Dome9/cloud-bots/blob/master/README_ADVANCED.md)
-
-## For more information on creating your own bots, please see [README_DEVELOPER_GUIDE.md](https://github.com/Dome9/cloud-bots/blob/master/README_DEVELOPER_GUIDE.md)
+################################  
+################################  
+################################  
+################################  
+## THE DOCS ARE MOVING! PLEASE SEE [OUR NEW DOCS](https://cloudbots.readthedocs.io/en/latest/) HERE
+################################  
+################################  
+################################  
+################################  
 
 # Overview
 ## What is this ?
