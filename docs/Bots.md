@@ -1,4 +1,4 @@
-# Actions
+# Bots
 
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it.  
