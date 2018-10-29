@@ -9,6 +9,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 def run_action(boto_session,rule,entity,params):
+    text_output = ""
     # Create an S3 client
     s3_client = boto_session.client('s3')
     bucket = entity['id']
