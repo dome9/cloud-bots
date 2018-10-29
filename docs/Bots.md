@@ -138,6 +138,11 @@ Usage: AUTO: rds_quarantine_instance
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)  
 
+## s3_delete_acls
+What it does: Deletes all ACLs from a bucket. If there is a bucket policy, it'll be left alone.  
+Usage: AUTO: s3_delete_acls  
+Limitations: none  
+
 ## s3_delete_permissions
 What it does: Deletes all ACLs and bucket policies from a bucket  
 Usage: AUTO: s3_delete_permissions  
