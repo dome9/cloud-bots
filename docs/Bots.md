@@ -1,5 +1,11 @@
 # Bots
 
+## ami_set_to_private
+What it does: Sets an AMI to be private instead of public  
+Usage: AUTO: ami_set_to_private  
+Sample GSL: AMI should have isPublic=false  
+Limitations: none  
+
 ## cloudtrail_enable
 What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it.  
 Pre-set Settings:  

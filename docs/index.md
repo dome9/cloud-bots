@@ -300,6 +300,9 @@ Bots that are extremely impactful (s3_delete_bucket, etc.) will live here as wel
 Updated sg_single_rule_delete to handle edge case for deleting rule with all ports defined (0-65535).  
 If you're not using port 0 in sg_single_rule_delete currently, no changes are needed. 
 If you want to use port 0 - please see the updated bot doc. 
+<br>
+Added new bot: ami_set_to_private  
+Documentation is in the bots section  
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
