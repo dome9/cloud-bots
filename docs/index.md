@@ -303,6 +303,11 @@ If you want to use port 0 - please see the updated bot doc.
 <br>
 Added new bot: ami_set_to_private  
 Documentation is in the bots section  
+The execution role for Lambda has an updated permission it needs: ec2:ModifyImageAttribute. This has been updated in the template  
+<br>
+Added new bot: s3_delete_acls
+Documentation is in the bots section  
+
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)
