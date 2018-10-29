@@ -296,6 +296,10 @@ Updated vpc_turn_on_flow_logs to support sending logs to S3 instead of CloudWatc
 Created a new folder called optional_bots. This will not be packaged with the standard Lambda function and will need to be added in manually as required.  
 Bots that are extremely impactful (s3_delete_bucket, etc.) will live here as well as edge case bots that were made for specific customers (ec2_tag_instance_from_vpc).  
 
+#### 10/29/18
+Updated sg_single_rule_delete to handle edge case for deleting rule with all ports defined (0-65535).  
+If you're not using port 0 in sg_single_rule_delete currently, no changes are needed. 
+If you want to use port 0 - please see the updated bot doc. 
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)

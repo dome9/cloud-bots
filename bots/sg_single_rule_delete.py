@@ -9,6 +9,11 @@ Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0'
 Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?
 Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
 If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
+
+If you want to delete a rule that is open on ALL ports:
+Put Port 0 as the port to be deleted and the bot will remove the rule. 
+Set Split to True
+AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 '''
 
 import boto3
@@ -95,6 +100,13 @@ def run_action(boto_session,rule,entity,params):
                 rule_to_delete = rule
                 break
 
+            if split == True and rule['port'] == port and rule['portTo'] == 65535 and port == 0: 
+                # If port 0 was defined, we want to delete the rule that is open on ALL ports.  
+                rule_to_delete = rule
+                lower_port_number = rule['port'] 
+                upper_port_number_to = rule['portTo']
+                break
+
             if split == True and rule['port'] <= port and rule['portTo'] >= port: # The port to delete is within a range of ports and will need to be extracted. 
                 rule_to_delete = rule
                 # If port 22 is the issue, and the rule in question defines port 20-30:
@@ -105,6 +117,7 @@ def run_action(boto_session,rule,entity,params):
                 lower_port_number = rule['port'] 
                 upper_port_number_to = rule['portTo']
                 break
+
 
     if rule_to_delete:
         text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s Port:%s Scope:%s \n" % (protocol, direction, port, scope)
@@ -191,7 +204,7 @@ def run_action(boto_session,rule,entity,params):
 
     
     # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are needed. One for the lower section and one for the upper. 
-    if split == True:
+    if split == True and port != 0:
         lower_port_number_to = port - 1
         upper_port_number = port + 1
         
