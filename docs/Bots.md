@@ -129,19 +129,19 @@ From there, a rule like "Instance should not have tags with [ key='marked_for_st
 Limitations: none  
 
 THIS WORKS ACROSS ALL EC2 RELATED SERVICES:  
-* Image
-* Instance
-* InternetGateway
-* NetworkAcl
-* NetworkInterface
-* PlacementGroup
-* RouteTable
-* SecurityGroup
-* Snapshot
-* Subnet
-* Volume
-* Vpc
-* VpcPeeringConnection
+* Image  
+* Instance  
+* InternetGateway  
+* NetworkAcl  
+* NetworkInterface  
+* PlacementGroup  
+* RouteTable  
+* SecurityGroup  
+* Snapshot  
+* Subnet  
+* Volume  
+* Vpc  
+* VpcPeeringConnection  
 
 
 ## rds_quarantine_instance
