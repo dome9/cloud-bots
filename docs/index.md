@@ -278,6 +278,19 @@ The execution role for Lambda has an updated permission it needs: ec2:ModifyImag
 Added new bot: s3_delete_acls
 Documentation is in the bots section  
 
+#### 10/30/18
+Added 2 new bots:  
+ec2_create_snapshot  
+kms_enable_rotation  
+Documentation is in the bots section  
+
+#### 10/30/18
+Added 2 new bots:  
+iam_user_attach_policy 
+iam_role_attach_policy 
+Documentation is in the bots section  
+
+
 
 ## Questions / Comments
 Contact: Alex Corstorphine (alex@dome9.com)

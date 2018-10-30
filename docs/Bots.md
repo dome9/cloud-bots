@@ -88,6 +88,24 @@ Usage: AUTO: ec2_update_instance_role policy_arn=<policy_arn>
 Example: AUTO: ec2_update_instance_role policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
 Sample GSL: Instance where roles should have roles with [ managedPolicies contain [ name='AmazonEC2RoleforSSM' ] ]  
 
+## iam_role_attach_policy  
+What it does: Attaches a policy (passed in as a variable) to the role  
+Usage: AUTO: iam_role_attach_policy policy_arn=<policy_arn>  
+Limitations: none  
+Examples:  
+    AUTO: iam_role_attach_policy policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessFullAccess  
+    AUTO: iam_role_attach_policy policy_arn=arn:aws:iam::621958466464:policy/sumo_collection  
+    AUTO: iam_role_attach_policy policy_arn=arn:aws:iam::$ACCOUNT_ID:policy/sumo_collection  
+
+## iam_user_attach_policy  
+What it does: Attaches a policy (passed in as a variable) to the user  
+Usage: AUTO: iam_user_attach_policy policy_arn=<policy_arn>  
+Limitations: none  
+Examples:  
+    AUTO: iam_user_attach_policy policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessFullAccess  
+    AUTO: iam_user_attach_policy policy_arn=arn:aws:iam::621958466464:policy/sumo_collection  
+    AUTO: iam_user_attach_policy policy_arn=arn:aws:iam::$ACCOUNT_ID:policy/sumo_collection  
+    
 ## iam_quarantine_role
 What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
 Usage: AUTO: iam_quarantine_role  
