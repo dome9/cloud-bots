@@ -114,6 +114,11 @@ Limitations: none
 What it does: Turns off ec2 instances with public IPs, detaches an IGW from a VPC, and then deletes it.  
 Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc.  
 
+## kms_enable_rotation
+What it does: Enables rotation on a KMS key  
+Usage: AUTO: kms_enable_rotation  
+Limitations: none  
+ 
 ## mark_for_stop_ec2_resource
 What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>     
 Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>  
