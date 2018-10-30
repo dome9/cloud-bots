@@ -231,7 +231,7 @@ This can also be useful for rolling out new bots and/or testing since you can re
 
 ### From here, you should be good to go!
 
-## Setup Screenshots
+## Setup Screenshots 
 
 - Create a bundle that you want to use for auto remediation. 
 ![Sample Bundle](https://github.com/Dome9/cloud-bots/blob/master/docs/pictures/sample_bundle.png?raw=true)
