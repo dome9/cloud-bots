@@ -1,4 +1,6 @@
-# CloudBots CloudFormation Launch Templates by Region
+# Deployment Links
+
+## CloudBots CloudFormation Launch Templates by Region
 
 | Region        | Launch        | 
 | :------------- |:-------------| 
@@ -19,7 +21,7 @@
 |sa-east-1|[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3-sa-east-1.amazonaws.com/dome9cftemplatessaeast1/cloudbots_cftemplate.yaml)|
 
 
-# CloudFormation URLs for Updating the CloudBots Stack
+## CloudFormation URLs for Updating the CloudBots Stack
 
 | Region        | CFT Link        | 
 | :------------- |:-------------| 
