@@ -246,8 +246,7 @@ Updating your current CloudBots stack is very straightforward. In the UI, naviga
 * Select "Specify an Amazon S3 template URL" and copy the link from the table below that corresponds to the region you're in. The link for us-east-1 is below, but **if you want another region, please see the "Deployment Links" tab.**
 * Click next/update all the way through and it'll deploy the new version of the template.
 
-us-east-1  
-https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate.yaml
+**us-east-1**  https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate.yaml
 
 
 
