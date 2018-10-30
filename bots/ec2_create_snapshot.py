@@ -42,7 +42,7 @@ def run_action(boto_session,rule,entity,params):
         if responseCode >= 400:
             text_output = text_output + "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output + "Volume snapshot started: %s \n" % volume_id
+            text_output = text_output + "Volume snapshot creation started: %s \n" % volume_id
 
     return text_output 
 
