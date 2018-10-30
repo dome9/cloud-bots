@@ -56,6 +56,12 @@ If you have a role that is the same across accounts, and don't want to pass in a
 Example: AUTO: ec2_attach_instance_role role_arn=arn:aws:iam::$ACCOUNT_ID:instance-profile/ec2SSM  
 Sample GSL: Instance should have roles
 
+## ec2_create_snapshot  
+What it does: Snapshots the EBS volumes on an instance  
+Usage: AUTO: ec2_create_snapshot  
+Notes: The snapshot description will show that it was created by CloudBots and the rule that failed that triggered the bot. Also, the snapshot will be tagged with a key of "source_instance_id" and a value with the instance id from the source instance.   
+Limitations: This will not work on Instance Store volumes. Only EBS  
+
 ## ec2_release_eips  
 What it does: Disassociates and releases all EIPs on an instance  
 Usage: AUTO: ec2_release_eips  

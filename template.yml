@@ -84,6 +84,7 @@ Resources:
                - ec2:AuthorizeSecurityGroupIngress # For sg_single_rule_delete
                - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                - ec2:CreateSecurityGroup # For instance_quarantine
+               - ec2:CreateSnapshot" # For ec2_create_snapshot
                - ec2:CreateTags # For ec2_tag_instance
                - ec2:DeleteSecurityGroup # For sg_delete
                - ec2:DeleteInternetGateway # For igw_delete
