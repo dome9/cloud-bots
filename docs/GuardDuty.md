@@ -104,7 +104,7 @@ For each region defined it will:
 - Update the lambda function invocation policy to allow SNS to trigger it
 
 
-## Muilti Account
+## Multi Account
 
 Setting up multiple accounts to work with a single deployment of CloudBots is very straightforward because GD easily sends events across accounts.  
 
