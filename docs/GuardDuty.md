@@ -9,6 +9,8 @@ Setup Steps
   * [Troubleshooting](#troubleshooting)
 * [Sample Setup Example](#sample-setup-example)
 
+![Data Flow](https://github.com/Dome9/cloud-bots/blob/master/docs/pictures/cloudbots_with_GD.png?raw=true "With GuardDuty")
+
 
 ## Lambda Deployment
 
