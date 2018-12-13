@@ -135,7 +135,7 @@ Limitations: VPCs have lots of interconnected services. This is currently just f
 ## kms_enable_rotation
 What it does: Enables rotation on a KMS key  
 Usage: AUTO: kms_enable_rotation  
-Sample GSL: KMS where isCustomerManaged=true should have rotationStatus=true  
+Sample GSL: KMS where isCustomerManaged=true and deletionDate!=0 should have rotationStatus=true
 Limitations: Edits can not be made to AWS maged keys. Only customer managed keys can be edited.  
  
 ## mark_for_stop_ec2_resource
