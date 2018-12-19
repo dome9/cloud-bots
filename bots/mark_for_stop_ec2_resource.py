@@ -25,6 +25,7 @@ Limitations: none
 
 import boto3
 import time
+import re
 
 def run_action(boto_session,rule,entity,params):
     instance = entity['id']
