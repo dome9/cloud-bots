@@ -21,27 +21,38 @@ def run_action(boto_session,rule,entity,params):
             }
         ]
     )
-
    
     addresses = describe_response['Addresses']
     print(addresses) #for debugging
 
     if len(addresses) > 0:
         for address in addresses:
+            #Instances not in the default VPC need to be disassociated before they can be released
+            association_id = address['AssociationId']
+            disassociate_result = ec2_client.disassociate_address(AssociationId=association_id)
+
+            responseCode = disassociate_result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(disassociate_result)
+                return text_output 
+            else:
+                text_output = text_output + "Disassociated EIP: %s \n" % address['PublicIp']
+
+
             allocation_id = address['AllocationId']
+            release_result = ec2_client.release_address(AllocationId=allocation_id)
 
-            result = ec2_client.release_address(AllocationId=allocation_id)
-
-            text_output = text_output + "Released EIP: %s \n" % address['PublicIp']
+            responseCode = release_result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(release_result)
+                return text_output 
+            else:
+                text_output = text_output + "Released EIP: %s \n" % address['PublicIp']
 
     else:
         text_output = "No EIPs found. Nothing to release.\n"
-        return text_output 
-
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = text_output + "Unexpected error: %s \n" % str(result)
 
     return text_output 
+
 
 
