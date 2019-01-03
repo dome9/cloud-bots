@@ -83,7 +83,7 @@ Dome9's cross account role is completely separate from the CloudBots permissions
 
 You can deploy this stack in us-east-1 via the link below. **If you would like to deploy the stack in another region, please go to the "Deployment Links" tab.**
 
-**us-east-1:**   [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3.amazonaws.com/dome9cftemplatesuseast1/cloudbots_cftemplate.yaml)
+**us-east-1:**   [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3.amazonaws.com/dome9cloudbotsemplatesuseast1/cloudbots_cftemplate.yaml)
 
 
 **If you want to deploy this via CLI, please see README_ADVANCED.md**
