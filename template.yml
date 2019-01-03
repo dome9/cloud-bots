@@ -92,6 +92,7 @@ Resources:
                - ec2:DescribeAddresses # For ec2_release_eips
                - ec2:DescribeSecurityGroups # For instance_quarantine
                - ec2:DescribeInstances # For igw_delete
+               - ec2:DisassociateAddress # For ec2_release_eips
                - ec2:ModifyImageAttribute # For ami_set_to_private
                - ec2:ModifyInstanceAttribute # For instance_quarantine
                - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
