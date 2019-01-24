@@ -25,7 +25,10 @@ def run_action(boto_session,rule,entity,params):
     ## Set up params. We need a role ARN to come through in the params.
     text_output = ""
     usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
-    
+    global result, protocol, scope, port, split
+
+    direction=""
+
     if len(params) == 5:
         try:
             for param in params:
@@ -92,6 +95,8 @@ def run_action(boto_session,rule,entity,params):
     rule_direction = direction + "Rules" ## The objects are nested in entity['inboundRules'] or outboundRules but we want to heave the direction variable alone for logging later. 
     found_rule = False
     rule_to_delete = False
+    lower_port_number = 0
+    upper_port_number_to = 0
     for rule in entity[rule_direction]:
         if scope == rule['scope'] and protocol == rule['protocol']: # Scope and protocol match - now check the ports that are open
             # 2/3 of the conditions are good. Check for scope now. 
