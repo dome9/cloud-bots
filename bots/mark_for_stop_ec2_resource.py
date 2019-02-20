@@ -30,6 +30,8 @@ import re
 def run_action(boto_session,rule,entity,params):
     instance = entity['id']
 
+    print("Start execute Instance mark for stope for instance - %s" % instance)
+
     # Take in the params and find the epoch time to mark for stop
     try:
         matches = re.findall('(\d+)([mMhHdD])', params[0])
@@ -52,22 +54,23 @@ def run_action(boto_session,rule,entity,params):
         text_output = "Mark for stop time not properly formatted in input params. Please check and try again\nUsage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>\nExample: AUTO: mark_for_stop_ec2_resource 3h\n"
         return text_output
 
+
     ec2_client = boto_session.client('ec2')
     result = ec2_client.create_tags(
         Resources=[instance],
         Tags=[
             {
                 'Key': "marked_for_stop",
-                'Value': mark_for_stop_time
+                'Value': str(mark_for_stop_time)
             }
         ]
     )
-    
+
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
         text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,key,value)
+        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,"marked_for_stop",str(mark_for_stop_time))
 
     return text_output
 
