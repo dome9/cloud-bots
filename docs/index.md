@@ -286,7 +286,7 @@ iam_user_attach_policy
 iam_role_attach_policy 
 Documentation is in the bots section  
 
-#### 02/20/18
+#### 02/20/19
 Bug fix:
 sg_single_rule_delete - Fix the bot and support port range's edges
 mark_for_stop_ec2_resource - Fix bugs 
