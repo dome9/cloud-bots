@@ -292,9 +292,6 @@ sg_single_rule_delete - Fix bugs and support port range's edges
 mark_for_stop_ec2_resource - Fix bugs 
 
 
-
-
-
 ## Questions / Comments
 Contact: Idan Perez (idperez@checkpoint.com)
 
