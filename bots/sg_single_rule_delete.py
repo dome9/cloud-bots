@@ -54,7 +54,7 @@ def run_action(boto_session,rule,entity,params):
                         protocol = "UDP"
                         text_output = text_output + "The protocol to be removed is UDP\n"
                     else: 
-                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only three currently supported protocols. Skipping\n" + usage
+                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only currently supported protocols. Skipping\n" + usage
                         return text_output
 
                 if key == "scope":     
