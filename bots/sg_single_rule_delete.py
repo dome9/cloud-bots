@@ -24,7 +24,7 @@ from botocore.exceptions import ClientError
 def run_action(boto_session,rule,entity,params):
     ## Set up params. We need a role ARN to come through in the params.
     text_output = ""
-    usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
+    usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>"
     global result, protocol, scope, port, split
 
     direction = ""
@@ -39,22 +39,22 @@ def run_action(boto_session,rule,entity,params):
                 if key == "split":     
                     if value.lower() == "true":
                         split = True
-                        text_output = text_output + "Split matching for the port to be remediated is set to True\n"
+                        text_output = text_output + "Split matching for the port to be remediated is set to True"
                     elif value.lower() == "false":
                         split = False
-                        text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
+                        text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped."
                     else: 
-                        text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
+                        text_output = text_output + "Split value doesn't match true or false. Defaulting to True"
                 
                 if key == "protocol":     
                     if value.lower() == "tcp":
                         protocol = "TCP"
-                        text_output = text_output + "The protocol to be removed is TCP\n"
+                        text_output = text_output + "The protocol to be removed is TCP"
                     elif value.lower() == "udp":
                         protocol = "UDP"
-                        text_output = text_output + "The protocol to be removed is UDP\n"
+                        text_output = text_output + "The protocol to be removed is UDP"
                     else: 
-                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only currently supported protocols. Skipping\n" + usage
+                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only currently supported protocols. Skipping" + usage
                         return text_output
 
                 if key == "scope":     
@@ -62,35 +62,35 @@ def run_action(boto_session,rule,entity,params):
                     #TODO - SUPPORT IPV6 SCOPE AS WELL
                     scope_pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
                     if scope_pattern.match(scope):
-                        text_output = text_output + "Scope to be removed found: %s \n" % scope
+                        text_output = text_output + "Scope to be removed found: %s " % scope
                     else:
-                        text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping.\n" + usage   
+                        text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping." + usage   
 
                 if key == "direction":     
                     if value.lower() == "inbound":
                         direction = "inbound"
-                        text_output = text_output + "The rule to be removed is going to be for inbound traffic\n"
+                        text_output = text_output + "The rule to be removed is going to be for inbound traffic"
                     elif value.lower() == "outbound":
                         direction = "outbound"
-                        text_output = text_output + "The rule to be removed is going to be for outbound traffic\n"
+                        text_output = text_output + "The rule to be removed is going to be for outbound traffic"
                     else: 
-                        text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping.\n" + usage
+                        text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping." + usage
                         return text_output
 
                 if key == "port":     
                     try: 
                         port = int(value)
-                        text_output = text_output + "Port to be removed: %s \n" % port
+                        text_output = text_output + "Port to be removed: %s " % port
                     except ValueError:
-                        text_output = text_output + "Port number was not a valid integer. Skipping.\n" + usage
+                        text_output = text_output + "Port number was not a valid integer. Skipping." + usage
                         return text_output
 
         except:
-            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
+            text_output = text_output + "Params handling error. Please check params and try again." + usage
             return text_output
 
     else:
-        text_output = "Wrong amount of params inputs detected. Exiting.\n" + usage
+        text_output = "Wrong amount of params inputs detected. Exiting." + usage
         return text_output
 
     rule_direction = direction + "Rules" ## The objects are nested in entity['inboundRules'] or outboundRules but we want to heave the direction variable alone for logging later. 
@@ -126,9 +126,9 @@ def run_action(boto_session,rule,entity,params):
 
 
     if rule_to_delete:
-        text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s Port:%s Scope:%s \n" % (protocol, direction, port, scope)
+        text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s Port:%s Scope:%s " % (protocol, direction, port, scope)
     else:
-        text_output = text_output + "No SG rule was found that matches the defined parameters. Skipping\n"
+        text_output = text_output + "No SG rule was found that matches the defined parameters. Skipping"
         return text_output
 
 
@@ -147,9 +147,9 @@ def run_action(boto_session,rule,entity,params):
         responseCode = touch_sg(sg, direction, "revoke", port, portTo, sg_id)
 
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s " % str(result)
         else:
-            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (port,portTo)
+            text_output = text_output + "Security Group rule from port %s to port %s successfully removed" % (port,portTo)
         
 
 
@@ -157,9 +157,9 @@ def run_action(boto_session,rule,entity,params):
         responseCode = touch_sg(sg, direction, "revoke", lower_port_number, upper_port_number_to, sg_id)
 
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s " % str(result)
         else:
-            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (lower_port_number,upper_port_number_to)
+            text_output = text_output + "Security Group rule from port %s to port %s successfully removed" % (lower_port_number,upper_port_number_to)
         
 
     
@@ -175,9 +175,9 @@ def run_action(boto_session,rule,entity,params):
             responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id)
 
             if responseCode >= 400:
-                text_output = "Unexpected error: %s \n" % str(result)
+                text_output = "Unexpected error: %s " % str(result)
             else:
-                text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
+                text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added" % (
                 lower_port_number, upper_port_number_to)
 
         else:
@@ -188,9 +188,9 @@ def run_action(boto_session,rule,entity,params):
                 responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id)
 
                 if responseCode >= 400:
-                    text_output = "Unexpected error: %s \n" % str(result)
+                    text_output = "Unexpected error: %s " % str(result)
                 else:
-                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
+                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added" % (
                         lower_port_number, upper_port_number_to)
 
             #in case that the revoked port was in the range
@@ -198,17 +198,17 @@ def run_action(boto_session,rule,entity,params):
                 responseCode = touch_sg(sg, direction, "authorize", lower_port_number, lower_port_number_to, sg_id)
 
                 if responseCode >= 400:
-                    text_output = "Unexpected error: %s \n" % str(result)
+                    text_output = "Unexpected error: %s " % str(result)
                 else:
-                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (lower_port_number,lower_port_number_to)
+                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added" % (lower_port_number,lower_port_number_to)
 
                 responseCode = touch_sg(sg, direction, "authorize", upper_port_number, upper_port_number_to, sg_id)
 
 
                 if responseCode >= 400:
-                    text_output = "Unexpected error: %s \n" % str(result)
+                    text_output = "Unexpected error: %s " % str(result)
                 else:
-                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (upper_port_number,upper_port_number_to)
+                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added" % (upper_port_number,upper_port_number_to)
 
 
                         

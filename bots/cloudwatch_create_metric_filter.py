@@ -32,12 +32,12 @@ def create_filter(boto_session,log_group,filter_name,filter_pattern,metric_name,
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
+        text_output = "Unexpected error: %s " % str(result)
     else:
-        text_output = "Metric filter created for filter: %s \n" % filter_name  
+        text_output = "Metric filter created for filter: %s " % filter_name  
 
   except ClientError as e:
-      text_output = "Unexpected error: %s \n" % e
+      text_output = "Unexpected error: %s " % e
 
   return text_output
 
@@ -50,12 +50,12 @@ def create_topic(boto_session,topic_name):
  
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s " % str(result)
         else:
-            text_output = "SNS topic created (or already existed): %s \n" % topic_name
+            text_output = "SNS topic created (or already existed): %s " % topic_name
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        text_output = "Unexpected error: %s " % e
 
     return text_output
 
@@ -68,11 +68,11 @@ def create_subscription(boto_session,topic_arn,email_address):
 
         for subscription in result['Subscriptions']:
             if subscription['Endpoint'] == email_address:
-                text_output = "Email address %s already has a subscription to this topic %s. Skipping\n" % (email_address,topic_arn)
+                text_output = "Email address %s already has a subscription to this topic %s. Skipping" % (email_address,topic_arn)
                 return text_output
 
     except ClientError as e:
-            text_output = "Unexpected error: %s \n" % e
+            text_output = "Unexpected error: %s " % e
 
     try:
         #Give the config somewhere to go
@@ -84,12 +84,12 @@ def create_subscription(boto_session,topic_arn,email_address):
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s " % str(result)
         else:
-            text_output = "SNS subscription created for: %s \n" % email_address
+            text_output = "SNS subscription created for: %s " % email_address
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        text_output = "Unexpected error: %s " % e
 
     return text_output 
 
@@ -117,12 +117,12 @@ def create_alarm(boto_session,filter_name,topic_arn):
       
       responseCode = result['ResponseMetadata']['HTTPStatusCode']
       if responseCode >= 400:
-          text_output = "Unexpected error: %s \n" % str(result)
+          text_output = "Unexpected error: %s " % str(result)
       else:
-          text_output = "CloudWatch alarm created: \"%s\" \n" % alarm_name
+          text_output = "CloudWatch alarm created: \"%s\" " % alarm_name
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        text_output = "Unexpected error: %s " % e
 
     return text_output 
 
@@ -140,13 +140,13 @@ def run_action(boto_session,rule,entity,params):
 
     #Validate the rule was set up properly
     if not re.match(r"[^@]+@[^@]+\.[^@]+", params[0]):
-      text_output = "No email found as the first parameter\nUsage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> .... \n"
+      text_output = "No email found as the first parameterUsage: AUTO: cloudwatch_create_metric_filter <email_address> <filter1> <filter2> .... "
       return text_output
     else:
       email_address = params[0]
 
     if log_group == None or log_group == "":
-        text_output = "Cloudtrail is not set up to send to a CloudWatchLogs group. Please update and try again\n"
+        text_output = "Cloudtrail is not set up to send to a CloudWatchLogs group. Please update and try again"
         return text_output
 
     else:
@@ -157,7 +157,7 @@ def run_action(boto_session,rule,entity,params):
             log_group = log_group_regex[0]
 
         except IndexError as e:
-            text_output = "The cloudWatchLogsLogGroupArn does not match the capture group. Can't parse / exiting\n"
+            text_output = "The cloudWatchLogsLogGroupArn does not match the capture group. Can't parse / exiting"
             return text_output
     
     filters = {
@@ -229,7 +229,7 @@ def run_action(boto_session,rule,entity,params):
             filter_pattern = filters[filter_name]['filter_pattern']
             metric_value = filters[filter_name]['metric_value']
         except KeyError as e:
-            text_output = text_output + "Metric filter %s not found. Please check spelling and try again.\nAvailable filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges \n" % filter_name
+            text_output = text_output + "Metric filter %s not found. Please check spelling and try again.Available filters are: UnauthorizedApiCalls, NoMfaConsoleLogins, RootAccountLogins, IamPolicyChanges, CloudTrailConfigurationChanges, FailedConsoleLogins, DisabledOrDeletedCmks, S3BucketPolicyChanges, AwsConfigChanges, SecurityGroupChanges, NetworkAccessControlListChanges, NetworkGatewayChanges, RouteTableChanges, VpcChanges " % filter_name
             continue
 
         #Do work
@@ -238,13 +238,13 @@ def run_action(boto_session,rule,entity,params):
           text_output = text_output + create_topic(boto_session,topic_name)
           text_output = text_output + create_alarm(boto_session,filter_name,topic_arn)
         except ClientError as e:
-          text_output = text_output + "Unexpected error: %s \n" % e  
+          text_output = text_output + "Unexpected error: %s " % e  
 
     #We only want to run this once so we'll do it at the end
     try:
       text_output = text_output + create_subscription(boto_session,topic_arn,email_address)
     except ClientError as e:
-      text_output = text_output + "Unexpected error: %s \n" % e  
+      text_output = text_output + "Unexpected error: %s " % e  
 
     return text_output 
 

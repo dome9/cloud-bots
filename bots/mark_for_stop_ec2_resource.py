@@ -51,7 +51,7 @@ def run_action(boto_session,rule,entity,params):
         mark_for_stop_time = current_time + total_seconds
 
     except IndexError:
-        text_output = "Mark for stop time not properly formatted in input params. Please check and try again\nUsage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>\nExample: AUTO: mark_for_stop_ec2_resource 3h\n"
+        text_output = "Mark for stop time not properly formatted in input params. Please check and try againUsage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>Example: AUTO: mark_for_stop_ec2_resource 3h"
         return text_output
 
 
@@ -68,9 +68,9 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
+        text_output = "Unexpected error: %s " % str(result)
     else:
-        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,"marked_for_stop",str(mark_for_stop_time))
+        text_output = "Instance tagged: %s Key: %s | Value: %s " % (instance,"marked_for_stop",str(mark_for_stop_time))
 
     return text_output
 
