@@ -50,12 +50,12 @@ def run_action(boto_session,rule,entity,params):
             
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s " % str(result)
+                text_output = "Unexpected error: %s \n" % str(result)
             else:
-                text_output = "Logging bucket created %s " % target_bucket_name
+                text_output = "Logging bucket created %s \n" % target_bucket_name
        
         except ClientError as e:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
 
     try:
@@ -70,11 +70,11 @@ def run_action(boto_session,rule,entity,params):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s " % str(result)
+            text_output = text_output + "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output + "Bucket logging enabled from bucket: %s to bucket: %s " % (bucket_name,target_bucket_name)
+            text_output = text_output + "Bucket logging enabled from bucket: %s to bucket: %s \n" % (bucket_name,target_bucket_name)
 
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s " % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output 

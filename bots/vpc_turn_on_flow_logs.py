@@ -54,12 +54,12 @@ def create_log_delivery_policy(boto_session):
 
         responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % create_policy_response
+            text_output = "Unexpected error: %s \n" % create_policy_response
         else:
-            text_output = "vpcFlowLogDelivery policy successfully created."  
+            text_output = "vpcFlowLogDelivery policy successfully created.\n"  
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -73,7 +73,7 @@ def check_for_log_delivery_policy(boto_session,policy_arn):
         get_policy_response = iam_client.get_policy(PolicyArn=policy_arn)
         
         if get_policy_response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output = "IAM vpcFlowLogDelivery policy exists in this account."
+            text_output = "IAM vpcFlowLogDelivery policy exists in this account.\n"
 
     except ClientError as e:
         error = e.response['Error']['Code']
@@ -81,7 +81,7 @@ def check_for_log_delivery_policy(boto_session,policy_arn):
             #If the policy isn't there - add it into the account
             text_output = create_log_delivery_policy(boto_session)
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -113,15 +113,15 @@ def create_role(boto_session,policy_arn):
             )
 
         if response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "vpcFlowLogDelivery role successfully created."
+            text_output =  "vpcFlowLogDelivery role successfully created.\n"
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'EntityAlreadyExists':
             #If the policy isn't there - add it into the account
-             text_output =  "vpcFlowLogDelivery role already exists in this account."
+             text_output =  "vpcFlowLogDelivery role already exists in this account.\n"
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -135,10 +135,10 @@ def add_policy_to_role(boto_session,policy_arn):
             RoleName="vpcFlowLogDelivery",
             PolicyArn=policy_arn
         )
-        text_output = "Flow log delivery policy attached to role."
+        text_output = "Flow log delivery policy attached to role.\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -172,17 +172,17 @@ def create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn)
             )            
 
         if response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "VPC Flow Logs successfully created. The destination is %s " % destination
+            text_output =  "VPC Flow Logs successfully created. The destination is %s \n" % destination
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
     
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'FlowLogAlreadyExists':
             #If the policy isn't there - add it into the account
-             text_output =  "There is an existing Flow Log in this VPC with the same configuration and log group. Skipping."
+             text_output =  "There is an existing Flow Log in this VPC with the same configuration and log group. Skipping.\n"
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -199,7 +199,7 @@ def run_action(boto_session,rule,entity,params):
 
     ## Set up params. We need a role ARN to come through in the params.
     text_output = ""
-    usage = "Usage: AUTO: vpc_turn_on_flow_logs traffic_type=<all|accept|reject> destination=<logs|s3> s3_arn=arn:aws:s3:::my-bucket/my-logs/Example: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=logsExample: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=s3 s3_arn=arn:aws:s3:::my-bucket/my-logs/"
+    usage = "Usage: AUTO: vpc_turn_on_flow_logs traffic_type=<all|accept|reject> destination=<logs|s3> s3_arn=arn:aws:s3:::my-bucket/my-logs/\nExample: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=logs\nExample: AUTO: vpc_turn_on_flow_logs traffic_type=all destination=s3 s3_arn=arn:aws:s3:::my-bucket/my-logs/\n"
     
     if len(params) > 1:
         try:
@@ -211,38 +211,38 @@ def run_action(boto_session,rule,entity,params):
                 if key == "destination":     
                     if value.lower() == "logs":
                         destination = "logs"
-                        text_output = text_output + "Flow logs will be sent to CW Logs"
+                        text_output = text_output + "Flow logs will be sent to CW Logs\n"
                     elif value.lower() == "s3":
                         destination = "s3"
-                        text_output = text_output + "Flow logs will be sent to S3"
+                        text_output = text_output + "Flow logs will be sent to S3\n"
                     else: 
                         destination = "logs"
-                        text_output = text_output + "Destination value doesn't match logs or S3. Defaulting to logs"
+                        text_output = text_output + "Destination value doesn't match logs or S3. Defaulting to logs\n"
                 
                 if key == "traffic_type":     
                     if value.upper() == "ALL":
                         traffic_type = "ALL"
-                        text_output = text_output + "The traffic_type to be logged is ALL"
+                        text_output = text_output + "The traffic_type to be logged is ALL\n"
                     elif value.upper() == "ACCEPT":
                         traffic_type = "ACCEPT"
-                        text_output = text_output + "The traffic_type to be logged is ACCEPT"
+                        text_output = text_output + "The traffic_type to be logged is ACCEPT\n"
                     elif value.upper() == "REJECT":
                         traffic_type = "REJECT"
-                        text_output = text_output + "The traffic_type to be logged is REJECT"
+                        text_output = text_output + "The traffic_type to be logged is REJECT\n"
                     else: 
-                        text_output = text_output + "Traffic_type not set to ALL, ACCEPT, or REJECT. Those are the only three supported traffic_types. Skipping" + usage
+                        text_output = text_output + "Traffic_type not set to ALL, ACCEPT, or REJECT. Those are the only three supported traffic_types. Skipping\n" + usage
                         return text_output
 
                 if key == "s3_arn":     
                     arn_pattern = re.compile("^arn:aws:s3:::")
                     if arn_pattern.match(value):
                         bucket_arn = value
-                        text_output = text_output + "Bucket destination: %s " % bucket_arn
+                        text_output = text_output + "Bucket destination: %s \n" % bucket_arn
                     else:
-                        text_output = text_output + "s3_arn doesn't match expected pattern arn:aws:s3:::my-bucket/my-logs/. Skipping." + usage   
+                        text_output = text_output + "s3_arn doesn't match expected pattern arn:aws:s3:::my-bucket/my-logs/. Skipping.\n" + usage   
 
         except:
-            text_output = text_output + "Params handling error. Please check params and try again." + usage
+            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
             return text_output
 
     try:
@@ -252,7 +252,7 @@ def run_action(boto_session,rule,entity,params):
         text_output = text_output + create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn) # Create the flow logs
         
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output
 

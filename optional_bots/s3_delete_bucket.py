@@ -16,8 +16,8 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % str(result)
+        text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "Bucket deleted. Id: %s " % (bucket)
+        text_output = "Bucket deleted. Id: %s \n" % (bucket)
 
     return text_output

@@ -39,12 +39,12 @@ def make_bucket(boto_session,region,account_id,bucket_name):
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "Bucket %s was created for storing trails" % bucket_name
+            text_output = "Bucket %s was created for storing trails\n" % bucket_name
    
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -84,12 +84,12 @@ def add_bucket_policy(boto_session,account_id,bucket_name):
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "Bucket policy updated for cloudtrail delivery."
+            text_output = "Bucket policy updated for cloudtrail delivery.\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -112,24 +112,24 @@ def create_trail(boto_session,trail_name,bucket_name):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "CloudTrail created successfully. Enabling logging next."
+            text_output = "CloudTrail created successfully. Enabling logging next.\n"
             try:
                 trail_arn = result['TrailARN']
                 response = cloudtrail_client.start_logging(Name=trail_arn)
                 
                 responseCode = result['ResponseMetadata']['HTTPStatusCode']
                 if responseCode >= 400:
-                    text_output = text_output +  "Unexpected error: %s " % str(result)
+                    text_output = text_output +  "Unexpected error: %s \n" % str(result)
                 else:
-                    text_output = text_output +  "CloudTrail logging enabled"
+                    text_output = text_output +  "CloudTrail logging enabled\n"
 
             except ClientError as e:
-                text_output = text_output +  "Unexpected error: %s " % e
+                text_output = text_output +  "Unexpected error: %s \n" % e
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -149,27 +149,27 @@ def run_action(boto_session,rule,entity,params):
     # Check params for usable values and if not - go to defaults
     try: # Params[0] should be the traffic type. 
         trail_name = env_variables['trail_name']
-        text_output = text_output + "CloudTrail name will be %s " % trail_name
+        text_output = text_output + "CloudTrail name will be %s \n" % trail_name
     except:
         trail_name = "allRegionTrail"
-        text_output = text_output +  "Trail name not set. Defaulting to allRegionTrail."
+        text_output = text_output +  "Trail name not set. Defaulting to allRegionTrail.\n"
         
     try:
         bucket_name = env_variables['bucket_name']
-        text_output = text_output +  "Sending trails to bucket: %s " % bucket_name
+        text_output = text_output +  "Sending trails to bucket: %s \n" % bucket_name
     except:
         try:
             bucket_name = "acct%scloudtraillogs" % account_id
-            text_output = text_output + "No target bucket defined in params. Creating a local bucket instead with bucket name %s " % bucket_name
+            text_output = text_output + "No target bucket defined in params. Creating a local bucket instead with bucket name %s \n" % bucket_name
             text_output = text_output + make_bucket(boto_session,region,account_id,bucket_name) 
             text_output = text_output + add_bucket_policy(boto_session,account_id,bucket_name) 
         except ClientError as e:
-            text_output = text_output +  "Unexpected error: %s " % e
+            text_output = text_output +  "Unexpected error: %s \n" % e
     
     try:
         text_output = text_output + create_trail(boto_session,trail_name,bucket_name)
         
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s " % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output

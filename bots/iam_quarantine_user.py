@@ -32,9 +32,9 @@ def create_deny_policy(boto_session):
 
     responseCode = create_policy_response['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % create_policy_response
+        text_output = "Unexpected error: %s \n" % create_policy_response
     else:
-        text_output = "IAM deny-all policy successfully created."
+        text_output = "IAM deny-all policy successfully created.\n"
   
     return text_output
 
@@ -48,7 +48,7 @@ def check_for_deny_policy(boto_session,policy_arn):
         get_policy_response = iam_client.get_policy(PolicyArn=policy_arn)
         
         if get_policy_response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "IAM deny-all policy exists in this account."
+            text_output =  "IAM deny-all policy exists in this account.\n"
 
     except ClientError as e:
         error = e.response['Error']['Code']
@@ -56,7 +56,7 @@ def check_for_deny_policy(boto_session,policy_arn):
             #If the policy isn't there - add it into the account
             text_output = create_deny_policy(boto_session)
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -71,10 +71,10 @@ def add_policy_to_user(boto_session,user,policy_arn):
             UserName=user,
             PolicyArn=policy_arn
         )
-        text_output = "Deny policy attached to user: \" %s \"" % user
+        text_output = "Deny policy attached to user: \" %s \"\n" % user
 
     except ClientError as e:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -91,6 +91,6 @@ def run_action(boto_session,rule,entity,params):
         text_output = text_output + add_policy_to_user(boto_session,user,policy_arn)
         
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output

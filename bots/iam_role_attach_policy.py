@@ -20,15 +20,15 @@ def check_for_policy(iam_client,policy_arn):
         get_policy_response = iam_client.get_policy(PolicyArn=policy_arn)
         
         if get_policy_response['ResponseMetadata']['HTTPStatusCode'] < 400:
-            text_output =  "IAM policy exists in this account."
+            text_output =  "IAM policy exists in this account.\n"
             found_policy = True
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'NoSuchEntity':
-            text_output = "The policy %s does not exist. Please check and try again." % policy_arn
+            text_output = "The policy %s does not exist. Please check and try again.\n" % policy_arn
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output,found_policy
 
@@ -39,10 +39,10 @@ def add_policy_to_role(iam_client,role,policy_arn):
             RoleName=role,
             PolicyArn=policy_arn
         )
-        text_output = "Policy attached to role: \" %s \"" % role
+        text_output = "Policy attached to role: \" %s \"\n" % role
 
     except ClientError as e:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -55,7 +55,7 @@ def run_action(boto_session,rule,entity,params):
     iam_client = boto_session.client('iam')
 
     # Get the policy_arn from the params
-    usage = "Usage: AUTO: iam_role_attach_policy policy_arn=<policy_arn>Examples: AUTO: iam_role_attach_policy policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessFullAccessAUTO: iam_role_attach_policy policy_arn=arn:aws:iam::621958466464:policy/sumo_collectioniam_role_attach_policy policy_arn=arn:aws:iam::$ACCOUNT_ID:policy/sumo_collection"
+    usage = "Usage: AUTO: iam_role_attach_policy policy_arn=<policy_arn>\n Examples: \nAUTO: iam_role_attach_policy policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessFullAccess\nAUTO: iam_role_attach_policy policy_arn=arn:aws:iam::621958466464:policy/sumo_collection\niam_role_attach_policy policy_arn=arn:aws:iam::$ACCOUNT_ID:policy/sumo_collection\n"
     if len(params) == 1:
         try:
             key_value = params[0].split("=")
@@ -65,28 +65,28 @@ def run_action(boto_session,rule,entity,params):
             if key == "policy_arn":     
                 if "arn:aws:iam::aws:policy" in value:
                     policy_arn = value
-                    text_output = text_output + "AWS Managed policy specified for attachmentARN: %s " % value
+                    text_output = text_output + "AWS Managed policy specified for attachment\nARN: %s \n" % value
                 
                 elif "$ACCOUNT_ID" in value:
                     # Look for "$ACCOUNT_ID" and replace it with the current account number
                     account_id = entity['accountNumber']
                     policy_arn = value.replace("$ACCOUNT_ID", account_id)
-                    text_output = text_output + "Policy ARN that we're attaching to the role: %s " % policy_arn
+                    text_output = text_output + "Policy ARN that we're attaching to the role: %s \n" % policy_arn
 
                 else:
                     policy_arn = value
-                    text_output = text_output + "Policy ARN specified for attachment: %s " % value
+                    text_output = text_output + "Policy ARN specified for attachment: %s \n" % value
 
             else:
-                text_output = text_output + "Params don't match expected values. Exiting." + usage
+                text_output = text_output + "Params don't match expected values. Exiting.\n" + usage
                 return text_output  
 
         except:
-            text_output = text_output + "Params handling error. Please check params and try again." + usage
+            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
             return text_output
 
     else:
-        text_output = "Wrong amount of params inputs detected. Exiting." + usage
+        text_output = "Wrong amount of params inputs detected. Exiting.\n" + usage
         return text_output
 
     ## Check and add the policy to the role
@@ -100,7 +100,7 @@ def run_action(boto_session,rule,entity,params):
             return text_output
         
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
     
     return text_output
 
