@@ -50,10 +50,10 @@ def handle_event(message, output):
         # Check the tag to see if we have AUTO: in it
         pattern = re.compile("^AUTO:\s.+")
         if pattern.match(tag):
-            output[rule_name] = "Rule name with violation found"
-            output[entity_id] = "Entity id with violation found"
-            output[entity_name] = "Entity name with violation found"
-            output[tag] = "Compliance tag of violation found"
+            output["Rule violation found"] = rule_name
+            output["ID"] = entity_id
+            output["name"] = entity_name
+            output["tag"] = tag
 
             # Pull out only the bot verb to run as a function
             # The format is AUTO: bot_name param1 param2 so if len<2 no bot was mentioned
