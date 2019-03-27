@@ -18,12 +18,12 @@ def run_action(boto_session,rule,entity, params):
     try:
         key = params[0]
     except:
-        text_output = "USAGE: AUTO: ec2_tag_instance_from_vpc <Key>\nNo key was found. Skipping.\n"
+        text_output = "USAGE: AUTO: ec2_tag_instance_from_vpc <Key>No key was found. Skipping."
         return text_output
 
     instance_tagged = False
 
-    text_output = "Checking instance VPC tags for \"%s\" tag\n" % key
+    text_output = "Checking instance VPC tags for \"%s\" tag" % key
 
     for tag in vpc_tags:
         vpc_key = tag['key']
@@ -42,13 +42,13 @@ def run_action(boto_session,rule,entity, params):
         
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = text_output + "Unexpected error: %s \n" % str(result)
+                text_output = text_output + "Unexpected error: %s " % str(result)
             else:
-                text_output = text_output + "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,vpc_key,vpc_value)
+                text_output = text_output + "Instance tagged: %s Key: %s | Value: %s " % (instance,vpc_key,vpc_value)
                 instance_tagged = True
 
     if not instance_tagged:
-        text_output = text_output + "Did not find the \"%s\" key in the VPC tags. Please check the VPC and try again.\n" % key
+        text_output = text_output + "Did not find the \"%s\" key in the VPC tags. Please check the VPC and try again." % key
         text_output = text_output + "Tags that were found in VPC: %s" % str(vpc_tags) 
 
 

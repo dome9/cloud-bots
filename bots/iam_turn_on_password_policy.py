@@ -27,7 +27,7 @@ def run_action(boto_session,rule,entity,params):
     iam_client = boto_session.client('iam')
 
     if len(params) != 9: #We need to make sure we have the exact amount of values for all of these properties.
-        text_output = "Array length is not equal to 9. Are you sure ALL passwort policy properties were set?\n MinimumPasswordLength=int, \nRequireSymbols=True|False, \nRequireNumbers=True|False, \nRequireUppercaseCharacters=True|False, \nRequireLowercaseCharacters=True|False, \nAllowUsersToChangePassword=True|False, \nMaxPasswordAge=int, \nPasswordReusePrevention=int, \nHardExpiry=True|False \n"
+        text_output = "Array length is not equal to 9. Are you sure ALL passwort policy properties were set?MinimumPasswordLength=int, RequireSymbols=True|False, RequireNumbers=True|False, RequireUppercaseCharacters=True|False, RequireLowercaseCharacters=True|False, AllowUsersToChangePassword=True|False, MaxPasswordAge=int, PasswordReusePrevention=int, HardExpiry=True|False "
         return text_output
 
     password_config = {}
@@ -64,8 +64,8 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error:" + str(result) + "\n"
+        text_output = "Unexpected error:" + str(result) + ""
     else:
-        text_output = "Account Password Policy updated successfully \n" 
+        text_output = "Account Password Policy updated successfully " 
 
     return text_output

@@ -34,16 +34,16 @@ def transform_gd_event(unformatted_message):
 
         for gd_finding_type, action in gd_actions.items():
             if unformatted_message["detail"]["type"] == gd_finding_type and "AUTO:" in action:
-                text_output = "Found a defined rule for GD finding %s. Continuing\n" % gd_finding_type
+                text_output = "Found a defined rule for GD finding %s. Continuing" % gd_finding_type
                 found_action = True
                 break    
 
     except Exception as e:
-        text_output = "Unexpected error %s \n Please check the formatting of the GD_ACTIONS env variable in Lambda\n Exiting\n Event:\n %s \n" % (e,unformatted_message["detail"])
+        text_output = "Unexpected error %s Please check the formatting of the GD_ACTIONS env variable in LambdaExitingEvent:%s " % (e,unformatted_message["detail"])
         return found_action, text_output, formatted_message
     
     if not found_action:
-        print("GuardDuty event found but no bots were defined for the event %s. Skipping.\n Event:\n %s \n" % (unformatted_message["detail"]["type"],unformatted_message["detail"]))
+        print("GuardDuty event found but no bots were defined for the event %s. Skipping.Event:%s " % (unformatted_message["detail"]["type"],unformatted_message["detail"]))
         return found_action, text_output, formatted_message
 
     try:
@@ -74,7 +74,7 @@ def transform_gd_event(unformatted_message):
 
             # Stop trying to parse event/run bot if it's from GD's "Generate Sample Findings"
             if instance_id == "i-99999999":
-              text_output = "Guard Duty sample event found. Instance ID from the finding is i-99999999. Skipping\n"
+              text_output = "Guard Duty sample event found. Instance ID from the finding is i-99999999. Skipping"
               found_action = False
               return found_action, text_output, formatted_message
 
@@ -100,20 +100,20 @@ def transform_gd_event(unformatted_message):
 
             # Stop trying to parse event/run bot if it's from GD's "Generate Sample Findings"
             if access_key_id == "GeneratedFindingAccessKeyId":
-              text_output = "Guard Duty sample event found. Access Key ID from the finding is \"GeneratedFindingAccessKeyId\". Skipping\n"
+              text_output = "Guard Duty sample event found. Access Key ID from the finding is \"GeneratedFindingAccessKeyId\". Skipping"
               found_action = False
               return found_action, text_output, formatted_message
 
 
             
         else:
-            text_output = "Unknown resource type found: %s. Current known resources are AccessKeys and Instance. Skipping.\n" % unformatted_message["detail"]["resource"]["resourceType"]
+            text_output = "Unknown resource type found: %s. Current known resources are AccessKeys and Instance. Skipping." % unformatted_message["detail"]["resource"]["resourceType"]
             found_action = False
             return found_action, text_output, formatted_message
 
-        text_output = text_output + "Successfully formatted GuardDuty finding and found a corresponding bot\n" 
+        text_output = text_output + "Successfully formatted GuardDuty finding and found a corresponding bot" 
     except Exception as e:
-        text_output = text_output + "Unexpected error: %s. Exiting\n" % e
+        text_output = text_output + "Unexpected error: %s. Exiting" % e
 
     return found_action, text_output, formatted_message
 
