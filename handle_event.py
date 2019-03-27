@@ -73,13 +73,12 @@ def handle_event(message, output):
                 bot_module = importlib.import_module('bots.' + bot, package=None)
             except ImportError as error:
                 print("Error: could not find bot: " + bot)
-                # output.append("Bot: %s is not a known bot. Skipping." % bot)
                 output[bot] = "Bot: is not a known bot. Skipping"
                 output["error"] = error.message
 
                 continue
 
-            print("Found bot '%s', about to invoke it" % bot)
+            print("Found bot {bot}, about to invoke it".format(bot=bot))
             bot_msg = ""
             try:
                 # Get the session info here. No point in waisting cycles running it up top if we aren't going to run an bot anyways:
@@ -89,7 +88,6 @@ def handle_event(message, output):
                     lambda_account_id = sts.get_caller_identity()["Account"]
 
                 except ClientError as e:
-                    # output.append("Unexpected STS error: %s "  % e)
                     output["Unexpected STS error"] = e
 
                 # Account mode will be set in the lambda variables. We'll default to single mdoe
@@ -101,7 +99,6 @@ def handle_event(message, output):
                         else:
                             role_arn = "arn:aws:iam::" + event_account_id + ":role/Dome9CloudBots"
 
-                        # output.append("Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account %s ." % event_account_id)
                         output[event_account_id] = "Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account"
                         try:
                             credentials_for_event = globals()['all_session_credentials'][event_account_id]
