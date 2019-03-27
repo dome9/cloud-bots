@@ -33,10 +33,10 @@ def run_action(boto_session,rule,entity,params):
 
             responseCode = disassociate_result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s " % str(disassociate_result)
+                text_output = "Unexpected error: %s \n" % str(disassociate_result)
                 return text_output 
             else:
-                text_output = text_output + "Disassociated EIP: %s " % address['PublicIp']
+                text_output = text_output + "Disassociated EIP: %s \n" % address['PublicIp']
 
 
             allocation_id = address['AllocationId']
@@ -44,13 +44,13 @@ def run_action(boto_session,rule,entity,params):
 
             responseCode = release_result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s " % str(release_result)
+                text_output = "Unexpected error: %s \n" % str(release_result)
                 return text_output 
             else:
-                text_output = text_output + "Released EIP: %s " % address['PublicIp']
+                text_output = text_output + "Released EIP: %s \n" % address['PublicIp']
 
     else:
-        text_output = "No EIPs found. Nothing to release."
+        text_output = "No EIPs found. Nothing to release.\n"
 
     return text_output 
 

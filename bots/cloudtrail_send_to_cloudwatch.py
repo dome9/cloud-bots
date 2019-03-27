@@ -42,16 +42,16 @@ def create_role(iam_client):
     
         responseCode = result['ResponseMetadata']['HTTPStatusCode']    
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "CloudTrail to CLoudwatch role successfully created."
+            text_output = "CloudTrail to CLoudwatch role successfully created.\n"
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'EntityAlreadyExists':
-             text_output =  "%s role already exists in this account" % role_name
+             text_output =  "%s role already exists in this account\n" % role_name
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -81,16 +81,16 @@ def create_log_delivery_policy(iam_client,log_group_arn):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % create_policy_response
+            text_output = "Unexpected error: %s \n" % create_policy_response
         else:
-            text_output = "CloudWatchLogsAllowDelivery policy successfully created."  
+            text_output = "CloudWatchLogsAllowDelivery policy successfully created.\n"  
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'EntityAlreadyExists':
-             text_output =  "CloudWatchLogsAllowDelivery policy already exists in this account" 
+             text_output =  "CloudWatchLogsAllowDelivery policy already exists in this account\n" 
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
 
     return text_output
@@ -107,12 +107,12 @@ def add_policy_to_role(iam_client,log_policy_arn):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % attach_policy_response
+            text_output = "Unexpected error: %s \n" % attach_policy_response
         else:
-            text_output = "CloudTrail log delivery policy attached to role."
+            text_output = "CloudTrail log delivery policy attached to role.\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -128,16 +128,16 @@ def create_log_group(boto_session,log_group_name):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "Log group created: %s " % log_group_name
+            text_output = "Log group created: %s \n" % log_group_name
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'ResourceAlreadyExistsException':
-            text_output = "Log group already exists. Skipping"
+            text_output = "Log group already exists. Skipping\n"
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
     
 
     return text_output 
@@ -157,12 +157,12 @@ def update_trail(boto_session,trail_name,log_group_arn,log_role_arn):
                  
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "Cloudtrail updated to send logs to CloudWatchLogs"
+            text_output = "Cloudtrail updated to send logs to CloudWatchLogs\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output 
 
@@ -177,10 +177,10 @@ def run_action(boto_session,rule,entity,params):
 
     try:
         log_group_name = params[0]
-        text_output = "Setting the log group to %s " % log_group_name
+        text_output = "Setting the log group to %s \n" % log_group_name
     except IndexError as e:
         log_group_name = "CloudTrail/DefaultLogGroup" 
-        text_output = "No log_group_name defined in params. Defaulting to CloudTrail/DefaultLogGroup"
+        text_output = "No log_group_name defined in params. Defaulting to CloudTrail/DefaultLogGroup\n"
 
     
     log_group_arn = "arn:aws:logs:" + region + ":" + accountNumber + ":log-group:" + log_group_name + ":*"
@@ -192,7 +192,7 @@ def run_action(boto_session,rule,entity,params):
     text_output = text_output + create_log_delivery_policy(iam_client,log_group_arn) # Create policy
     text_output = text_output + add_policy_to_role(iam_client,log_policy_arn) # Attach policy > role
     text_output = text_output + update_trail(boto_session,trail_name,log_group_arn,log_role_arn)
-    text_output = text_output + "Outputs:Log Group ARN: %s Log Role ARN: %s Log Delivery Policy ARN: %s " % (log_group_arn,log_role_arn,log_policy_arn)
+    text_output = text_output + "Outputs:\n  Log Group ARN: %s \n  Log Role ARN: %s \n  Log Delivery Policy ARN: %s \n" % (log_group_arn,log_role_arn,log_policy_arn)
 
     return text_output 
 

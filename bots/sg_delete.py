@@ -16,8 +16,8 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % str(result)
+        text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "Security Group %s successfully deleted" % sg_id
+        text_output = "Security Group %s successfully deleted\n" % sg_id
 
     return text_output 

@@ -28,8 +28,8 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % str(result)
+        text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "AMI successfully set to private: %s " % ami_id
+        text_output = "AMI successfully set to private: %s \n" % ami_id
 
     return text_output 

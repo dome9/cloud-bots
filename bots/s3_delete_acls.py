@@ -20,21 +20,21 @@ def run_action(boto_session,rule,entity,params):
         bucket_acls = s3_client.get_bucket_acl(Bucket=bucket)['Grants']
         
         if len(bucket_acls) == 1:
-            text_output = text_output + "Only the CanonicalUser ACL found. Skipping."
+            text_output = text_output + "Only the CanonicalUser ACL found. Skipping.\n"
             return text_output
 
-        text_output = text_output + "ACLs that will be removed: " + str(bucket_acls[1:]) + ""
+        text_output = text_output + "ACLs that will be removed: \n " + str(bucket_acls[1:]) + "\n"
 
         # Unset the bucket ACLs
         result = s3_client.put_bucket_acl(Bucket=bucket,ACL='private')
     
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s " % str(result) 
+            text_output = text_output + "Unexpected error: %s \n" % str(result) 
         else:
-            text_output = text_output + "Bucket ACL deleted: %s " % bucket
+            text_output = text_output + "Bucket ACL deleted: %s \n" % bucket
     
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s " % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output

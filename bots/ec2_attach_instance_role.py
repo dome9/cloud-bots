@@ -18,7 +18,7 @@ def run_action(boto_session,rule,entity,params):
     ec2_client = boto_session.client('ec2')   
 
     ## Set up params. We need a role ARN to come through in the params.
-    usage = "Usage: AUTO: ec2_update_instance_role role_arn=<role_arn>Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::621958466464:role/ec2Alexa"
+    usage = "Usage: AUTO: ec2_update_instance_role role_arn=<role_arn>\n Example: AUTO: ec2_update_instance_role role_arn=arn:aws:iam::621958466464:role/ec2Alexa\n"
     if len(params) == 1:
         try:
             key_value = params[0].split("=")
@@ -29,18 +29,18 @@ def run_action(boto_session,rule,entity,params):
                 # Look for "$ACCOUNT_ID" and replace it with the current account number
                 account_id = entity['accountNumber']
                 role_arn = value.replace("$ACCOUNT_ID", account_id)
-                text_output = text_output + "Role ARN that we're attaching to the instance: %s " % role_arn
+                text_output = text_output + "Role ARN that we're attaching to the instance: %s \n" % role_arn
 
             else:
-                text_output = text_output + "Params don't match expected values. Exiting." + usage
+                text_output = text_output + "Params don't match expected values. Exiting.\n" + usage
                 return text_output  
 
         except:
-            text_output = text_output + "Params handling error. Please check params and try again." + usage
+            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
             return text_output
 
     else:
-        text_output = "Wrong amount of params inputs detected. Exiting." + usage
+        text_output = "Wrong amount of params inputs detected. Exiting.\n" + usage
         return text_output
 
     # If the instance has an instance profile, try to update the role to have the new policy attached. It it's already attached, it'll still return a 200 so no need to worry about too much error handling. 
@@ -56,15 +56,15 @@ def run_action(boto_session,rule,entity,params):
 
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = text_output + "Unexpected error: %s " % str(result)
+                text_output = text_output + "Unexpected error: %s \n" % str(result)
             else:
-                text_output = text_output + "Role successfully attached to instance"
+                text_output = text_output + "Role successfully attached to instance\n"
 
         except ClientError as e:
-            text_output = text_output + "Unexpected error: %s " % e
+            text_output = text_output + "Unexpected error: %s \n" % e
 
     else:
-        text_output = "Instance already has an instance role attached.Exiting"
+        text_output = "Instance already has an instance role attached.\nExiting\n"
 
     return text_output
 

@@ -46,16 +46,16 @@ def create_role(iam_client):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "AWS Config role successfully created."
+            text_output = "AWS Config role successfully created.\n"
 
     except ClientError as e:
         error = e.response['Error']['Code']
         if error == 'EntityAlreadyExists':
-             text_output =  "AWSConfigRole role already exists in this account"
+             text_output =  "AWSConfigRole role already exists in this account\n"
         else:
-            text_output = "Unexpected error: %s " % e
+            text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -67,10 +67,10 @@ def add_policy_to_role(iam_client):
             RoleName='AWSConfigRole',
             PolicyArn='arn:aws:iam::aws:policy/service-role/AWSConfigRole'
         )
-        text_output = "AWSConfigRole policy attached to role"
+        text_output = "AWSConfigRole policy attached to role\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -81,14 +81,14 @@ def create_config_recorder(config_client,accountNumber,region,include_global_res
  
     if region == include_global_resource_types_region:
         include_resource_types = True
-        text_output = "Creating Configuration recorderincludeGlobalResourceTypes will be set to true"
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to true\n"
     elif include_global_resource_types_region == "Null":
         ## include_global_resource_types_region is not set. Default to true
         include_resource_types = True
-        text_output = "Creating Configuration recorderincludeGlobalResourceTypes will be set to true"
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to true\n"
     else:
         include_resource_types = False
-        text_output = "Creating Configuration recorderincludeGlobalResourceTypes will be set to false"
+        text_output = "Creating Configuration recorder\nincludeGlobalResourceTypes will be set to false\n"
             
     try:
         result = config_client.put_configuration_recorder(
@@ -104,12 +104,12 @@ def create_config_recorder(config_client,accountNumber,region,include_global_res
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s " % str(result)
+            text_output = text_output + "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output + "AWS Config recorder created"
+            text_output = text_output + "AWS Config recorder created\n"
 
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s " % e
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -122,12 +122,12 @@ def start_config_recorder(config_client):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "AWS Config recorder started "
+            text_output = "AWS Config recorder started \n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -137,11 +137,11 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
     text_output = ""
     try:
         s3_client.head_bucket(Bucket=target_bucket_name)
-        text_output = "Bucket %s already exists. Checking bucket policy next" % target_bucket_name
+        text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
 
     except ClientError as e:
         if e.response['Error']['Code'] == "403":
-            text_output = "Bucket %s already exists. Skipping" % target_bucket_name
+            text_output = "Bucket %s already exists. Skipping\n" % target_bucket_name
             return text_output
 
         # The bucket does not exist or you have no access. Create it    
@@ -165,20 +165,20 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
             
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s " % str(result)
+                text_output = "Unexpected error: %s \n" % str(result)
             else:
-                text_output = "Config logs bucket created %s " % target_bucket_name
+                text_output = "Config logs bucket created %s \n" % target_bucket_name
        
         except ClientError as e:
             error = e.response['Error']['Code']
             if error == 'BucketAlreadyOwnedByYou':
-                text_output = "Bucket %s already owned by this account. Checking bucket policy next" % target_bucket_name
+                text_output = "Bucket %s already owned by this account. Checking bucket policy next\n" % target_bucket_name
             elif error == 'BucketAlreadyExists':
-                text_output = "Bucket %s already exists. Checking bucket policy next" % target_bucket_name
+                text_output = "Bucket %s already exists. Checking bucket policy next\n" % target_bucket_name
             elif error == 'OperationAborted':
-                text_output = "Another bucket creation is in progress. Skipping."
+                text_output = "Another bucket creation is in progress. Skipping.\n"
             else:
-                text_output = "Unexpected error: %s " % e
+                text_output = "Unexpected error: %s \n" % e
 
 
         ### ATTACH BUCKET POLICY
@@ -230,12 +230,12 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
              
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = text_output + "Unexpected error: %s " % str(result)
+                text_output = text_output + "Unexpected error: %s \n" % str(result)
             else:
-                text_output = text_output + "Bucket policy attached to bucket for Config file delivery"
+                text_output = text_output + "Bucket policy attached to bucket for Config file delivery\n"
 
         except ClientError as e:
-            text_output = text_output + "Unexpected error: %s " % e
+            text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -254,12 +254,12 @@ def put_delivery_channel(config_client,target_bucket_name):
          
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s " % str(result)
+            text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "DeliveryChannel set to deliver to S3"
+            text_output = "DeliveryChannel set to deliver to S3\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s " % e
+        text_output = "Unexpected error: %s \n" % e
 
     return text_output
 
@@ -279,15 +279,15 @@ def run_action(boto_session,rule,entity,params):
 
                 if key == "bucket_name":
                     target_bucket_name = value
-                    text_output = text_output + "S3 Bucket name will be %s " % target_bucket_name
+                    text_output = text_output + "S3 Bucket name will be %s \n" % target_bucket_name
 
                 elif key == "bucket_region":
                     target_bucket_region = value
-                    text_output = text_output + "S3 Bucket region will be %s " % target_bucket_region
+                    text_output = text_output + "S3 Bucket region will be %s \n" % target_bucket_region
                     
                 elif key == "include_global_resource_types_region":
                     include_global_resource_types_region = value
-                    text_output = text_output + "Include global_logs_region will be set as %s " % include_global_resource_types_region
+                    text_output = text_output + "Include global_logs_region will be set as %s \n" % include_global_resource_types_region
 
             except:
                 text_output = text_output + "Params formatting doesn't match required formatting. Using defaults."
@@ -298,18 +298,18 @@ def run_action(boto_session,rule,entity,params):
         print ("Target_bucket_name: %s" % target_bucket_name)
     except NameError:
         target_bucket_name = accountNumber + "awsconfiglogs"
-        text_output = text_output +  "S3 Bucket name not set. Defaulting to %s." % target_bucket_name
+        text_output = text_output +  "S3 Bucket name not set. Defaulting to %s.\n" % target_bucket_name
 
     try:
         print("Target bucket region: %s" % target_bucket_region) 
     except NameError:    
         target_bucket_region = "us-west-1"
-        text_output = text_output +  "S3 Bucket region not set. Defaulting to %s." % target_bucket_region
+        text_output = text_output +  "S3 Bucket region not set. Defaulting to %s.\n" % target_bucket_region
 
     try:
         print("Include global logs region: %s" % include_global_resource_types_region)
     except NameError:    
-        text_output = text_output +  "All regions will have 'includeGlobalResourceTypes' set to true." 
+        text_output = text_output +  "All regions will have 'includeGlobalResourceTypes' set to true.\n" 
         include_global_resource_types_region = "Null"
 
 
@@ -319,7 +319,7 @@ def run_action(boto_session,rule,entity,params):
     s3_client = boto_session.client('s3')
     s3_resource = boto_session.resource('s3')
 
-    text_output = "Setting up config for %s " % region
+    text_output = "Setting up config for %s \n" % region
 
     #Do work
     text_output = text_output + create_role(iam_client) # Create a role for AWS Config
