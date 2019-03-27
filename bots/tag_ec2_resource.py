@@ -37,7 +37,7 @@ def run_action(boto_session,rule,entity,params):
         both_tags = " ".join(params)
 
         if "\"" not in both_tags: 
-            text_output = ("Tag \"%s\" does not follow formatting - skipping" % both_tags) # String is formatted wrong. Fail/exit
+            text_output = ("Tag \"%s\" does not follow formatting - skipping\n" % both_tags) # String is formatted wrong. Fail/exit
             return text_output
 
         #Capture text blocks in quotes or standalones
@@ -63,9 +63,9 @@ def run_action(boto_session,rule,entity,params):
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % str(result)
+        text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "Instance tagged: %s Key: %s | Value: %s " % (instance,key,value)
+        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,key,value)
 
     return text_output
 

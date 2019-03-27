@@ -15,8 +15,8 @@ def run_action(boto_session,rule,entity,params):
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % result
+        text_output = "Unexpected error: %s \n" % result
     else:
-        text_output = "Instance terminated: %s " % instance
+        text_output = "Instance terminated: %s \n" % instance
 
     return text_output

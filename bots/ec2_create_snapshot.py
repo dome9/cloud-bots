@@ -14,7 +14,7 @@ def run_action(boto_session,rule,entity,params):
     ec2_client = boto_session.client('ec2')
     
     if len(entity['volumes']) == 0:
-        text_output = "Instance only has Instance Store volumes and this bot only supports snapshotting EBS volumes. Skipping"
+        text_output = "Instance only has Instance Store volumes and this bot only supports snapshotting EBS volumes. Skipping\n"
         return text_output
 
     # if volumes (length) == 0 - just instance store. skipping
@@ -40,9 +40,9 @@ def run_action(boto_session,rule,entity,params):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s " % str(result)
+            text_output = text_output + "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output + "Volume snapshot creation started: %s " % volume_id
+            text_output = text_output + "Volume snapshot creation started: %s \n" % volume_id
 
     return text_output 
 

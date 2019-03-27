@@ -21,9 +21,9 @@ def run_action(boto_session,rule,entity,params):
 
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s " % str(result)
+        text_output = "Unexpected error: %s \n" % str(result)
     else:
-        text_output = "Key rotation enabled for key: %s " % entity['name']
+        text_output = "Key rotation enabled for key: %s \n" % entity['name']
 
     return text_output 
 
