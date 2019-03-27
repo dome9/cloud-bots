@@ -18,7 +18,7 @@ def handle_event(message, output):
     region = message['entity']['region']
 
     # Some events come through with 'null' as the region. If so, default to us-east-1
-    if region == None or region == "":
+    if not region:
         region = 'us-east-1'
     else:
         region = region.replace("_", "-")
@@ -31,16 +31,16 @@ def handle_event(message, output):
 
     # evaluate the event and tags and decide is there's something to do with them. 
     if status == "Passed":
-        # output.append("Previously failing rule has been resolved: %s ID: %s Name: %s " % (rule_name, entity_id, entity_name))
-        output["Previously failing rule has been resolved name"] = rule_name + entity_id + entity_name
+        output[rule_name] = "Previously failing rule has been resolved name"
+        output[entity_id] = "Previously failing rule has been resolved name"
+        output[entity_name] = "Previously failing rule has been resolved name"
         post_to_sns = False
         return output, post_to_sns
 
     # Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it. 
     auto_pattern = re.compile("AUTO:")
     if not auto_pattern.search(message['rule']['complianceTags']):
-        # output.append("Rule %s Doesn't have any 'AUTO:' tags. Skipping." % rule_name)
-        output["Rule Doesn't have any 'AUTO:' tags. Skipping. "] = rule_name
+        output[rule_name] = "Rule Doesn't have any 'AUTO:' tags. Skipping."
         post_to_sns = False
         return output, post_to_sns
 
@@ -50,14 +50,13 @@ def handle_event(message, output):
         # Check the tag to see if we have AUTO: in it
         pattern = re.compile("^AUTO:\s.+")
         if pattern.match(tag):
-            # output.append("Rule name  violation found: %s ID: %s Name: %s Remediation bot: %s " % (rule_name, entity_id, entity_name, tag))
-            output["Rule name with violation found"] = rule_name
-            output["Entity id with violation found"] = entity_id
-            output["Entity name with violation found"] = entity_name
-            output["Compliance tag of violation found"] = tag
+            output[rule_name] = "Rule name with violation found"
+            output[entity_id] = "Entity id with violation found"
+            output[entity_name] = "Entity name with violation found"
+            output[tag] = "Compliance tag of violation found"
 
             # Pull out only the bot verb to run as a function
-            # The format is AUTO: bot_name param1 param2
+            # The format is AUTO: bot_name param1 param2 so if len<2 no bot was mentioned
             arr = tag.split(' ')
             if len(arr) < 2:
                 err_msg = "Empty AUTO: tag. No bot was specified"
@@ -72,10 +71,11 @@ def handle_event(message, output):
 
             try:
                 bot_module = importlib.import_module('bots.' + bot, package=None)
-            except:
+            except ImportError as error:
                 print("Error: could not find bot: " + bot)
                 # output.append("Bot: %s is not a known bot. Skipping." % bot)
-                output["Bot: is not a known bot. Skipping"] = bot
+                output[bot] = "Bot: is not a known bot. Skipping"
+                output["error"] = error.message
 
                 continue
 
@@ -102,16 +102,12 @@ def handle_event(message, output):
                             role_arn = "arn:aws:iam::" + event_account_id + ":role/Dome9CloudBots"
 
                         # output.append("Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account %s ." % event_account_id)
-                        output[
-                            "Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account"] = event_account_id
-
+                        output[event_account_id] = "Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account"
                         try:
                             credentials_for_event = globals()['all_session_credentials'][event_account_id]
-                            # output.append("Found existing credentials to use from still warm lambda functions. Skipping another STS assume role")
 
                         except (NameError, KeyError):
                             # If we can't find the credentials, try to generate new ones
-                            # output.append("Session credentials weren't found cached in the function. Trying to generate new ones.")
 
                             global all_session_credentials
                             all_session_credentials = {}
@@ -125,17 +121,13 @@ def handle_event(message, output):
                                     RoleSessionName="CloudBotsAutoRemedation"
                                 )
                                 # From the response that contains the assumed role, get the temporary credentials that can be used to make subsequent API calls
-                                credentials_for_event = all_session_credentials[event_account_id] = assumedRoleObject[
-                                    'Credentials']
+                                credentials_for_event = all_session_credentials[event_account_id] = assumedRoleObject['Credentials']
 
                             except ClientError as e:
                                 error = e.response['Error']['Code']
                                 print(e)
                                 if error == 'AccessDenied':
-                                    # output.append("Tried and failed to assume a role in the target account. Please verify that the cross account role is createad. ")
-                                    output[
-                                        "Error AccessDenied"] = "Tried and failed to assume a role in the target account. Please verify that the cross account role is createad"
-
+                                    output["Error AccessDenied"] = "Tried and failed to assume a role in the target account. Please verify that the cross account role is createad"
                                 else:
                                     output["Unexpected error"] = e
                                 continue
@@ -149,7 +141,6 @@ def handle_event(message, output):
 
                     else:
                         # In single account mode, we don't want to try to run bots outside of this one
-                        # output.append("Error: This finding was found in account id %s. The Lambda function is running in account id: %s. Remediations need to be ran from the account there is the issue in." % (event_account_id, lambda_account_id))
                         post_to_sns = False
                         return output, post_to_sns
 
@@ -161,12 +152,11 @@ def handle_event(message, output):
                 bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
 
             except Exception as e:
-                bot_msg = "Error while executing function '%s'. Error: %s " % (bot, e)
+                bot_msg = "Error while executing function {bot}. Error: {error} ".format(bot=bot, error=e)
                 print(bot_msg)
             finally:
                 output["Bot message"] = bot_msg
 
-                # output.append(bot_msg)
 
     # After the remediation functions finish, send the notification out. 
     return output, post_to_sns

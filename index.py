@@ -45,7 +45,7 @@ def lambda_handler(event, context):
         output, post_to_sns = handle_event(source_message,output)
     except Exception as e:
         post_to_sns = True
-        output["Handle_event failed"] = e
+        output["Handle_event failed"] = str(e)
 
     # After the bot is called, post it to SNS for output logging
     if SNS_TOPIC_ARN != '' and post_to_sns:
@@ -55,5 +55,3 @@ def lambda_handler(event, context):
 
     print(output)
     return
-
-
