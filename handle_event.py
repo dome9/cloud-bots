@@ -53,7 +53,7 @@ def handle_event(message, output):
             output["Rule violation found"] = rule_name
             output["ID"] = entity_id
             output["name"] = entity_name
-            output["tag"] = tag
+            output["Remediation bot"] = tag
 
             # Pull out only the bot verb to run as a function
             # The format is AUTO: bot_name param1 param2 so if len<2 no bot was mentioned
