@@ -15,7 +15,7 @@ from botocore.exceptions import ClientError
 
 # Try to create the role
 def create_role(iam_client):
-    print("Creating role for CloudTrail log delivery")
+    print("Dome9 Cloud bots - cloudtrail_send_to_cloudwatch.py - Creating role for CloudTrail log delivery")
 
     role_name = 'CloudTrail_CloudWatchLogs_Role'
 
@@ -56,7 +56,7 @@ def create_role(iam_client):
     return text_output
 
 def create_log_delivery_policy(iam_client,log_group_arn):
-    print("Creating log delivery policy")
+    print("Dome9 Cloud bots - cloudtrail_send_to_cloudwatch.py -Creating log delivery policy")
     try:
         # Create a policy
         delivery_policy = {
@@ -97,7 +97,7 @@ def create_log_delivery_policy(iam_client,log_group_arn):
 
 
 def add_policy_to_role(iam_client,log_policy_arn):        
-    print("Attaching policy to role")
+    print("Dome9 Cloud bots - cloudtrail_send_to_cloudwatch.py - Attaching policy to role")
 
     try:
         result = iam_client.attach_role_policy(
@@ -121,7 +121,7 @@ def add_policy_to_role(iam_client,log_policy_arn):
 
 def create_log_group(boto_session,log_group_name):
     cloudwatchlogs_client = boto_session.client('logs')
-    print("Creating log group")
+    print("Dome9 Cloud bots - cloudtrail_send_to_cloudwatch.py - Creating log group")
     
     try:
         result = cloudwatchlogs_client.create_log_group(logGroupName=log_group_name)
@@ -146,7 +146,7 @@ def create_log_group(boto_session,log_group_name):
 
 def update_trail(boto_session,trail_name,log_group_arn,log_role_arn):
     cloudtrail_client = boto_session.client('cloudtrail')
-    print("Updating trail")
+    print("Dome9 Cloud bots - cloudtrail_send_to_cloudwatch.py - Updating trail")
 
     try:
         result = cloudtrail_client.update_trail(

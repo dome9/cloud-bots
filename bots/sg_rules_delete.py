@@ -34,7 +34,7 @@ def run_action(boto_session,rule,entity,params):
             try:
                 del ingressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
-                        print("No groupName to clean up - deleting rules")
+                        print("Dome9 Cloud bots - sg_rules_delete.py - No groupName to clean up - deleting rules")
         result = sg.revoke_ingress(IpPermissions=ingressRules)
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -52,7 +52,7 @@ def run_action(boto_session,rule,entity,params):
             try:
                 del egressRules[i]['UserIdGroupPairs'][0]['GroupName']
             except Exception as e: 
-                        print("No groupName to clean up - deleting rules")
+                        print("Dome9 Cloud bots - sg_rules_delete.py - No groupName to clean up - deleting rules")
         result = sg.revoke_egress(IpPermissions=egressRules)
         
         responseCode = result['ResponseMetadata']['HTTPStatusCode']

@@ -23,7 +23,7 @@ def run_action(boto_session,rule,entity,params):
     )
    
     addresses = describe_response['Addresses']
-    print(addresses) #for debugging
+    print("Dome9 Cloud bots - ec2_release_eips.py - {}".format(addresses)) #for debugging
 
     if len(addresses) > 0:
         for address in addresses:

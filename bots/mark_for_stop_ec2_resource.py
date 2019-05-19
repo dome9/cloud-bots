@@ -30,7 +30,7 @@ import re
 def run_action(boto_session,rule,entity,params):
     instance = entity['id']
 
-    print("Start execute Instance mark for stope for instance - %s" % instance)
+    print("Dome9 Cloud bots - mark_for_stop_ec2_resource.py - Start execute Instance mark for stope for instance - {}".format(instance))
 
     # Take in the params and find the epoch time to mark for stop
     try:
