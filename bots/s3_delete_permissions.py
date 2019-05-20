@@ -29,7 +29,7 @@ def run_action(boto_session,rule,entity,params):
             text_output = text_output + "Bucket policy deleted: %s \n" % bucket
 
     except ClientError as e:
-        print("Dome9 Cloud bots - s3_delete_permissions.py - Error - {}".format(e))
+        print(f'{__file__} - s3_delete_permissions.py - Error - {e}')
         error = e.response['Error']['Code']
         if error == 'NoSuchBucketPolicy':
             text_output = "Bucket %s does not have a bucket policy. Checking ACLs next.\n" % bucket

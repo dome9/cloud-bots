@@ -2,13 +2,14 @@
 ## ec2_release_eips
 What it does: Disassociates and releases all EIPs on an instance
 Usage: AUTO: ec2_release_eips
-Limitations: none  
+Limitations: none
 '''
+
 
 import boto3
 
 def run_action(boto_session,rule,entity,params):
-    text_output = ""
+    text_output = ''
     instance = entity['id']
     ec2_client = boto_session.client('ec2')
     
@@ -23,7 +24,7 @@ def run_action(boto_session,rule,entity,params):
     )
    
     addresses = describe_response['Addresses']
-    print("Dome9 Cloud bots - ec2_release_eips.py - {}".format(addresses)) #for debugging
+    print(f'{__file__} - {addresses}')
 
     if len(addresses) > 0:
         for address in addresses:
@@ -33,10 +34,10 @@ def run_action(boto_session,rule,entity,params):
 
             responseCode = disassociate_result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s \n" % str(disassociate_result)
+                text_output = 'Unexpected error: %s \n' % str(disassociate_result)
                 return text_output 
             else:
-                text_output = text_output + "Disassociated EIP: %s \n" % address['PublicIp']
+                text_output = text_output + 'Disassociated EIP: %s \n' % address['PublicIp']
 
 
             allocation_id = address['AllocationId']
@@ -44,13 +45,13 @@ def run_action(boto_session,rule,entity,params):
 
             responseCode = release_result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
-                text_output = "Unexpected error: %s \n" % str(release_result)
+                text_output = 'Unexpected error: %s \n' % str(release_result)
                 return text_output 
             else:
-                text_output = text_output + "Released EIP: %s \n" % address['PublicIp']
+                text_output = text_output + 'Released EIP: %s \n' % address['PublicIp']
 
     else:
-        text_output = "No EIPs found. Nothing to release.\n"
+        text_output = 'No EIPs found. Nothing to release.\n'
 
     return text_output 
 

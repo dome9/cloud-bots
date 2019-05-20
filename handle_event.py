@@ -10,23 +10,23 @@ cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
 
 def get_data_from_message(message):
     data = {}
-    if message['rule'] and message['rule']['name']:
-        data['rule_name'] = message['rule']['name']
-    if message['status']:
+    if 'rule' in message:
+        data['rule_name'] = message['rule'].get('name')
+        if 'complianceTags' in message['rule']:
+            # All of the remediation values are coming in on the compliance tags and they're pipe delimited
+            data['compliance_tags'] = message['rule']['complianceTags'].split('|')
+    if 'status' in message:
         data['status'] = message['status']
-    if message['entity']:
-        data['entity_id'] = message['entity']['id']
-        data['entity_name'] = message['entity']['name']
-        data['region'] = message['entity']['region']
+    entity = message.get('entity')
+    if entity:
+        data['entity_id'] = entity.get('id')
+        data['entity_name'] = entity.get('name')
+        data['region'] = entity.get('region')
     # Some events come through with 'null' as the region. If so, default to us-east-1
-    if data['region'] == None or data['region'] == "":
+    if not data.get('region'):
         data['region'] = 'us-east-1'
     else:
-        data['region'] = data['region'].replace("_", "-")
-    # All of the remediation values are coming in on the compliance tags and they're pipe delimited
-    if message['rule']:
-        if message['rule']['complianceTags']:
-            data['compliance_tags'] = message['rule']['complianceTags'].split("|")
+        data['region'] = data['region'].replace('_', '-')
     return data
 
 
@@ -35,26 +35,22 @@ def handle_event(message, output_message):
     message_data = get_data_from_message(message)
 
     # evaluate the event and tags and decide is there's something to do with them.
-    if message_data.get('status') == "Passed":
-        output_message['Previously failing rule has been resolved'] = dict(rule=message_data.get('rule_name'),
-                                                                           ID=message_data.get('entity_id'),
-                                                                           Name=message_data.get('entity_name'))
-        post_to_sns = False
-        return post_to_sns
+    if message_data.get('status') == 'Passed':
+        print(f'''{__file__} - Rule: {message_data.get('rule_name')} passed''')
+        return False
 
     # Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it.
-    auto_pattern = re.compile("AUTO:")
+    auto_pattern = re.compile('AUTO:')
     compliance_tags = message_data.get('compliance_tags')
     if not compliance_tags or not filter(auto_pattern.search, compliance_tags):
-        output_message['Rule'] = "{} - Doesnt have any 'AUTO:' tags. Skipping.".format(message_data['rule_name'])
-        post_to_sns = False
-        return post_to_sns
+        print(f'''{__file__} - Rule: {message_data.get('rule_name')} Doesnt have any 'AUTO:' tags. Skipping.''')
+        return False
 
     for tag in compliance_tags:
         tag = tag.strip()  # Sometimes the tags come through with trailing or leading spaces.
 
         # Check the tag to see if we have AUTO: in it
-        pattern = re.compile("^AUTO:\s.+")
+        pattern = re.compile('^AUTO:\s.+')
         if pattern.match(tag):
             output_message['Rule violation found'] = message_data.get('rule_name')
             output_message['ID'] = message_data.get('entity_id')
@@ -62,41 +58,40 @@ def handle_event(message, output_message):
             output_message['Remediation'] = tag
             # Pull out only the bot verb to run as a function
             # The format is AUTO: bot_name param1 param2
-            tag_pattern = tag.split(' ')
+            tag_pattern = tuple(tag.split(' '))
             if len(tag_pattern) < 2:
                 output_message['Empty Auto'] = 'tag. No bot was specified'
                 continue
 
-            bot = tag_pattern[1]
-            params = tag_pattern[2:]
+            tag, bot, *params = tag_pattern
 
             try:
                 bot_module = importlib.import_module('bots.' + bot, package=None)
             except:
-                print("Dome9 Cloud bots - handle_event.py - Error - could not find bot: {}".format(bot))
-                output_message['Bot'] = "{} is not a known bot. skipping".format(bot)
+                print(f'{__file__} - Error - could not find bot: {bot}')
+                output_message['Bot'] = f'{bot} is not a known bot. skipping'
                 continue
 
-            bot_msg = ""
+            bot_msg = ''
             try:
                 # Get the session info here. No point in waisting cycles running it up top if we aren't going to run an bot anyways:
                 try:
                     # get the accountID
-                    sts = boto3.client("sts")
-                    lambda_account_id = sts.get_caller_identity()["Account"]
+                    sts = boto3.client('sts')
+                    lambda_account_id = sts.get_caller_identity()['Account']
 
                 except ClientError as e:
-                    output_message['Unexpected STS error'] = e
+                    print(f'{__file__} Unexpected STS error - {e}')
+                    # return False
+
                 event_account_id = output_message['Account id']
                 # Account mode will be set in the lambda variables. We'll default to single mdoe
                 if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
-                    if account_mode == "multi":  # multi or single account mode?
+                    if account_mode == 'multi':  # multi or single account mode?
                         # If it's not the same account, try to assume role to the new one
-                        if cross_account_role_name:  # This allows users to set their own role name if they have a different naming convention they have to follow
-                            role_arn = "arn:aws:iam::" + event_account_id + ":role/" + cross_account_role_name
-                        else:
-                            role_arn = "arn:aws:iam::" + event_account_id + ":role/Dome9CloudBots"
-
+                        role_arn = ''.join(['arn:aws:iam::', event_account_id,':role/'])
+                        # This allows users to set their own role name if they have a different naming convention they have to follow
+                        role_arn = ''.join([role_arn,cross_account_role_name]) if cross_account_role_name else ''.join([role_arn,'Dome9CloudBots'])
                         output_message['Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
                         try:
@@ -113,17 +108,17 @@ def handle_event(message, output_message):
                             try:
                                 assumedRoleObject = sts_client.assume_role(
                                     RoleArn=role_arn,
-                                    RoleSessionName="CloudBotsAutoRemedation"
+                                    RoleSessionName='CloudBotsAutoRemedation'
                                 )
                                 # From the response that contains the assumed role, get the temporary credentials that can be used to make subsequent API calls
-                                credentials_for_event = all_session_credentials[event_account_id] = assumedRoleObject[
-                                    'Credentials']
+                                all_session_credentials[event_account_id] = assumedRoleObject['Credentials']
+                                credentials_for_event = all_session_credentials[event_account_id]
 
                             except ClientError as e:
                                 error = e.response['Error']['Code']
-                                print("Dome9 Cloud bots - handle_event.py - Error - {}".format(e))
+                                print(f'{__file__} - Error - {e}')
                                 if error == 'AccessDenied':
-                                    output_message['Access Denied'] = "Tried and failed to assume a role in the target account. Please verify that the cross account role is createad."
+                                    output_message['Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
                                 else:
                                     output_message['Unexpected error'] = e
                                 continue
@@ -136,10 +131,8 @@ def handle_event(message, output_message):
                         )
 
                     else:
-                        # In single account mode, we don't want to try to run bots outside of this one
-                        output_message['Error'] = "This finding was found in account id {}. The Lambda function is running in account id: {}. Remediations need to be ran from the account there is the issue in.".format(event_account_id, lambda_account_id)
-                        post_to_sns = False
-                        return post_to_sns
+                        # In single account mode, we don't want to try to run bots outside of this account therefore error
+                        output_message['Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
 
                 else:
                     # Boto will default to default session if we don't need assume_role credentials
@@ -149,8 +142,8 @@ def handle_event(message, output_message):
                 bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
 
             except Exception as e:
-                bot_msg = "Error while executing function '{}'. Error: {}" (bot, e)
-                print("Dome9 Cloud bots - handle_event.py - Error - {}".format(bot_msg))
+                bot_msg = f'Error while executing function {bot}. Error: {e}'
+                print(f'{__file__} - Error - {bot_msg}')
             finally:
                 output_message['Bot message'] = bot_msg
 
