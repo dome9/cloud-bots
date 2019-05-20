@@ -89,10 +89,12 @@ def handle_event(message, output_message):
                 if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
                     if account_mode == 'multi':  # multi or single account mode?
                         # If it's not the same account, try to assume role to the new one
-                        role_arn = ''.join(['arn:aws:iam::', event_account_id,':role/'])
+                        role_arn = ''.join(['arn:aws:iam::', event_account_id, ':role/'])
                         # This allows users to set their own role name if they have a different naming convention they have to follow
-                        role_arn = ''.join([role_arn,cross_account_role_name]) if cross_account_role_name else ''.join([role_arn,'Dome9CloudBots'])
-                        output_message['Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
+                        role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
+                            [role_arn, 'Dome9CloudBots'])
+                        output_message[
+                            'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
                         try:
                             credentials_for_event = globals()['all_session_credentials'][event_account_id]
@@ -118,7 +120,8 @@ def handle_event(message, output_message):
                                 error = e.response['Error']['Code']
                                 print(f'{__file__} - Error - {e}')
                                 if error == 'AccessDenied':
-                                    output_message['Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
+                                    output_message[
+                                        'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
                                 else:
                                     output_message['Unexpected error'] = e
                                 continue
@@ -132,7 +135,8 @@ def handle_event(message, output_message):
 
                     else:
                         # In single account mode, we don't want to try to run bots outside of this account therefore error
-                        output_message['Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
+                        output_message[
+                            'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
 
                 else:
                     # Boto will default to default session if we don't need assume_role credentials

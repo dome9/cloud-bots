@@ -69,6 +69,3 @@ def run_action(boto_session,rule,entity,params):
 
     return text_output
 
-
-
-
