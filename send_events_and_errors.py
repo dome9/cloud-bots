@@ -11,7 +11,7 @@ def sendEvent(output_message, SNS_TOPIC_ARN):
     if output_type == 'JSON':
         text_output = json.dumps(output_message)
     else:
-        bot_message = "\nBot message :" + output_message.get('Bot message')
+        bot_message = ''.join(['\nBot message :', output_message.get('Bot message', 'N.A')])
         del output_message['Bot message']
         text_output = json.dumps(output_message).replace('"', '').replace('{', '').replace('}', '').replace(',',
                                                                                                             '\n').replace(
