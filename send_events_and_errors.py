@@ -8,7 +8,7 @@ def sendEvent(output_message,SNS_TOPIC_ARN):
 	output_type = os.getenv('OUTPUT_TYPE', '')
 	print("Dome9 Cloud bots - send_events_and_errors.py - output type: {} - TopicArn: {}".format(output_type, SNS_TOPIC_ARN))
 
-	if output_type == 'json':
+	if output_type == 'JSON':
 		text_output = json.dumps(output_message)
 	else:
 		bot_message = "\nBot message :" + output_message.get('Bot message')
