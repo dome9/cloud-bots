@@ -67,90 +67,86 @@ def handle_event(message, output_message):
             tag, bot, *params = tag_pattern
 
             try:
-                bot_module = importlib.import_module('bots.' + bot, package=None)
+                bot_module = importlib.import_module(''.join(['bots.', bot]), package=None)
             except:
                 print(f'{__file__} - Error - could not find bot: {bot}')
                 bot_data['Bot'] = f'{bot} is not a known bot. skipping'
                 continue
 
             bot_msg = ''
-            try:
-                # Get the session info here. No point in waisting cycles running it up top if we aren't going to run an bot anyways:
-                try:
-                    # get the accountID
-                    sts = boto3.client('sts')
-                    lambda_account_id = sts.get_caller_identity()['Account']
+            # Get the session info here. No point in waisting cycles running it up top if we aren't going to run an bot anyways:
+            try:  # get the accountID
+                sts = boto3.client('sts')
+                lambda_account_id = sts.get_caller_identity()['Account']
 
-                except ClientError as e:
-                    print(f'{__file__} Unexpected STS error - {e}')
-                    # return False
+            except ClientError as e:
+                print(f'{__file__} Unexpected STS error - {e}')
+                # return False
 
-                event_account_id = output_message['Account id']
-                # Account mode will be set in the lambda variables. We'll default to single mdoe
-                if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
-                    if account_mode == 'multi':  # multi or single account mode?
-                        # If it's not the same account, try to assume role to the new one
-                        role_arn = ''.join(['arn:aws:iam::', event_account_id, ':role/'])
-                        # This allows users to set their own role name if they have a different naming convention they have to follow
-                        role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
-                            [role_arn, 'Dome9CloudBots'])
-                        bot_data[
-                            'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
+            event_account_id = output_message['Account id']
+            # Account mode will be set in the lambda variables. We'll default to single mdoe
+            if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
+                if account_mode == 'multi':  # multi or single account mode?
+                    # If it's not the same account, try to assume role to the new one
+                    role_arn = ''.join(['arn:aws:iam::', event_account_id, ':role/'])
+                    # This allows users to set their own role name if they have a different naming convention they have to follow
+                    role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
+                        [role_arn, 'Dome9CloudBots'])
+                    bot_data[
+                        'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
+                    try:
+                        credentials_for_event = globals()['all_session_credentials'][event_account_id]
+
+                    except (NameError, KeyError):
+                        # If we can't find the credentials, try to generate new ones
+                        global all_session_credentials
+                        all_session_credentials = {}
+                        # create an STS client object that represents a live connection to the STS service
+                        sts_client = boto3.client('sts')
+
+                        # Call the assume_role method of the STSConnection object and pass the role ARN and a role session name.
                         try:
-                            credentials_for_event = globals()['all_session_credentials'][event_account_id]
+                            assumedRoleObject = sts_client.assume_role(
+                                RoleArn=role_arn,
+                                RoleSessionName='CloudBotsAutoRemedation'
+                            )
+                            # From the response that contains the assumed role, get the temporary credentials that can be used to make subsequent API calls
+                            all_session_credentials[event_account_id] = assumedRoleObject['Credentials']
+                            credentials_for_event = all_session_credentials[event_account_id]
 
-                        except (NameError, KeyError):
-                            # If we can't find the credentials, try to generate new ones
-                            global all_session_credentials
-                            all_session_credentials = {}
-                            # create an STS client object that represents a live connection to the STS service
-                            sts_client = boto3.client('sts')
+                        except ClientError as e:
+                            error = e.response['Error']['Code']
+                            print(f'{__file__} - Error - {e}')
+                            if error == 'AccessDenied':
+                                bot_data[
+                                    'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
+                            else:
+                                bot_data['Unexpected error'] = e
+                            continue
 
-                            # Call the assume_role method of the STSConnection object and pass the role ARN and a role session name.
-                            try:
-                                assumedRoleObject = sts_client.assume_role(
-                                    RoleArn=role_arn,
-                                    RoleSessionName='CloudBotsAutoRemedation'
-                                )
-                                # From the response that contains the assumed role, get the temporary credentials that can be used to make subsequent API calls
-                                all_session_credentials[event_account_id] = assumedRoleObject['Credentials']
-                                credentials_for_event = all_session_credentials[event_account_id]
-
-                            except ClientError as e:
-                                error = e.response['Error']['Code']
-                                print(f'{__file__} - Error - {e}')
-                                if error == 'AccessDenied':
-                                    bot_data[
-                                        'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
-                                else:
-                                    bot_data['Unexpected error'] = e
-                                continue
-
-                        boto_session = boto3.Session(
-                            region_name=message_data.get('region'),
-                            aws_access_key_id=credentials_for_event['AccessKeyId'],
-                            aws_secret_access_key=credentials_for_event['SecretAccessKey'],
-                            aws_session_token=credentials_for_event['SessionToken']
-                        )
-
-                    else:
-                        # In single account mode, we don't want to try to run bots outside of this account therefore error
-                        bot_data[
-                            'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
+                    boto_session = boto3.Session(
+                        region_name=message_data.get('region'),
+                        aws_access_key_id=credentials_for_event['AccessKeyId'],
+                        aws_secret_access_key=credentials_for_event['SecretAccessKey'],
+                        aws_session_token=credentials_for_event['SessionToken']
+                    )
 
                 else:
-                    # Boto will default to default session if we don't need assume_role credentials
-                    boto_session = boto3.Session(region_name=message_data.get('region'))
+                    # In single account mode, we don't want to try to run bots outside of this account therefore error
+                    bot_data[
+                        'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
 
-                    ## Run the bot
+            else:  # Boto will default to default session if we don't need assume_role credentials
+                boto_session = boto3.Session(region_name=message_data.get('region'))
+
+            try:  ## Run the bot
                 bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
-
             except Exception as e:
                 bot_msg = f'Error while executing function {bot}. Error: {e}'
                 print(f'{__file__} - Error - {bot_msg}')
-            finally:
-                bot_data['Bot message'] = bot_msg
+
+            bot_data['Bot message'] = bot_msg
             output_message['Rules violations found'].append(bot_data.copy())
 
     # After the remediation functions finish, send the notification out.
