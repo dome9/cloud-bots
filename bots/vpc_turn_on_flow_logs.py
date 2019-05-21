@@ -27,7 +27,7 @@ def create_log_delivery_policy(boto_session):
     # Create IAM client
     iam_client = boto_session.client('iam')
 
-    print(f'{__file__} - vpc_turn_on_flow_logs.py - Creating log delivery policy')
+    print(f'{__file__} - Creating log delivery policy')
 
     try:
         # Create a policy
@@ -68,7 +68,7 @@ def create_log_delivery_policy(boto_session):
 def check_for_log_delivery_policy(boto_session,policy_arn):
     # Create IAM client
     iam_client = boto_session.client('iam')
-    print(f'{__file__} - vpc_turn_on_flow_logs.py - Checking for log delivery policy')
+    print(f'{__file__} - Checking for log delivery policy')
 
     try:
         #Check to see if the deny policy exists in the account currently
@@ -91,7 +91,7 @@ def check_for_log_delivery_policy(boto_session,policy_arn):
 # Try to create the role
 def create_role(boto_session,policy_arn):
     iam_client = boto_session.client('iam')
-    print(f'{__file__} - vpc_turn_on_flow_logs.py - Creating role')
+    print(f'{__file__} - Creating role')
 
 
     trust_policy = {
@@ -131,7 +131,7 @@ def create_role(boto_session,policy_arn):
 def add_policy_to_role(boto_session,policy_arn):        
     # Create IAM client
     iam_client = boto_session.client('iam')
-    print(f'{__file__} - vpc_turn_on_flow_logs.py - adding policy to new role')
+    print(f'{__file__} - adding policy to new role')
 
     try:
         attach_policy_response = iam_client.attach_role_policy(
