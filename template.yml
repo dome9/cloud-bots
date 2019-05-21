@@ -9,7 +9,7 @@ Parameters:
   OutputMode:
     Description: Output Mode - can be as text or as JSON
     Type: String
-    Default: text
+    Default: JSON
     AllowedValues:
       - text
       - JSON

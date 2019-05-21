@@ -11,11 +11,11 @@ def sendEvent(output_message, SNS_TOPIC_ARN):
     if output_type == 'JSON':
         text_output = json.dumps(output_message)
     else:
-        bot_message = ''.join(['\nBot message :', output_message.get('Bot message', 'N.A')])
-        del output_message['Bot message']
+        bots_messages = ''.join([str(v) for v in output_message.get('Rules violations found', ['N.A'])])
+        del output_message['Rules violations found']
         text_output = json.dumps(output_message).replace('"', '').replace('{', '').replace('}', '').replace(',',
                                                                                                             '\n').replace(
-            "'", '') + bot_message
+            "'", '') + bots_messages
 
     print(f'{__file__} - text_output: {text_output}')
     sns = boto3.client('sns')

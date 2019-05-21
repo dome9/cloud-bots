@@ -45,22 +45,23 @@ def handle_event(message, output_message):
     if not compliance_tags or not filter(auto_pattern.search, compliance_tags):
         print(f'''{__file__} - Rule: {message_data.get('rule_name')} Doesnt have any 'AUTO:' tags. Skipping.''')
         return False
-
+    output_message['Rules violations found'] = []
     for tag in compliance_tags:
         tag = tag.strip()  # Sometimes the tags come through with trailing or leading spaces.
 
         # Check the tag to see if we have AUTO: in it
         pattern = re.compile('^AUTO:\s.+')
+        bot_data = {}
         if pattern.match(tag):
-            output_message['Rule violation found'] = message_data.get('rule_name')
-            output_message['ID'] = message_data.get('entity_id')
-            output_message['Name'] = message_data.get('entity_name')
-            output_message['Remediation'] = tag
+            bot_data['Rule'] = message_data.get('rule_name')
+            bot_data['ID'] = message_data.get('entity_id')
+            bot_data['Name'] = message_data.get('entity_name')
+            bot_data['Remediation'] = tag
             # Pull out only the bot verb to run as a function
             # The format is AUTO: bot_name param1 param2
             tag_pattern = tuple(tag.split(' '))
             if len(tag_pattern) < 2:
-                output_message['Empty Auto'] = 'tag. No bot was specified'
+                bot_data['Empty Auto'] = 'tag. No bot was specified'
                 continue
 
             tag, bot, *params = tag_pattern
@@ -69,7 +70,7 @@ def handle_event(message, output_message):
                 bot_module = importlib.import_module('bots.' + bot, package=None)
             except:
                 print(f'{__file__} - Error - could not find bot: {bot}')
-                output_message['Bot'] = f'{bot} is not a known bot. skipping'
+                bot_data['Bot'] = f'{bot} is not a known bot. skipping'
                 continue
 
             bot_msg = ''
@@ -93,7 +94,7 @@ def handle_event(message, output_message):
                         # This allows users to set their own role name if they have a different naming convention they have to follow
                         role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
                             [role_arn, 'Dome9CloudBots'])
-                        output_message[
+                        bot_data[
                             'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
                         try:
@@ -120,10 +121,10 @@ def handle_event(message, output_message):
                                 error = e.response['Error']['Code']
                                 print(f'{__file__} - Error - {e}')
                                 if error == 'AccessDenied':
-                                    output_message[
+                                    bot_data[
                                         'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
                                 else:
-                                    output_message['Unexpected error'] = e
+                                    bot_data['Unexpected error'] = e
                                 continue
 
                         boto_session = boto3.Session(
@@ -135,7 +136,7 @@ def handle_event(message, output_message):
 
                     else:
                         # In single account mode, we don't want to try to run bots outside of this account therefore error
-                        output_message[
+                        bot_data[
                             'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
 
                 else:
@@ -149,7 +150,8 @@ def handle_event(message, output_message):
                 bot_msg = f'Error while executing function {bot}. Error: {e}'
                 print(f'{__file__} - Error - {bot_msg}')
             finally:
-                output_message['Bot message'] = bot_msg
+                bot_data['Bot message'] = bot_msg
+            output_message['Rules violations found'].append(bot_data.copy())
 
     # After the remediation functions finish, send the notification out.
     return post_to_sns
