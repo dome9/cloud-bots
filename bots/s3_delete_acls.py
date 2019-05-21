@@ -1,6 +1,7 @@
 '''
 ## s3_delete_acls
-What it does: Deletes all ACLs from a bucket. If there is a bucket policy, it'll be left alone.
+Description: Deletes all ACLs from a bucket. If there is a bucket policy, it'll be left alone.
+Required Permissions: s3:PutBucketAcl, s3:GetBucketAcl
 Usage: AUTO: s3_delete_acls  
 Limitations: none  
 '''

@@ -1,10 +1,10 @@
 '''
 ## tag_ec2_resource
-What it does: Tags an ec2 instance  
+Description: Tags an ec2 instance
+Required Permissions: ec2:CreateTags
 Usage: AUTO: tag_ec2_resource <key> <value>  
 Note: Tags with spaces can be added if they are surrounded by quotes: ex: tag_ec2_resource "this is my key" "this is a value"
 Limitations: none
-
 ## THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 * Image
 * Instance

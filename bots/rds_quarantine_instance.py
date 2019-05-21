@@ -1,6 +1,7 @@
 '''
 ## rds_quarantine_instance
-What it does: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
+Description: Attaches the RDS instance a SG with no rules so it can't communicate with the outside world
+Required Permissions: rds:ModifyDBInstance, ec2:DescribeSecurityGroups, ec2:CreateSecurityGroup, ec2:RevokeSecurityGroupEgress
 Usage: AUTO: rds_quarantine_instance
 Limitations: Instance needs to be "Available" in order to update. If it's in "backing up" state, this will fail
     Might not work with Aurora since it's in a cluster

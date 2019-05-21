@@ -1,6 +1,7 @@
 '''
 ## mark_for_stop_ec2_resource
-What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.   
+Description: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.
+Required Permissions: ec2:CreateTags
 Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>
 Example: AUTO: mark_for_stop_ec2_resource 3h
 Note: This is meant to be used in conjunction with a more aggressive action like stopping or termanating an instance. The first step will be to tag an instance with the time that we want to tigger the remediation bot. 

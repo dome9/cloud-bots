@@ -1,6 +1,7 @@
 '''
 ## s3_enable_encryption
-What it does: Turns on AES-256 encryption on the target bucket  
+Description: Turns on AES-256 encryption on the target bucket
+Required Permissions: s3:PutEncryptionConfiguration
 Usage: AUTO: s3_enable_encryption  
 Limitations: none  
 '''

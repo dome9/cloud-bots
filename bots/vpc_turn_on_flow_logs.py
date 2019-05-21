@@ -1,6 +1,7 @@
 '''
 ## vpc_turn_on_flow_logs
-What it does: Turns on flow logs for a VPC
+Description: Turns on flow logs for a VPC
+Required Permissions: iam:CreateRole, ec2:CreateFlowLogs, iam:CreatePolicy, iam:GetPolicy, iam:AttachRolePolicy
 Settings: 
 Log Group Name: vpcFlowLogs
 If traffic type to be logged isn't specified, it defaults to all.

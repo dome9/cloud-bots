@@ -1,6 +1,7 @@
 '''
 s3_enable_logging
-What it does: Turns on server access logging. The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error. This bot will create a bucket to log to as well.
+Description: Turns on server access logging. The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error. This bot will create a bucket to log to as well.
+Required Permissions: s3:HeadBucket, s3:CreateBucket, s3:PutBucketLogging
 Usage: AUTO: s3_enable_logging 
 Limitations: none
 '''

@@ -1,6 +1,7 @@
 '''
 ## iam_user_attach_policy  
-What it does: Attaches a policy (passed in as a variable) to the user  
+Description: Attaches a policy (passed in as a variable) to the user
+Required Permissions: iam:GetPolicy, iam:AttachUserPolicy
 Usage: AUTO: iam_user_attach_policy policy_arn=<policy_arn>  
 Limitations: none  
 Examples:  

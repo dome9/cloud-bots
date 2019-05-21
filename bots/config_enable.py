@@ -1,6 +1,8 @@
 '''
 ## config_enable
-What it does: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders. 
+Description: Enables AWS Config. This DOES NOT create config rules. It only turns on the configuration recorders.
+Required Permissions: config:PutConfigurationRecorder, config:PutDeliveryChannel, config:StartConfigurationRecorder, iam:CreateRole, iam:AttachRolePolicy, s3:HeadBucket, s3:CreateBucket, s3:PutBucketPolicy
+
 Usage: AUTO: config_enable bucket_name=mybucketlogs bucket_region=us-west-1 include_global_resource_types_region=us-west-1
 Limitations: none  
 Variables (and their defaults): 
@@ -44,9 +46,9 @@ def create_role(iam_client):
             Description='Created by Dome9 CloudBots. This is to allow Config to collect data'
             )
 
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        responseCode = response['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
+            text_output = "Unexpected error: %s \n" % str(response)
         else:
             text_output = "AWS Config role successfully created.\n"
 

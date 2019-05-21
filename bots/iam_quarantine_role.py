@@ -1,6 +1,7 @@
 '''
 ## iam_quarantine_role
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a role  
+Description: Adds an explicit deny all policy to IAM and directly attaches it to a role
+Required Permissions: iam:CreatePolicy, iam:GetPolicy, iam:AttachRolePolicy
 Usage: AUTO: iam_quarantine_role  
 Limitations: none  
 '''

@@ -1,6 +1,7 @@
 '''
 ## cloudtrail_send_to_cloudwatch
-What it does: Makes CloudTrail output logs to CloudWatchLogs. If the log group doesn't exist alredy, it'll reate a new one. 
+Description: Makes CloudTrail output logs to CloudWatchLogs. If the log group doesn't exist alredy, it'll reate a new one.
+Required Permissions: iam:CreateRole, logs:CreateLogGroup, iam:CreatePolicy iam:AttachRolePolicy, cloudtrail:UpdateTrail, cloudwatch:PutMetricAlarm
 Usage: AUTO: cloudtrail_send_to_cloudwatch <log_group_name>  
 Limitations: none  
 Defaults: 
@@ -81,7 +82,7 @@ def create_log_delivery_policy(iam_client,log_group_arn):
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % create_policy_response
+            text_output = "Unexpected error: %s \n" % result
         else:
             text_output = "CloudWatchLogsAllowDelivery policy successfully created.\n"  
 

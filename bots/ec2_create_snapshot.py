@@ -1,6 +1,7 @@
 '''
 ## ec2_create_snapshot  
-What it does: Snapshots the EBS volumes on an instance  
+Description: Snapshots the EBS volumes on an instance
+Required Permissions: ec2:CreateSnapshot
 Usage: AUTO: ec2_create_snapshot  
 Notes: The snapshot description will show that it was created by CloudBots and the rule that failed that triggered the bot. Also, the snapshot will be tagged with a key of "source_instance_id" and a value with the instance id from the source instance.   
 Limitations: This will not work on Instance Store volumes. Only EBS  

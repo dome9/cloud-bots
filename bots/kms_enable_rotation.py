@@ -1,9 +1,7 @@
-
-
-
 '''
 ## kms_enable_rotation
-What it does: Enables rotation on a KMS key
+Description: Enables rotation on a KMS key
+Required Permissions: kms:EnableKeyRotation
 Usage: AUTO: kms_enable_rotation
 Sample GSL: KMS where isCustomerManaged=true should have rotationStatus=true  
 Limitations: Edits can not be made to AWS maged keys. Only customer managed keys can be edited.   

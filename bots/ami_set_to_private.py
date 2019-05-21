@@ -1,6 +1,7 @@
 '''
 ## ami_set_to_private
-What it does: Sets an AMI to be private instead of public
+Description: Sets an AMI to be private instead of public
+Required Permissions: ec2:ModifyImageAttribute
 Usage: AUTO: ami_set_to_private
 Sample GSL: AMI should have isPublic=false
 Limitations: none  

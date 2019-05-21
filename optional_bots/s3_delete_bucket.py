@@ -1,6 +1,7 @@
 '''
 ## s3_delete_bucket
-What it does: Deletes an S3 bucket  
+Description: Deletes an S3 bucket
+Required Permissions: s3:DeleteBucket
 Usage: AUTO: s3_delete_bucket  
 Limitations: none  
 '''

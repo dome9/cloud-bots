@@ -1,6 +1,7 @@
 '''
 ## cloudtrail_enable
-What it does: Creates a new S3 bucket and turns on a multi-region trail that logs to it. 
+Description: Creates a new S3 bucket and turns on a multi-region trail that logs to it.
+Required Permissions: s3:CreateBucket, s3:PutBucketPolicy, s3:PutObject, cloudtrail:CreateTrail, cloudtrail:StartLogging
 Pre-set Settings:  
 Bucket name: acct<account_id>cloudtraillogs 
 IsMultiRegionTrail: True (CIS for AWS V 1.1.0 Section 2.1)

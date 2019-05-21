@@ -1,6 +1,7 @@
 '''
 ## iam_quarantine_user
-What it does: Adds an explicit deny all policy to IAM and directly attaches it to a user  
+Description: Adds an explicit deny all policy to IAM and directly attaches it to a user
+Required Permissions: iam:CreatePolicy, iam:GetPolicy, iam:AttachUserPolicy
 Usage: AUTO: iam_quarantine_user  
 Limitations: none  
 '''

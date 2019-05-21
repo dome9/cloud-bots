@@ -1,6 +1,7 @@
 '''
 ## iam_turn_on_password_policy
-What it does: Sets all settings in an account password policy  
+Description: Sets all settings in an account password policy
+Required Permissions: iam:UpdateAccountPasswordPolicy
 Usage: AUTO: iam_turn_on_password_policy MinimumPasswordLength:<int> RequireSymbols:<True/False> RequireNumbers:<True/False>  RequireUppercaseCharacters:<True/False>  RequireLowercaseCharacters:<True/False>  AllowUsersToChangePassword:<True/False>  MaxPasswordAge:<int> PasswordReusePrevention:<int> HardExpiry:<True/False>   
 Limitations: ALL variables need to be set at the same time  
 

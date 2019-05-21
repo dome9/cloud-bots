@@ -1,7 +1,8 @@
 
 '''
 ## ec2_quarantine_instance
-What it does: Attaches the instance a SG with no rules so it can't communicate with the outside world
+Description: Attaches the instance a SG with no rules so it can't communicate with the outside world
+Required Permissions: ec2:DescribeSecurityGroups, ec2:CreateSecurityGroup, ec2:ModifyInstanceAttribute, ec2:RevokeSecurityGroupEgress
 Usage: AUTO: ec2_quarantine_instance
 Limitations: None
 '''

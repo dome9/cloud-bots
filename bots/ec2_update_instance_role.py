@@ -1,6 +1,7 @@
 '''
 ## ec2_update_instance_role  
-What it does: Updates an EXISTING EC2 instance role by attaching another policy to the role. This policy needs be passed in through the params.  
+Description: Updates an EXISTING EC2 instance role by attaching another policy to the role. This policy needs be passed in through the params.
+Required Permissions: iam:AttachRolePolicy
 Usage: AUTO: ec2_update_instance_role policy_arn=<policy_arn>  
 Example: AUTO: ec2_update_instance_role policy_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
 Sample GSL: Instance where roles should have roles with [ managedPolicies contain [ name='AmazonEC2RoleforSSM' ] ]  

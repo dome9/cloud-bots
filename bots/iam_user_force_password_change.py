@@ -1,6 +1,7 @@
 '''
 ## iam_user_force_password_change
-What it does: Updates the setting for an IAM user so that they need to change their console password the next time they log in.  
+Description: Updates the setting for an IAM user so that they need to change their console password the next time they log in
+Required Permissions: iam:UpdateLoginProfile
 Usage: AUTO: iam_user_force_password_change
 Limitations: none  
 '''

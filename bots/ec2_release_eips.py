@@ -1,6 +1,7 @@
 '''
 ## ec2_release_eips
-What it does: Disassociates and releases all EIPs on an instance
+Description: Disassociates and releases all EIPs on an instance
+Required Permissions: ec2:DescribeAddresses, ec2:DisassociateAddress, ec2:ReleaseAddress
 Usage: AUTO: ec2_release_eips
 Limitations: none  
 '''

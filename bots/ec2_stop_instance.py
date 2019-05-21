@@ -1,6 +1,7 @@
 '''
 ## ec2_stop_instance
-What it does: Stops an ec2 instance  
+Description: Stops an ec2 instance
+Required Permissions: ec2:StopInstances
 Usage: AUTO: ec2_stop_instance  
 Limitations: none  
 '''

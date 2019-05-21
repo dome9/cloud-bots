@@ -1,6 +1,7 @@
 '''
 ## s3_enable_versioning
-What it does: Turns on versioning for an S3 bucket
+Description: Turns on versioning for an S3 bucket
+Required Permissions: s3:PutBucketVersioning
 Usage: AUTO: s3_enable_versioning
 Limitations: none 
 '''

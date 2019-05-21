@@ -1,6 +1,7 @@
 '''
 ## sg_delete
-What it does: Deletes a security group  
+Description: Deletes a security group
+Required Permissions: ec2:DeleteSecurityGroup
 Usage: AUTO: sg_delete  
 Limitations: This will fail if there is something still attached to the SG.  
 '''

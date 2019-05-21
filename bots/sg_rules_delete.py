@@ -1,6 +1,7 @@
 '''
 ## sg_rules_delete
-What it does: Deletes all ingress and egress rules from a SG  
+Description: Deletes all ingress and egress rules from a SG
+Required Permissions: ec2:RevokeSecurityGroupEgress, ec2:RevokeSecurityGroupIngress, ec2:DescribeSecurityGroups
 Usage: AUTO: sg_rules_delete  
 Limitations: none  
 '''

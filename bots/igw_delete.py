@@ -1,10 +1,9 @@
 '''
-## Delete IGW
-From the boto3 docs: The VPC must not contain any running instances with Elastic IP addresses or public IPv4 addresses.
-Because of this, all instances with a public IP will be turned off in the VPC before the IGW can be detached
-
-Limitations: 
-VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc. 
+## igw_delete
+Description: The VPC must not contain any running instances with Elastic IP addresses or public IPv4 addresses. Because of this, all instances with a public IP will be turned off in the VPC before the IGW can be detached
+Required Permissions: ec2:DeleteInternetGateway, ec2:DetachInternetGateway, ec2:DescribeInstances, ec2:StopInstances
+Usage: AUTO: igw_delete
+Limitations: VPCs have lots of interconnected services. This is currently just focused on EC2 but future enhancements will need to be made to turn off RDS, Redshift, etc.
 '''
 
 import boto3  

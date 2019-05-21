@@ -1,7 +1,8 @@
 '''
 ## ec2_tag_instance_from_vpc
 ### This bot was created for a customer and most likely won't be used outside of that edge case
-What it does: If an instance is missing a specific tag, try to pull it from the VPC. 
+Description: If an instance is missing a specific tag, try to pull it from the VPC.
+Required Permissions: ec2:CreateTags
 Usage: AUTO: ec2_tag_instance_from_vpc <Key>  
 Limitations: none  
 '''

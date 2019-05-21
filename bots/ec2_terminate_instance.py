@@ -1,6 +1,7 @@
 '''
 ## ec2_terminate_instance
-What it does: Terminates an ec2 instance  
+Description: Terminates an ec2 instance
+Required Permissions: ec2:TerminateInstances
 Usage: AUTO: ec2_terminate_instance  
 Limitations: none  
 '''

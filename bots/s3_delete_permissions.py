@@ -1,6 +1,7 @@
 '''
 ## s3_delete_permissions
-What it does: Deletes all ACLs and bucket policies from a bucket  
+Description: Deletes all ACLs and bucket policies from a bucket
+Required Permissions: s3:PutBucketPolicy, s3:DeleteBucketPolicy, s3:PutBucketAcl, s3:GetBucketAcl
 Usage: AUTO: s3_delete_permissions  
 Limitations: none  
 '''
