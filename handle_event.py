@@ -27,6 +27,7 @@ def get_data_from_message(message):
         data['region'] = 'us-east-1'
     else:
         data['region'] = data['region'].replace('_', '-')
+
     return data
 
 
@@ -90,10 +91,8 @@ def handle_event(message, output_message):
                     # If it's not the same account, try to assume role to the new one
                     role_arn = ''.join(['arn:aws:iam::', event_account_id, ':role/'])
                     # This allows users to set their own role name if they have a different naming convention they have to follow
-                    role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
-                        [role_arn, 'Dome9CloudBots'])
-                    bot_data[
-                        'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
+                    role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join([role_arn, 'Dome9CloudBots'])
+                    bot_data[ 'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
                     try:
                         credentials_for_event = globals()['all_session_credentials'][event_account_id]
@@ -119,8 +118,7 @@ def handle_event(message, output_message):
                             error = e.response['Error']['Code']
                             print(f'{__file__} - Error - {e}')
                             if error == 'AccessDenied':
-                                bot_data[
-                                    'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
+                                bot_data['Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
                             else:
                                 bot_data['Unexpected error'] = e
                             continue
@@ -134,8 +132,7 @@ def handle_event(message, output_message):
 
                 else:
                     # In single account mode, we don't want to try to run bots outside of this account therefore error
-                    bot_data[
-                        'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
+                    bot_data['Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
 
             else:  # Boto will default to default session if we don't need assume_role credentials
                 boto_session = boto3.Session(region_name=message_data.get('region'))
