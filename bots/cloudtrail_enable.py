@@ -10,7 +10,7 @@ Default trail name if unset: allRegionTrail
 Usage: AUTO: cloudtrail_enable trail_name=<trail_name> bucket_name=<bucket_name>
 Note: Trail_name and bucket_name are optional and don't need to be set. 
 Limitations: none 
-
+aaa
 '''
 
 import boto3
