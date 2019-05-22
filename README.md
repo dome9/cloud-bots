@@ -42,7 +42,7 @@ The default mode is 'single' account. Remediations will be applied to entities i
 
 In multi-mode, remediations are applied for more than one account. The lambda function is deployed in only one account, but used cross-account roles to run bots in other accounts. It follows this workflow:
 
-![multi mode](docs/pictures/cs2_multi_acct_workflow.png)
+![multi mode](docs/pictures/cs2_multi_acct_workflow.jpg)
 
 
 # Onboarding
