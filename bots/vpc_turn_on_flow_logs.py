@@ -27,7 +27,8 @@ def create_log_delivery_policy(boto_session):
     # Create IAM client
     iam_client = boto_session.client('iam')
 
-    print("Creating log delivery policy")
+    print(f'{__file__} - Creating log delivery policy')
+
     try:
         # Create a policy
         delivery_policy = {
@@ -67,7 +68,8 @@ def create_log_delivery_policy(boto_session):
 def check_for_log_delivery_policy(boto_session,policy_arn):
     # Create IAM client
     iam_client = boto_session.client('iam')
-    print("Checking for log delivery policy")
+    print(f'{__file__} - Checking for log delivery policy')
+
     try:
         #Check to see if the deny policy exists in the account currently
         get_policy_response = iam_client.get_policy(PolicyArn=policy_arn)
@@ -89,7 +91,8 @@ def check_for_log_delivery_policy(boto_session,policy_arn):
 # Try to create the role
 def create_role(boto_session,policy_arn):
     iam_client = boto_session.client('iam')
-    print("Creating role")
+    print(f'{__file__} - Creating role')
+
 
     trust_policy = {
       "Version": "2012-10-17",
@@ -128,7 +131,7 @@ def create_role(boto_session,policy_arn):
 def add_policy_to_role(boto_session,policy_arn):        
     # Create IAM client
     iam_client = boto_session.client('iam')
-    print("adding policy to new role")
+    print(f'{__file__} - adding policy to new role')
 
     try:
         attach_policy_response = iam_client.attach_role_policy(
@@ -145,7 +148,8 @@ def add_policy_to_role(boto_session,policy_arn):
 def create_logs(boto_session,role_id,vpc_id,traffic_type,destination,bucket_arn):
     ec2_client = boto_session.client('ec2')
 
-    print("creating vpc flow loggging")
+    print(f'{__file__} - creating vpc flow logging')
+
     #Resource IDs need to be in a list - not string
     vpc_ids = []
     vpc_ids.append(vpc_id)

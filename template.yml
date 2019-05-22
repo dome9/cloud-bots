@@ -6,6 +6,13 @@ Parameters:
     Description: OPTIONAL - Email address to send output logs to
     Type: String
     Default: ''
+  OutputMode:
+    Description: Output Mode - can be as text or as JSON
+    Type: String
+    Default: JSON
+    AllowedValues:
+      - text
+      - JSON
   DeploymentMode:
     Description: Deployment Mode - can be single or multi
     Type: String
@@ -136,6 +143,7 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
           ACCOUNT_MODE: !Ref DeploymentMode
+          OUTPUT_TYPE: !Ref OutputMode
           GD_ACTIONS: !Ref GuardDutyRules
       Events:
         d9Findings:
