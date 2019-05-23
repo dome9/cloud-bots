@@ -53,7 +53,9 @@ def run_action(boto_session,rule,entity,params):
                     elif value.lower() == "udp":
                         protocol = "UDP"
                         text_output = text_output + "The protocol to be removed is UDP\n"
+
                     else:
+
                         text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only currently supported protocols. Skipping\n" + usage
                         return text_output
 
@@ -210,9 +212,10 @@ def run_action(boto_session,rule,entity,params):
                 else:
                     text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (upper_port_number,upper_port_number_to)
 
-
-
     return text_output
+
+
+
 
 
 def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id):
