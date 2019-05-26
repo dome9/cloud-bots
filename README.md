@@ -1,8 +1,10 @@
+{:toc}
+
 # CloudBots
 
 # Overview
 
-## What are D9 CloudBots?
+## What are Dome9 CloudBots?
 
 Cloud-Bots is an autoremediation solution for AWS, built on top of the CloudGuard Dome9 Continuous Compliance capabilities.
 
@@ -10,24 +12,26 @@ They can also be used standalone, without Dome9, to remedy issues in AWS account
 
 ## What does it do?
 
-If you have configured Dome9 Continuous Compliance rulesets for your AWS cloud account, the Dome9 Compliance Engine continuously scans  your cloud account for rule violations, and issues alerts and reports for issues that are found.
+You can configure Dome9 Continuous Compliance to assess your cloud accounts with rulesets, to continuously check the compliance of your accounts, and issue reports and findings in near real-time for issues that are found. 
 
-CloudBots provide autoremediation for these issues, in which you configure your cloud account to  trigger  specific remedial actions, using CloudBots, in response to specific compliance violations. The actions use the  CloudBots included here. They are  typically  scripts, which perform actions on your cloud account.
+CloudBots extends this  by adding an option to trigger an immediate remediation action on the problematic cloud entity in your account, directly from the compliance rule that fails. The rule triggers a bot that runs in your account, that provides a remedy to the issue that failed the rule.
 
-For example, a rule that checks whether a customer-managed KMS has rotation enabled, could trigger the bot kms_enable_rotation, to enable rotation. Similarly, a rule that checks whether CloudTrail is enabled could trigger the bot cloud_trailenable, to create and enalbe a CloudTrail.
+For example, a rule that checks whether a customer-managed KMS has rotation enabled, could trigger the bot *kms_enable_rotation*, to enable rotation. Similarly, a rule that checks whether CloudTrail is enabled could trigger the bot *cloud_trailenable*, to create and enable a CloudTrail.
 
-You can use the CloudBots without Dome9, using the same triggers, but sourced from your application (details for configuring this included).
+
+You can also use the CloudBots without Dome9, using the same triggers, but sourced from your application (details for configuring this included).
 
 ## How does it work?
 
-Dome9 continuously  scans your cloud accounts (using compliance rulesets)  and can be configured to send findings for  failed rules to an AWS SNS.
+To use Dome9 cloudbots, you  deploy a CFT stack in your AWS account (or one of your accounts). This stack  has the bots, and an AWS Lambda function that runs the bots. 
 
-To add a remediation step, the rule is modified to include  a "remediation flag" in the compliance section so that the SNS event is tagged with what we want to do.
-Each remediation bot that is tagged corresponds to a file in the bots folder of the remediation function.
+You also create an SNS in your AWS account, which is triggers the Lambda function. Finally, to connect a specific compliance rule in a ruleset with a bot, you add a remediation flag in the rule. If this rule fails during a compliance assessment, the Dome9 Compliance Engine will send an event message to the SNS, with details about the bot to be triggered (and any parameters that are needed when it is run). This will trigger the Lambda function, which runs the specified bot on the entity in question. 
 
-When you deploy the CloudBots in your account, a Lambda function is deployed. This Lambda function picks up the event messages from the SNS, reads the message tags, and looks for a tag that matches AUTO:
-If any of those AUTO tags match a remediation bot it will call that bot.
-All of the methods are sending their events to an array called text_output. Once the function is finished working, this array is turned into a string and posted to SNS.
+The remedial action is triggered in near real-time after the rule fails. The next time the rule is run the issue should already be remedied, and the rule should pass.
+
+## The Bots
+
+Refer to [this](docs.Bots.md) file for a list of the bots,  what each one does, and an example of a rule that could be used to trigger it.
 
 ## Deployment modes
 
@@ -52,8 +56,7 @@ In multi-mode, remediations are applied for more than one account. The lambda fu
 ## Setup your AWS account(s) for CloudBots
 Follow these steps for each region in your account in which you want to deploy the bots.
 
-1. Select the region (deployment links), click  [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3.amazonaws.com/dome9cftemplatesuseast1/CloudBots_cftemplate.yaml). 
-This will launch a script in the AWS CloudFormation console, for your AWS account, to setup cloud-bots in the selected region.
+1. Refer to the [Deployments Link file](docs/Deployment%20Links.md ) and click  <img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"> for the region in which you wish to deploy the stack.  This will run a script in the CFT console to deploy the cloudbot stack in the selected region.
 1. In the **Select Template**, click **Next** (no need to make a selection)
 1. In the **Parameters** section select the deployment mode, *single* or *multi* mode. Enter an email address for SNS notifications in the EmailAddress field (optional),then click **Next**
 1. In the **Options** page, click **Next** (no need to make any selections)
