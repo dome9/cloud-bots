@@ -1,5 +1,3 @@
-{:toc}
-
 # CloudBots
 
 # Overview
@@ -31,7 +29,7 @@ The remedial action is triggered in near real-time after the rule fails. The nex
 
 ## The Bots
 
-Refer to [this](docs.Bots.md) file for a list of the bots,  what each one does, and an example of a rule that could be used to trigger it.
+Refer to [this](docs/Bots.md) file for a list of the bots,  what each one does, and an example of a rule that could be used to trigger it.
 
 ## Deployment modes
 
