@@ -10,9 +10,11 @@ They can also be used standalone, without Dome9, to remedy issues in AWS account
 
 ## What does it do?
 
-If you have configured Dome9 Continuous Compliance rulesets for your cloud account, the Dome9 Compliance Engine continuously scans  your cloud account (AWS,Azure,GCP) for rule violations, and issues alerts and reports for issues that are found.
+If you have configured Dome9 Continuous Compliance rulesets for your AWS cloud account, the Dome9 Compliance Engine continuously scans  your cloud account for rule violations, and issues alerts and reports for issues that are found.
 
 CloudBots provide autoremediation for these issues, in which you configure your cloud account to  trigger  specific remedial actions, using CloudBots, in response to specific compliance violations. The actions use the  CloudBots included here. They are  typically  scripts, which perform actions on your cloud account.
+
+For example, a rule that checks whether a customer-managed KMS has rotation enabled, could trigger the bot kms_enable_rotation, to enable rotation. Similarly, a rule that checks whether CloudTrail is enabled could trigger the bot cloud_trailenable, to create and enalbe a CloudTrail.
 
 You can use the CloudBots without Dome9, using the same triggers, but sourced from your application (details for configuring this included).
 
