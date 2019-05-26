@@ -35,7 +35,6 @@ def lambda_handler(event, context):
         output_message['Handle event failed'] = str(e)
 
     print(f'{__file__} - output message - {output_message}')
-    sendEvent(output_message, SNS_TOPIC_ARN)
 
     # After the bot is called, post it to SNS for output logging
     if SNS_TOPIC_ARN != '' and post_to_sns:
