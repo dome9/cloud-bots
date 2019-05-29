@@ -12,13 +12,13 @@ def getTimeStamp():
     return timeStamp
 
 
-def send_logs(message, start_time):
+def send_logs(message, start_time, vendor):
     account_mode = os.getenv('ACCOUNT_MODE', '')
     cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
     output_type = os.getenv('OUTPUT_TYPE', '')
     execution_time = time.time() - start_time
     session = requests.Session()
-    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+    headers = {"Content-Type": "application/json", "Accept": "application/json", "X-Sumo-Name": message.get('Account id'), "X-Sumo-Category": vendor}
     data = {'timestamp': getTimeStamp(),
             'msg': message,
             'account_mode': account_mode,

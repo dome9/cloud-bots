@@ -47,5 +47,5 @@ def lambda_handler(event, context):
 
     send_logs_to_dome9 = os.getenv('SEND_LOGS_TO_DOME9', '')
     if(send_logs_to_dome9 == 'True'):
-        send_logs(output_message, start_time)
+        send_logs(output_message, start_time, source_message.get('account').get('vendor'))
     return
