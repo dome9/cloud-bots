@@ -1,13 +1,16 @@
 import json
 from handle_event import *
 from send_events_and_errors import *
+from send_logs import *
+import time
+
 
 # Feed in the SNS Topic from an env. variable
 SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN', '')
 
-
 # Bring the data in and parse the SNS message
 def lambda_handler(event, context):
+    start_time = time.time()
     output_message = {}
     print(f'{__file__} - Start running')
     if event['Records'][0]['Sns']['Message']:
@@ -27,7 +30,6 @@ def lambda_handler(event, context):
         output_message['Account id'] = source_message['account'].get('id', 'N.A')
 
     output_message['Finding key'] = source_message.get('findingKey', 'N.A')
-
     try:
         post_to_sns = handle_event(source_message, output_message)
     except Exception as e:
@@ -42,4 +44,8 @@ def lambda_handler(event, context):
 
     if not SNS_TOPIC_ARN:
         print(f'{__file__} - SNS topic out was not defined!')
+
+    send_logs_to_dome9 = os.getenv('SEND_LOGS_TO_DOME9', '')
+    if(send_logs_to_dome9 == 'True'):
+        send_logs(output_message, start_time)
     return
