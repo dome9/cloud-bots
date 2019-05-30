@@ -1,4 +1,5 @@
-import requests, json
+import json
+from botocore.vendored import requests
 import os
 import time
 from time import gmtime, strftime

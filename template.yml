@@ -27,10 +27,6 @@ Parameters:
     AllowedValues: 
       - single
       - multi
-  GuardDutyRules:
-    Description: Configuration for what will be triggered when certain Guard Duty events happen. Leave empty if you're not using GuardDuty directly with CloudBots
-    Type: String
-    Default: ''
 
 Conditions:
   CreateSubscriber: !Not [!Equals [!Ref EmailAddress, ""]]
@@ -152,7 +148,6 @@ Resources:
           ACCOUNT_MODE: !Ref DeploymentMode
           OUTPUT_TYPE: !Ref OutputMode
           SEND_LOGS_TO_DOME9: !ref sendLogs
-          GD_ACTIONS: !Ref GuardDutyRules
       Events:
         d9Findings:
           Type: SNS
