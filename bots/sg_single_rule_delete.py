@@ -11,13 +11,16 @@ Currently the way this is being addressed is using the 'split' parameter. If it'
 If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
 
 If you want to delete a rule that is open on ALL ports:
-Put Port 0 as the port to be deleted and the bot will remove the rule. 
+Put Port 0 as the port to be deleted and the bot will remove the rule.
+If you want to delete a rule that is open no matter from which protocol:
+Put protocol ALL and the bot will remove the open rule with no considering the protocol
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 '''
 
 import boto3
 import re
+import sys, traceback
 from botocore.exceptions import ClientError
 
 ### DeleteSecurityGroupRules ###
@@ -29,6 +32,7 @@ def run_action(boto_session,rule,entity,params):
 
     direction = ""
 
+    # Param retrieving
     if len(params) == 5:
         try:
             for param in params:
@@ -53,6 +57,9 @@ def run_action(boto_session,rule,entity,params):
                     elif value.lower() == "udp":
                         protocol = "UDP"
                         text_output = text_output + "The protocol to be removed is UDP\n"
+                    elif value.lower() == "all":
+                        protocol = "ALL"
+                        text_output = text_output + "The protocol to be removed is ALL protocols\n"
 
                     else:
 
@@ -100,15 +107,23 @@ def run_action(boto_session,rule,entity,params):
     rule_to_delete = False
     lower_port_number = 0
     upper_port_number_to = 0
+
+    remediation_protocol = protocol
+
+    # Iterate over the rules and look for one to be deleted
     for rule in entity[rule_direction]:
-        if scope == rule['scope'] and protocol == rule['protocol']: # Scope and protocol match - now check the ports that are open
+        if scope == rule['scope'] and (protocol == 'ALL' or protocol == rule['protocol']): # Scope and protocol match - now check the ports that are open
+
+            # In case that the remediation was for ALL protocol we will assign the current protocol
+            protocol = rule['protocol']
+
             # 2/3 of the conditions are good. Check for scope now.
             if port == rule['port'] and port == rule['portTo']: # The port to delete is the only one open for the rule and will be deleted
                 split = False # We can just do the normal port delete if there's only 1 port defined in the SG rule. No need to try to split it.
                 rule_to_delete = rule
                 break
 
-            if split == True and rule['port'] == port and rule['portTo'] == 65535 and port == 0:
+            if split == True and port == 0:
                 # If port 0 was defined, we want to delete the rule that is open on ALL ports.
                 rule_to_delete = rule
                 lower_port_number = rule['port']
@@ -126,9 +141,14 @@ def run_action(boto_session,rule,entity,params):
                 upper_port_number_to = rule['portTo']
                 break
 
+            # Back to the origin remediation protocol if we skip to the next rule
+            # (just in case were the protocol to delete is ALL at the remediation)
+            protocol = remediation_protocol
+
 
     if rule_to_delete:
-        text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s Port:%s Scope:%s \n" % (protocol, direction, port, scope)
+        text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s " \
+                                    "Port:%s Scope:%s \n" % (protocol, direction, port, scope)
     else:
         text_output = text_output + "No SG rule was found that matches the defined parameters. Skipping\n"
         return text_output
@@ -220,58 +240,58 @@ def run_action(boto_session,rule,entity,params):
 
 def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id):
     global result
+    try:
+        if touch_type == "authorize":
 
-    if touch_type == "authorize":
-
-        if direction == "inbound":
-            result = sg.authorize_ingress(
-                CidrIp=scope,
-                FromPort=lower_port,
-                ToPort=uper_port,
-                GroupId=sg_id,
-                IpProtocol=protocol
-            )
+            if direction == "inbound":
+                result = sg.authorize_ingress(
+                    CidrIp=scope,
+                    FromPort=lower_port,
+                    ToPort=uper_port,
+                    GroupId=sg_id,
+                    IpProtocol=protocol
+                )
+            else:
+                result = sg.authorize_egress(
+                    IpPermissions=[
+                        {
+                            'FromPort': lower_port,
+                            'ToPort': uper_port,
+                            'IpProtocol': protocol,
+                            'IpRanges': [
+                                {
+                                    'CidrIp': scope
+                                }
+                            ]
+                        }
+                    ]
+                )
         else:
-            result = sg.authorize_egress(
-                IpPermissions=[
-                    {
-                        'FromPort': lower_port,
-                        'ToPort': uper_port,
-                        'IpProtocol': protocol,
-                        'IpRanges': [
-                            {
-                                'CidrIp': scope
-                            }
-                        ]
-                    }
-                ]
-            )
-    else:
-        if direction == "inbound":
-            result = sg.revoke_ingress(
-                CidrIp=scope,
-                FromPort=lower_port,
-                ToPort=uper_port,
-                GroupId=sg_id,
-                IpProtocol=protocol
-            )
-        else:
-            result = sg.revoke_egress(
-                IpPermissions=[
-                    {
-                        'FromPort': lower_port,
-                        'ToPort': uper_port,
-                        'IpProtocol': protocol,
-                        'IpRanges': [
-                            {
-                                'CidrIp': scope
-                            }
-                        ]
-                    }
-                ]
-            )
-
-
+            if direction == "inbound":
+                result = sg.revoke_ingress(
+                    CidrIp=scope,
+                    FromPort=lower_port,
+                    ToPort=uper_port,
+                    GroupId=sg_id,
+                    IpProtocol=protocol
+                )
+            else:
+                result = sg.revoke_egress(
+                    IpPermissions=[
+                        {
+                            'FromPort': lower_port,
+                            'ToPort': uper_port,
+                            'IpProtocol': protocol,
+                            'IpRanges': [
+                                {
+                                    'CidrIp': scope
+                                }
+                            ]
+                        }
+                    ]
+                )
+    except Exception as e:
+        traceback.print_exc(file=sys.stdout)
 
 
     return result['ResponseMetadata']['HTTPStatusCode']
