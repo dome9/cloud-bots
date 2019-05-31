@@ -224,7 +224,7 @@ If you want to delete a rule that is open no matter to the configured protocol
 Put protocol=* and the bot will remove the open rule  
 
 Set Split to True
-AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
+AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0   
 
 ## tag_ec2_resource
 What it does: Tags an ec2 instance  
