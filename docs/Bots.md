@@ -216,8 +216,13 @@ If you set split to true, then the whole rule that the problematic port is neste
 
 If you want to delete a rule that is open on ALL ports:
 Put Port 0 as the port to be deleted and the bot will remove the rule.
-If you want to delete a rule that is open no matter from which protocol:
-Put protocol ALL and the bot will remove the open rule with no considering the protocol
+
+If you want to delete a rule that is open to ALL :
+Put protocol=ALL and the bot will remove the open rule that configured with ALL as protocol
+
+If you want to delete a rule that is open no matter to the configured protocol 
+Put protocol=* and the bot will remove the open rule  
+
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 

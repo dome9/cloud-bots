@@ -10,10 +10,15 @@ Conditions and caveats: Deleting a single rule on a security group can be diffic
 Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
 If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
 
-If you want to delete a rule that is open on ALL ports:
-Put Port 0 as the port to be deleted and the bot will remove the rule.
-If you want to delete a rule that is open no matter from which protocol:
-Put protocol ALL and the bot will remove the open rule with no considering the protocol
+If you want to delete a rule that is open on any ports:
+Put Port 0 as the port to be deleted and the bot will remove the rule
+
+If you want to delete a rule that is open to ALL protocol:
+Put protocol=ALL and the bot will remove the open rule that configured with ALL as protocol
+
+If you want to delete a rule that is open to any protocol:
+Put protocol=* and the bot will remove the open rule
+
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 '''
@@ -60,12 +65,9 @@ def run_action(boto_session,rule,entity,params):
                     elif value.lower() == "all":
                         protocol = "ALL"
                         text_output = text_output + "The protocol to be removed is ALL protocols\n"
-
-                    else:
-
-                        text_output = text_output + "Protocol not set to TCP, or UDP. Those are the only currently supported protocols. Skipping\n" + usage
-                        return text_output
-
+                    elif value.lower() == "*":
+                        protocol = "*"
+                        text_output = text_output + "Will remove any open protocol\n"
                 if key == "scope":
                     scope = value
                     #TODO - SUPPORT IPV6 SCOPE AS WELL
@@ -112,9 +114,9 @@ def run_action(boto_session,rule,entity,params):
 
     # Iterate over the rules and look for one to be deleted
     for rule in entity[rule_direction]:
-        if scope == rule['scope'] and (protocol == 'ALL' or protocol == rule['protocol']): # Scope and protocol match - now check the ports that are open
+        if scope == rule['scope'] and (protocol == '*' or protocol == rule['protocol']): # Scope and protocol match - now check the ports that are open
 
-            # In case that the remediation was for ALL protocol we will assign the current protocol
+            # In case that the remediation was for ANY protocol we will assign the current protocol
             protocol = rule['protocol']
 
             # 2/3 of the conditions are good. Check for scope now.
@@ -173,18 +175,6 @@ def run_action(boto_session,rule,entity,params):
         else:
             text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (port,portTo)
 
-
-
-    if split == True:
-        responseCode = touch_sg(sg, direction, "revoke", lower_port_number, upper_port_number_to, sg_id)
-
-        if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
-        else:
-            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (lower_port_number,upper_port_number_to)
-
-
-
     # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are needed. One for the lower section and one for the upper.
     if split == True and port != 0:
         lower_port_number_to = port - 1
@@ -192,7 +182,7 @@ def run_action(boto_session,rule,entity,params):
 
         # In case that the port to revoke was the start of the range
         if lower_port_number == port:
-            lower_port_number = lower_port_number+1
+            lower_port_number = lower_port_number + 1
 
             responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id)
 
@@ -200,7 +190,7 @@ def run_action(boto_session,rule,entity,params):
                 text_output = "Unexpected error: %s \n" % str(result)
             else:
                 text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
-                lower_port_number, upper_port_number_to)
+                    lower_port_number, upper_port_number_to)
 
         else:
             # In case that the port to revoke was the end of the range
@@ -215,22 +205,38 @@ def run_action(boto_session,rule,entity,params):
                     text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
                         lower_port_number, upper_port_number_to)
 
-            #in case that the revoked port was in the range
+            # in case that the revoked port was in the range
             else:
                 responseCode = touch_sg(sg, direction, "authorize", lower_port_number, lower_port_number_to, sg_id)
 
                 if responseCode >= 400:
                     text_output = "Unexpected error: %s \n" % str(result)
                 else:
-                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (lower_port_number,lower_port_number_to)
+                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
+                    lower_port_number, lower_port_number_to)
 
                 responseCode = touch_sg(sg, direction, "authorize", upper_port_number, upper_port_number_to, sg_id)
-
 
                 if responseCode >= 400:
                     text_output = "Unexpected error: %s \n" % str(result)
                 else:
-                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (upper_port_number,upper_port_number_to)
+                    text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
+                    upper_port_number, upper_port_number_to)
+
+
+
+
+    if split == True:
+        responseCode = touch_sg(sg, direction, "revoke", lower_port_number, upper_port_number_to, sg_id)
+
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (lower_port_number,upper_port_number_to)
+
+
+
+
 
     return text_output
 
