@@ -214,10 +214,12 @@ Conditions and caveats: Deleting a single rule on a security group can be diffic
 Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
 If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
 
-If you want to delete a rule that is open on ALL ports:  
-Put Port 0 as the port to be deleted and the bot will remove the rule.  
-Set Split to True  
-AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0  
+If you want to delete a rule that is open on ALL ports:
+Put Port 0 as the port to be deleted and the bot will remove the rule.
+If you want to delete a rule that is open no matter from which protocol:
+Put protocol ALL and the bot will remove the open rule with no considering the protocol
+Set Split to True
+AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 
 ## tag_ec2_resource
 What it does: Tags an ec2 instance  
