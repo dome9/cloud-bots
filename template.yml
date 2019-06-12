@@ -73,9 +73,9 @@ Resources:
     Properties:
       FunctionName: Dome9CloudBots
       Description: 'Auto-remediation actions from Dome9 events'
-      Code:
-        S3Bucket: !Join [ '', !Split [ "-" , !Ref "AWS::Region" ] ]
-        S3Key: template.yml
+      CodeUri:
+        Bucket: !Join [ '' , [ 'dome9cloudbotsemplates' , !Join [ '', !Split [ "-" , !Ref "AWS::Region" ] ] ] ]
+        Key: cloudbots.zip
       Runtime: python3.6
       Timeout: 120 # Most will be under 8 seconds, but delete IGW needs to wait for the instances to be off before detaching from the VPC. This takes a bunch of time.
       Handler: index.lambda_handler
