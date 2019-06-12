@@ -149,7 +149,7 @@ Resources:
           SNS_TOPIC_ARN: !Ref OutputTopic
           ACCOUNT_MODE: !Ref DeploymentMode
           OUTPUT_TYPE: !Ref OutputMode
-          SEND_LOGS_TO_DOME9: !ref sendLogs
+          SEND_LOGS_TO_DOME9: !Ref sendLogs
       Events:
         d9Findings:
           Type: SNS
