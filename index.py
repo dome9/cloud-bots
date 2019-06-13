@@ -46,6 +46,7 @@ def lambda_handler(event, context):
         print(f'{__file__} - SNS topic out was not defined!')
 
     send_logs_to_dome9 = os.getenv('SEND_LOGS_TO_DOME9', '')
-    if(send_logs_to_dome9 == 'True'):
+    print(f'{__file__} - send_logs_to_dome9 {send_logs_to_dome9}')
+    if(send_logs_to_dome9 != 'false' and send_logs_to_dome9 != 'False'):
         send_logs(output_message, start_time, source_message.get('account').get('vendor'))
     return
