@@ -1,4 +1,5 @@
-  - [CloudBots](#cloudbots)
+# CloudBots
+
   - [Overview](#overview)
       - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
       - [What does it do?](#what-does-it-do)
@@ -15,7 +16,6 @@
         policy](#configure-the-continuous-compliance-policy)
   - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
 
-# CloudBots
 
 # Overview
 
