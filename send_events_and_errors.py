@@ -16,23 +16,27 @@ def parse_rule_violations(rule_violations):
 def sendEvent(output_message, SNS_TOPIC_ARN):
     output_type = os.getenv('OUTPUT_TYPE', '')
     print(f'{__file__} - output type: {output_type} - TopicArn: {SNS_TOPIC_ARN}')
-
+    sns = boto3.client('sns')
     if output_type == 'JSON':
         text_output = json.dumps(output_message)
+        response = sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=json.dumps({'default': text_output}),
+            Subject='RemediationLog',
+            MessageStructure='json'
+        )
     else:
         bots_messages = parse_rule_violations(output_message.get('Rules violations found', ['N.A']))
         del output_message['Rules violations found']
         text_output = ''.join([json.dumps(output_message).replace('"', '').replace('{', '').replace('}', '').replace(',', '\n').replace( "'", ''), '\nRule violations found:\n', bots_messages])
+        response = sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=text_output,
+            Subject='RemediationLog',
+            MessageStructure='string'
+        )
 
     print(f'{__file__} - text_output: {text_output}')
-    sns = boto3.client('sns')
-
-    response = sns.publish(
-        TopicArn=SNS_TOPIC_ARN,
-        Message=text_output,
-        Subject='RemediationLog',
-        MessageStructure='string'
-    )
 
     status_code = response['ResponseMetadata']['HTTPStatusCode']
     if status_code > 400:
