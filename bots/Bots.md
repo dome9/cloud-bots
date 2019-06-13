@@ -1,44 +1,41 @@
-  - [Bots](#bots)
-      - [ami\_set\_to\_private](#ami_set_to_private)
-      - [cloudtrail\_enable](#cloudtrail_enable)
-      - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
-      - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
-      - [config\_enable](#config_enable)
-      - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
-      - [ec2\_create\_snapshot](#ec2_create_snapshot)
-      - [ec2\_release\_eips](#ec2_release_eips)
-      - [ec2\_quarantine\_instance](#ec2_quarantine_instance)
-      - [ec2\_stop\_instance](#ec2_stop_instance)
-      - [ec2\_terminate\_instance](#ec2_terminate_instance)
-      - [ec2\_update\_instance\_role](#ec2_update_instance_role)
-      - [iam\_role\_attach\_policy](#iam_role_attach_policy)
-      - [iam\_user\_attach\_policy](#iam_user_attach_policy)
-      - [iam\_quarantine\_role](#iam_quarantine_role)
-      - [iam\_quarantine\_user](#iam_quarantine_user)
-      - [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
-      - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
-      - [igw\_delete](#igw_delete)
-      - [kms\_enable\_rotation](#kms_enable_rotation)
-      - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
-      - [rds\_quarantine\_instance](#rds_quarantine_instance)
-      - [s3\_delete\_acls](#s3_delete_acls)
-      - [s3\_delete\_permissions](#s3_delete_permissions)
-      - [s3\_enable\_encryption](#s3_enable_encryption)
-      - [s3\_enable\_logging](#s3_enable_logging)
-      - [s3\_enable\_versioning](#s3_enable_versioning)
-      - [sg\_delete](#sg_delete)
-      - [sg\_rules\_delete](#sg_rules_delete)
-      - [sg\_single\_rule\_delete](#sg_single_rule_delete)
-      - [tag\_ec2\_resource](#tag_ec2_resource)
-      - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
-  - [Optional Bots](#optional-bots)
-      - [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
-          - [This bot was created for a customer and most likely won't
-            be used outside of that edge
-            case](#this-bot-was-created-for-a-customer-and-most-likely-wont-be-used-outside-of-that-edge-case)
-      - [s3\_delete\_bucket](#s3_delete_bucket)
-
 # Bots
+  - [ami\_set\_to\_private](#ami_set_to_private)
+  - [cloudtrail\_enable](#cloudtrail_enable)
+  - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
+  - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
+  - [config\_enable](#config_enable)
+  - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
+  - [ec2\_create\_snapshot](#ec2_create_snapshot)
+  - [ec2\_release\_eips](#ec2_release_eips)
+  - [ec2\_quarantine\_instance](#ec2_quarantine_instance)
+  - [ec2\_stop\_instance](#ec2_stop_instance)
+  - [ec2\_terminate\_instance](#ec2_terminate_instance)
+  - [ec2\_update\_instance\_role](#ec2_update_instance_role)
+  - [iam\_role\_attach\_policy](#iam_role_attach_policy)
+  - [iam\_user\_attach\_policy](#iam_user_attach_policy)
+  - [iam\_quarantine\_role](#iam_quarantine_role)
+  - [iam\_quarantine\_user](#iam_quarantine_user)
+  - [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
+  - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
+  - [igw\_delete](#igw_delete)
+  - [kms\_enable\_rotation](#kms_enable_rotation)
+  - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
+  - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [s3\_delete\_acls](#s3_delete_acls)
+  - [s3\_delete\_permissions](#s3_delete_permissions)
+  - [s3\_enable\_encryption](#s3_enable_encryption)
+  - [s3\_enable\_logging](#s3_enable_logging)
+  - [s3\_enable\_versioning](#s3_enable_versioning)
+  - [sg\_delete](#sg_delete)
+  - [sg\_rules\_delete](#sg_rules_delete)
+  - [sg\_single\_rule\_delete](#sg_single_rule_delete)
+  - [tag\_ec2\_resource](#tag_ec2_resource)
+  - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
+  
+###[Optional Bots](#optional-bots)
+- [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
+- [s3\_delete\_bucket](#s3_delete_bucket)
+
 
 ## ami\_set\_to\_private
 
@@ -360,6 +357,8 @@ If you want to delete a rule that is open no matter to the configured protocol
 Put protocol=* and the bot will remove the open rule  
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0   
+
+## tag\_ec2\_resource
 
 What it does: Tags an ec2 instance  
 Usage: AUTO: tag\_ec2\_resource "key" "value"  
