@@ -116,6 +116,7 @@ def handle_event(message, output_message):
 
                         except ClientError as e:
                             error = e.response['Error']['Code']
+                            bot_data['Execution status'] = "failed"
                             print(f'{__file__} - Error - {e}')
                             if error == 'AccessDenied':
                                 bot_data['Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
@@ -139,8 +140,10 @@ def handle_event(message, output_message):
 
             try:  ## Run the bot
                 bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
+                bot_data['Execution status'] = "passed"
             except Exception as e:
                 bot_msg = f'Error while executing function {bot}. Error: {e}'
+                bot_data['Execution status'] = "failed"
                 print(f'{__file__} - Error - {bot_msg}')
 
             bot_data['Bot message'] = bot_msg
