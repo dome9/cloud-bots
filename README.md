@@ -71,7 +71,7 @@ the rule should pass.
 
 ## The Bots
 
-Refer to [this](docs/Bots.md) file for a list of the bots, what each one
+Refer to [this](bots/Bots.md) file for a list of the bots, what each one
 does, and an example of a rule that could be used to trigger it.
 
 ## Deployment modes
