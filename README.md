@@ -101,7 +101,7 @@ roles to run bots in other accounts. It follows this workflow:
 Follow these steps for each region in your account in which you want to
 deploy the bots.
 
-1.  Click [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3.amazonaws.com/dome9cloudbotsemplatesuseast1/cloudbots_cftemplate.yaml)
+1.  Click [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml)
     and select the region in which you wish to deploy the stack. This will run
     a script in the CFT console to deploy the cloudbot stack in the
     selected region.
