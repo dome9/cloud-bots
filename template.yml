@@ -6,17 +6,27 @@ Parameters:
     Description: OPTIONAL - Email address to send output logs to
     Type: String
     Default: ''
+  OutputMode:
+    Description: Output Mode - can be as text or as JSON
+    Type: String
+    Default: JSON
+    AllowedValues:
+      - text
+      - JSON
+  sendLogs:
+      Description: Send logs to Dome9
+      Type: String
+      Default: True
+      AllowedValues:
+        - True
+        - False
   DeploymentMode:
     Description: Deployment Mode - can be single or multi
     Type: String
     Default: single
-    AllowedValues: 
+    AllowedValues:
       - single
       - multi
-  GuardDutyRules:
-    Description: Configuration for what will be triggered when certain Guard Duty events happen. Leave empty if you're not using GuardDuty directly with CloudBots
-    Type: String
-    Default: ''
 
 Conditions:
   CreateSubscriber: !Not [!Equals [!Ref EmailAddress, ""]]
@@ -24,7 +34,7 @@ Conditions:
 Resources:
   InputTopic:
     Type: "AWS::SNS::Topic"
-    Properties: 
+    Properties:
       DisplayName: 'd9-findings'
       TopicName: 'd9-findings'
 
@@ -46,7 +56,7 @@ Resources:
 
   OutputTopic:
     Type: "AWS::SNS::Topic"
-    Properties: 
+    Properties:
       DisplayName: 'remediationOutput'
       TopicName: 'remediationOutput'
 
@@ -63,9 +73,11 @@ Resources:
     Properties:
       FunctionName: Dome9CloudBots
       Description: 'Auto-remediation actions from Dome9 events'
-      CodeUri: ./remediation-function.zip
+      CodeUri:
+        Bucket: !Join [ '' , [ 'dome9cloudbotsemplates' , !Join [ '', !Split [ "-" , !Ref "AWS::Region" ] ] ] ]
+        Key: cloudbots.zip
       Runtime: python3.6
-      Timeout: 120 # Most will be under 8 seconds, but delete IGW needs to wait for the instances to be off before detaching from the VPC. This takes a bunch of time. 
+      Timeout: 120 # Most will be under 8 seconds, but delete IGW needs to wait for the instances to be off before detaching from the VPC. This takes a bunch of time.
       Handler: index.lambda_handler
       Policies:
        - Version: '2012-10-17' # Custom Policy Document
@@ -126,9 +138,9 @@ Resources:
                - s3:PutBucketVersioning # For s3_enable_versioning
                - s3:PutEncryptionConfiguration # For s3_enable_encryption
                - s3:PutObject # For create_cloudtrail
-               - sns:Publish # For exporting the logs from CS2 
-               - sns:CreateTopic # For cloudwatch_create_metric_filter 
-               - sns:Subscribe # For cloudwatch_create_metric_filter 
+               - sns:Publish # For exporting the logs from CS2
+               - sns:CreateTopic # For cloudwatch_create_metric_filter
+               - sns:Subscribe # For cloudwatch_create_metric_filter
                - sts:GetCallerIdentity # For checking what account this is running in
                - sts:AssumeRole # For multi_account
              Resource: '*'
@@ -136,7 +148,8 @@ Resources:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
           ACCOUNT_MODE: !Ref DeploymentMode
-          GD_ACTIONS: !Ref GuardDutyRules
+          OUTPUT_TYPE: !Ref OutputMode
+          SEND_LOGS_TO_DOME9: !Ref sendLogs
       Events:
         d9Findings:
           Type: SNS

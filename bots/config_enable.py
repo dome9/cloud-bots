@@ -20,7 +20,7 @@ from botocore.exceptions import ClientError
 
 # Try to create the role
 def create_role(iam_client):
-    print("Creating role for Config")
+    print(f'{__file__} - Creating role for Config')
 
     trust_policy = {
       "Version": "2012-10-17",
@@ -61,7 +61,7 @@ def create_role(iam_client):
 
 
 def add_policy_to_role(iam_client):        
-    print("Adding policy to new role")
+    print(f'{__file__} - Adding policy to new role')
     try:
         attach_policy_response = iam_client.attach_role_policy(
             RoleName='AWSConfigRole',
@@ -75,7 +75,7 @@ def add_policy_to_role(iam_client):
     return text_output
 
 def create_config_recorder(config_client,accountNumber,region,include_global_resource_types_region):    
-    print("Creating ConfigurationRecorder")
+    print(f'{__file__} - Creating ConfigurationRecorder')
 
     role_id = "arn:aws:iam::" + accountNumber + ":role/AWSConfigRole"
  
@@ -145,7 +145,7 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
             return text_output
 
         # The bucket does not exist or you have no access. Create it    
-        print("Creating S3 bucket")
+        print(f'{__file__} - Creating S3 bucket')
         try: ## Currently getting an illegallocationconstraintexception on us-east-1. Still working on it
             if region == "us-east-1":
                 result = s3_resource.create_bucket(
@@ -182,7 +182,7 @@ def create_bucket(s3_client,s3_resource,region,target_bucket_name,accountNumber)
 
 
         ### ATTACH BUCKET POLICY
-        print("Attaching bucket policy")
+        print(f'{__file__} - Attaching bucket policy')
         try:
             bucket_arn = "arn:aws:s3:::" + target_bucket_name
 
@@ -295,19 +295,19 @@ def run_action(boto_session,rule,entity,params):
 
     #### IF VARIABLE ISN'T SET - FALL BACK
     try:
-        print ("Target_bucket_name: %s" % target_bucket_name)
+        print(f'{__file__} - Target_bucket_name: {target_bucket_name}')
     except NameError:
         target_bucket_name = accountNumber + "awsconfiglogs"
         text_output = text_output +  "S3 Bucket name not set. Defaulting to %s.\n" % target_bucket_name
 
     try:
-        print("Target bucket region: %s" % target_bucket_region) 
+        print(f'{__file__} - Target bucket region: {target_bucket_region}')
     except NameError:    
         target_bucket_region = "us-west-1"
         text_output = text_output +  "S3 Bucket region not set. Defaulting to %s.\n" % target_bucket_region
 
     try:
-        print("Include global logs region: %s" % include_global_resource_types_region)
+        print(f'{__file__} - Include global logs region: {include_global_resource_types_region}')
     except NameError:    
         text_output = text_output +  "All regions will have 'includeGlobalResourceTypes' set to true.\n" 
         include_global_resource_types_region = "Null"

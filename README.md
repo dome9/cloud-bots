@@ -1,4 +1,5 @@
-  - [CloudBots](#cloudbots)
+# CloudBots
+
   - [Overview](#overview)
       - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
       - [What does it do?](#what-does-it-do)
@@ -15,7 +16,6 @@
         policy](#configure-the-continuous-compliance-policy)
   - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
 
-# CloudBots
 
 # Overview
 
@@ -101,10 +101,8 @@ roles to run bots in other accounts. It follows this workflow:
 Follow these steps for each region in your account in which you want to
 deploy the bots.
 
-1.  Refer to the [Deployments Link file](docs/Deployment%20Links.md) and
-    click
-    <img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">
-    for the region in which you wish to deploy the stack. This will run
+1.  Click [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://s3.amazonaws.com/dome9cloudbotsemplatesuseast1/cloudbots_cftemplate.yaml)
+    and select the region in which you wish to deploy the stack. This will run
     a script in the CFT console to deploy the cloudbot stack in the
     selected region.
 2.  In the **Select Template**, click **Next** (no need to make a

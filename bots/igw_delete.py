@@ -41,14 +41,14 @@ def run_action(boto_session,rule,entity,params):
                 for interface in instance['NetworkInterfaces']:
                     for ips in interface['PrivateIpAddresses']:
                         try:
-                            print(ips['Association']['PublicIp'])
-                            print(instance_id)
+                            print(f'''{__file__} - igw_delete.py - ips {ips['Association']['PublicIp']}''')
+                            print(f'{__file__} - igw_delete.py - instance id : {instance_id}')
                             instances_to_turn_off.append(instance_id)
                         except:
                             continue
 
         if instances_to_turn_off:
-            print("turning instances off")
+            print(f'{__file__} - igw_delete.py - turning instances off')
             result = ec2_client.stop_instances(InstanceIds=instances_to_turn_off)
 
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -61,10 +61,10 @@ def run_action(boto_session,rule,entity,params):
         
                 instance = ec2_resource.Instance(instances_to_turn_off[0])
                 while instance.state['Name'] not in 'stopped':
-                    print("Sleeping while waiting for instances to turn off (usually about 45 seconds)")
+                    print(f'{__file__} - igw_delete.py - Sleeping while waiting for instances to turn off (usually about 45 seconds)')
                     sleep(5)
                     instance.load()
-                print("Instances are fully shut down. Continuing")
+                print(f'{__file__} - Instances are fully shut down. Continuing')
 
         else:
             text_output = text_output + "No instances in this VPC that have public IPs. Trying to remove the IGW next.\n"

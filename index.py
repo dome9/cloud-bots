@@ -1,66 +1,51 @@
-import boto3
 import json
-import os
-import importlib
-from botocore.exceptions import ClientError
+from handle_event import *
+from send_events_and_errors import *
+from send_logs import *
+import time
 
-from handle_event import * 
-from send_events_and_errors import * 
 
-#Feed in the SNS Topic from an env. variable
-SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN','')
+# Feed in the SNS Topic from an env. variable
+SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN', '')
 
-#Bring the data in and parse the SNS message
+# Bring the data in and parse the SNS message
 def lambda_handler(event, context):
-    text_output_array = ["-------------------------"]
+    start_time = time.time()
+    output_message = {}
+    print(f'{__file__} - Start running')
+    if event['Records'][0]['Sns']['Message']:
+        raw_message = event['Records'][0]['Sns']['Message']
+    print(f'{__file__}- Raw message - {raw_message}')
 
-    raw_message = event['Records'][0]['Sns']['Message']
-    print(raw_message) #CW Logs prints JSON prettier. Printing this for easier recreation. 
+    try:  # Normally the event comes through as json
+        source_message = json.loads(raw_message)
+    except:  # If the event comes through as a dict, take it as it comes (this is usually when testing locally)
+        source_message = raw_message
 
-    try: 
-        try: # Normally the event comes through as json
-            source_message = json.loads(raw_message)
-        except: # If the event comes through as a dict, take it as it comes (this is usually when testing locally)
-            source_message = raw_message
-        # Check for source. Transform it to "Dome9" format if it's not originating from Dome9. 
-        # This expects that GD is triggering lambda via SNS. This is neeeded for running cross-region GD events. 
-        if "source" in source_message and source_message["source"] == "aws.guardduty": # GuardDuty event source via CW Events
-            text_output_array.append("Event Source: GuardDuty")
-            gd_transform_module = importlib.import_module('transform_gd_event')
-            found_action, text_output, source_message = gd_transform_module.transform_gd_event(source_message) # Transform the event from GuardDuty to the Dome9 format
-            text_output_array.append(text_output)
-            if not found_action:
-                print(text_output_array)
-                return      
-    except: 
-        print("Unexpected error. Exiting.")
-        return
+    print(f'{__file__} - Source message - {source_message}')
 
-    print(source_message) #log the input for troubleshooting
+    output_message['ReportTime'] = source_message.get('reportTime', 'N.A')
 
-    timestamp = "ReportTime: " + str(source_message['reportTime'])
-    text_output_array.append(timestamp)
+    if (source_message.get('account')):
+        output_message['Account id'] = source_message['account'].get('id', 'N.A')
 
-    event_account = "Account id: " + source_message['account']['id']
-    text_output_array.append(event_account)
-
+    output_message['findingKey'] = source_message.get('findingKey', 'N.A')
     try:
-        text_output_array, post_to_sns = handle_event(source_message,text_output_array)
-    except Exception as e: 
+        post_to_sns = handle_event(source_message, output_message)
+    except Exception as e:
         post_to_sns = True
-        text_output_array.append("Handle_event failed")
-        text_output_array.append(str(e))
+        output_message['Handle event failed'] = str(e)
+
+    print(f'{__file__} - output message - {output_message}')
 
     # After the bot is called, post it to SNS for output logging
     if SNS_TOPIC_ARN != '' and post_to_sns:
-        sendEvent(text_output_array,SNS_TOPIC_ARN)
+        sendEvent(output_message, SNS_TOPIC_ARN)
 
     if not SNS_TOPIC_ARN:
-        print("SNS topic out was not defined!")
+        print(f'{__file__} - SNS topic out was not defined!')
 
-    for out_put in text_output_array:
-        print(out_put)
-
+    send_logs_to_dome9 = os.getenv('SEND_LOGS_TO_DOME9', '')
+    if(send_logs_to_dome9 == 'True'):
+        send_logs(output_message, start_time, source_message.get('account').get('vendor'))
     return
-
-
