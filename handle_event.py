@@ -1,6 +1,7 @@
 import re
 import os
 import boto3
+import sys, traceback
 import importlib 
 from botocore.exceptions import ClientError
 
@@ -66,6 +67,7 @@ def handle_event(message,text_output_array):
             except:
                 print("Error: could not find bot: " + bot)
                 text_output_array.append("Bot: %s is not a known bot. Skipping.\n" % bot)
+                traceback.print_exc()
                 continue
             
             print("Found bot '%s', about to invoke it" % bot)

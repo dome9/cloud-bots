@@ -352,13 +352,14 @@ problematic port is nested in will be removed and 2 split rules will be
 added in its place (ex: if port 1-30 is open and you want to remove SSH,
 the new rules will be for port 1-21 and port 23-30).
 
-If you want to delete a rule that is open on ALL ports:  
-Put Port 0 as the port to be deleted and the bot will remove the rule.  
-Set Split to True  
-AUTO: sg\_single\_rule\_delete split=true protocol=TCP scope=8.8.8.8/32
-direction=inbound port=0
-
-## tag\_ec2\_resource
+If you want to delete a rule that is open on ALL ports:
+Put Port 0 as the port to be deleted and the bot will remove the rule.
+If you want to delete a rule that is open to ALL :
+Put protocol=ALL and the bot will remove the open rule that configured with ALL as protocol
+If you want to delete a rule that is open no matter to the configured protocol 
+Put protocol=* and the bot will remove the open rule  
+Set Split to True
+AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0   
 
 What it does: Tags an ec2 instance  
 Usage: AUTO: tag\_ec2\_resource "key" "value"  

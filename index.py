@@ -12,7 +12,7 @@ SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN','')
 
 #Bring the data in and parse the SNS message
 def lambda_handler(event, context):
-    text_output_array = ["-------------------------\n"]
+    text_output_array = ["-------------------------"]
 
     raw_message = event['Records'][0]['Sns']['Message']
     print(raw_message) #CW Logs prints JSON prettier. Printing this for easier recreation. 
@@ -25,7 +25,7 @@ def lambda_handler(event, context):
         # Check for source. Transform it to "Dome9" format if it's not originating from Dome9. 
         # This expects that GD is triggering lambda via SNS. This is neeeded for running cross-region GD events. 
         if "source" in source_message and source_message["source"] == "aws.guardduty": # GuardDuty event source via CW Events
-            text_output_array.append("Event Source: GuardDuty\n")
+            text_output_array.append("Event Source: GuardDuty")
             gd_transform_module = importlib.import_module('transform_gd_event')
             found_action, text_output, source_message = gd_transform_module.transform_gd_event(source_message) # Transform the event from GuardDuty to the Dome9 format
             text_output_array.append(text_output)
@@ -38,17 +38,17 @@ def lambda_handler(event, context):
 
     print(source_message) #log the input for troubleshooting
 
-    timestamp = "ReportTime: " + str(source_message['reportTime']) + "\n"
+    timestamp = "ReportTime: " + str(source_message['reportTime'])
     text_output_array.append(timestamp)
 
-    event_account = "Account id: " + source_message['account']['id'] + "\n"
+    event_account = "Account id: " + source_message['account']['id']
     text_output_array.append(event_account)
 
     try:
         text_output_array, post_to_sns = handle_event(source_message,text_output_array)
     except Exception as e: 
         post_to_sns = True
-        text_output_array.append("Handle_event failed\n")
+        text_output_array.append("Handle_event failed")
         text_output_array.append(str(e))
 
     # After the bot is called, post it to SNS for output logging
@@ -58,7 +58,9 @@ def lambda_handler(event, context):
     if not SNS_TOPIC_ARN:
         print("SNS topic out was not defined!")
 
-    print(text_output_array)
+    for out_put in text_output_array:
+        print(out_put)
+
     return
 
 
