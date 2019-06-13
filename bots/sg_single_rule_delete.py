@@ -16,9 +16,6 @@ Put Port 0 as the port to be deleted and the bot will remove the rule
 If you want to delete a rule that is open to ALL protocol:
 Put protocol=ALL and the bot will remove the open rule that configured with ALL as protocol
 
-If you want to delete a rule that is open to any protocol:
-Put protocol=* and the bot will remove the open rule
-
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0
 '''
@@ -33,76 +30,88 @@ def run_action(boto_session,rule,entity,params):
     ## Set up params. We need a role ARN to come through in the params.
     text_output = ""
     usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
-    global result, protocol, scope, port, split
+    global result, protocol, scope, port, split, portTo
 
     direction = ""
 
     # Param retrieving
-    if len(params) == 5:
-        try:
-            for param in params:
-                key_value = param.split("=")
-                key = key_value[0]
-                value = key_value[1]
+    params_dic = {}
+    try:
+        for param in params:
+            key_value = param.split("=")
+            key = key_value[0]
+            value = key_value[1]
 
-                if key == "split":
-                    if value.lower() == "true":
-                        split = True
-                        text_output = text_output + "Split matching for the port to be remediated is set to True\n"
-                    elif value.lower() == "false":
-                        split = False
-                        text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
-                    else:
-                        text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
 
-                if key == "protocol":
-                    if value.lower() == "tcp":
-                        protocol = "TCP"
-                        text_output = text_output + "The protocol to be removed is TCP\n"
-                    elif value.lower() == "udp":
-                        protocol = "UDP"
-                        text_output = text_output + "The protocol to be removed is UDP\n"
-                    elif value.lower() == "all":
-                        protocol = "ALL"
-                        text_output = text_output + "The protocol to be removed is ALL protocols\n"
-                    elif value.lower() == "*":
-                        protocol = "*"
-                        text_output = text_output + "Will remove any open protocol\n"
-                if key == "scope":
-                    scope = value
-                    #TODO - SUPPORT IPV6 SCOPE AS WELL
-                    scope_pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
-                    if scope_pattern.match(scope):
-                        text_output = text_output + "Scope to be removed found: %s \n" % scope
-                    else:
-                        text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping.\n" + usage
+            if key == "split":
+                split = True
+                if value.lower() == "true":
+                    text_output = text_output + "Split matching for the port to be remediated is set to True\n"
+                elif value.lower() == "false":
+                    split = False
+                    text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
+                else:
+                    text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
+                params_dic[key] = split
 
-                if key == "direction":
-                    if value.lower() == "inbound":
-                        direction = "inbound"
-                        text_output = text_output + "The rule to be removed is going to be for inbound traffic\n"
-                    elif value.lower() == "outbound":
-                        direction = "outbound"
-                        text_output = text_output + "The rule to be removed is going to be for outbound traffic\n"
-                    else:
-                        text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping.\n" + usage
-                        return text_output
+            if key == "protocol":
+                if value.lower() == "tcp":
+                    protocol = "TCP"
+                    text_output = text_output + "The protocol to be removed is TCP\n"
+                elif value.lower() == "udp":
+                    protocol = "UDP"
+                    text_output = text_output + "The protocol to be removed is UDP\n"
+                elif value.lower() == "all":
+                    protocol = "ALL"
+                    text_output = text_output + "The protocol to be removed is ALL protocols\n"
+                else:
+                    text_output = text_output + "Unsupported Protocol - currently the only supported options are - TCP,UDP,ALL"
+                    return text_output
+                params_dic[key] = protocol
 
-                if key == "port":
-                    try:
-                        port = int(value)
-                        text_output = text_output + "Port to be removed: %s \n" % port
-                    except ValueError:
-                        text_output = text_output + "Port number was not a valid integer. Skipping.\n" + usage
-                        return text_output
+            if key == "scope":
+                scope = value
+                # TODO - SUPPORT IPV6 SCOPE AS WELL
+                scope_pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
+                if scope_pattern.match(scope):
+                    text_output = text_output + "Scope to be removed found: %s \n" % scope
+                else:
+                    text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping.\n" + usage
+                    return text_output
+                params_dic[key] = scope
 
-        except:
-            text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
-            return text_output
+            if key == "direction":
+                if value.lower() == "inbound":
+                    direction = "inbound"
+                    text_output = text_output + "The rule to be removed is going to be for inbound traffic\n"
+                elif value.lower() == "outbound":
+                    direction = "outbound"
+                    text_output = text_output + "The rule to be removed is going to be for outbound traffic\n"
+                else:
+                    text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping.\n" + usage
+                    return text_output
+                params_dic[key] = direction
 
-    else:
+            if key == "port":
+                try:
+                    port = int(value)
+                    text_output = text_output + "Port to be removed: %s \n" % port
+                    params_dic[key] = port
+                except ValueError:
+                    text_output = text_output + "Port number was not a valid integer. Skipping.\n" + usage
+                    return text_output
+
+    except:
+        text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
+        return text_output
+
+
+    print(params_dic)
+    if not (len(params_dic) == 5 or (len(params_dic) == 4 and "protocol" in params_dic and params_dic["protocol"] == 'ALL' )):
         text_output = "Wrong amount of params inputs detected. Exiting.\n" + usage
         return text_output
+
+
 
     rule_direction = direction + "Rules" ## The objects are nested in entity['inboundRules'] or outboundRules but we want to heave the direction variable alone for logging later.
     found_rule = False
@@ -114,10 +123,22 @@ def run_action(boto_session,rule,entity,params):
 
     # Iterate over the rules and look for one to be deleted
     for rule in entity[rule_direction]:
-        if scope == rule['scope'] and (protocol == '*' or protocol == rule['protocol']): # Scope and protocol match - now check the ports that are open
+        if scope == rule['scope'] and (protocol == rule['protocol']): # Scope and protocol match - now check the ports that are open
+
+
 
             # In case that the remediation was for ANY protocol we will assign the current protocol
             protocol = rule['protocol']
+
+            # In case we want to delete the SG with protocol = 'All'  traffic
+            if (protocol == 'ALL'):
+                port = -1
+                portTo = -1
+                protocol = '-1'
+                split = False
+                rule_to_delete = rule
+                break
+
 
             # 2/3 of the conditions are good. Check for scope now.
             if port == rule['port'] and port == rule['portTo']: # The port to delete is the only one open for the rule and will be deleted
@@ -245,7 +266,7 @@ def run_action(boto_session,rule,entity,params):
 
 
 def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id):
-    global result
+    result = {}
     try:
         if touch_type == "authorize":
 
