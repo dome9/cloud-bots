@@ -29,7 +29,7 @@ def lambda_handler(event, context):
     if (source_message.get('account')):
         output_message['Account id'] = source_message['account'].get('id', 'N.A')
 
-    output_message['Finding key'] = source_message.get('findingKey', 'N.A')
+    output_message['findingKey'] = source_message.get('findingKey', 'N.A')
     try:
         post_to_sns = handle_event(source_message, output_message)
     except Exception as e:

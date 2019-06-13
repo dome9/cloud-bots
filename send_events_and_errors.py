@@ -21,9 +21,9 @@ def sendEvent(output_message, SNS_TOPIC_ARN):
         text_output = json.dumps(output_message)
         response = sns.publish(
             TopicArn=SNS_TOPIC_ARN,
-            Message=json.dumps({'default': text_output}),
+            Message=json.dumps(text_output),
             Subject='RemediationLog',
-            MessageStructure='json'
+            MessageStructure='string'
         )
     else:
         bots_messages = parse_rule_violations(output_message.get('Rules violations found', ['N.A']))
