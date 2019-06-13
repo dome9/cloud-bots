@@ -25,88 +25,39 @@ import re
 import sys, traceback
 from botocore.exceptions import ClientError
 
+
+text_output = ""
+
+usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
+
+
 ### DeleteSecurityGroupRules ###
 def run_action(boto_session,rule,entity,params):
     ## Set up params. We need a role ARN to come through in the params.
-    text_output = ""
-    usage = "AUTO: sg_single_rule_delete split=<true|false> protocol=<TCP|UDP> scope=<a.b.c.d/e> direction=<inbound|outbound> port=<number>\n"
-    global result, protocol, scope, port, split, portTo
 
-    direction = ""
+    global text_output, usage, portTo
+
+    result = {}
+
+
+
 
     # Param retrieving
-    params_dic = {}
     try:
-        for param in params:
-            key_value = param.split("=")
-            key = key_value[0]
-            value = key_value[1]
+        params_dic = get_params(params)
+    except Exception as e:
+        return (e)
 
+    protocol = params_dic['protocol']
+    scope = params_dic['scope']
+    port = params_dic['port']
+    split = params_dic['split']
+    direction = params_dic['direction']
 
-            if key == "split":
-                split = True
-                if value.lower() == "true":
-                    text_output = text_output + "Split matching for the port to be remediated is set to True\n"
-                elif value.lower() == "false":
-                    split = False
-                    text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
-                else:
-                    text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
-                params_dic[key] = split
-
-            if key == "protocol":
-                if value.lower() == "tcp":
-                    protocol = "TCP"
-                    text_output = text_output + "The protocol to be removed is TCP\n"
-                elif value.lower() == "udp":
-                    protocol = "UDP"
-                    text_output = text_output + "The protocol to be removed is UDP\n"
-                elif value.lower() == "all":
-                    protocol = "ALL"
-                    text_output = text_output + "The protocol to be removed is ALL protocols\n"
-                else:
-                    text_output = text_output + "Unsupported Protocol - currently the only supported options are - TCP,UDP,ALL"
-                    return text_output
-                params_dic[key] = protocol
-
-            if key == "scope":
-                scope = value
-                # TODO - SUPPORT IPV6 SCOPE AS WELL
-                scope_pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
-                if scope_pattern.match(scope):
-                    text_output = text_output + "Scope to be removed found: %s \n" % scope
-                else:
-                    text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping.\n" + usage
-                    return text_output
-                params_dic[key] = scope
-
-            if key == "direction":
-                if value.lower() == "inbound":
-                    direction = "inbound"
-                    text_output = text_output + "The rule to be removed is going to be for inbound traffic\n"
-                elif value.lower() == "outbound":
-                    direction = "outbound"
-                    text_output = text_output + "The rule to be removed is going to be for outbound traffic\n"
-                else:
-                    text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping.\n" + usage
-                    return text_output
-                params_dic[key] = direction
-
-            if key == "port":
-                try:
-                    port = int(value)
-                    text_output = text_output + "Port to be removed: %s \n" % port
-                    params_dic[key] = port
-                except ValueError:
-                    text_output = text_output + "Port number was not a valid integer. Skipping.\n" + usage
-                    return text_output
-
-    except:
-        text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
-        return text_output
 
 
     print(params_dic)
+
     if not (len(params_dic) == 5 or (len(params_dic) == 4 and "protocol" in params_dic and params_dic["protocol"] == 'ALL' )):
         text_output = "Wrong amount of params inputs detected. Exiting.\n" + usage
         return text_output
@@ -119,7 +70,6 @@ def run_action(boto_session,rule,entity,params):
     lower_port_number = 0
     upper_port_number_to = 0
 
-    remediation_protocol = protocol
 
     # Iterate over the rules and look for one to be deleted
     for rule in entity[rule_direction]:
@@ -127,7 +77,6 @@ def run_action(boto_session,rule,entity,params):
 
 
 
-            # In case that the remediation was for ANY protocol we will assign the current protocol
             protocol = rule['protocol']
 
             # In case we want to delete the SG with protocol = 'All'  traffic
@@ -164,14 +113,12 @@ def run_action(boto_session,rule,entity,params):
                 upper_port_number_to = rule['portTo']
                 break
 
-            # Back to the origin remediation protocol if we skip to the next rule
-            # (just in case were the protocol to delete is ALL at the remediation)
-            protocol = remediation_protocol
+
 
 
     if rule_to_delete:
-        text_output = text_output + "Matching rule found that is going to be deleted. Protocol:%s Direction:%s " \
-                                    "Port:%s Scope:%s \n" % (protocol, direction, port, scope)
+        str_protocol = 'All' if protocol == -1 else protocol
+        text_output = text_output + f"Matching rule found that is going to be deleted. Protocol:{str_protocol} Direction:{direction} Port:{port} Scope:{scope}\n"
     else:
         text_output = text_output + "No SG rule was found that matches the defined parameters. Skipping\n"
         return text_output
@@ -181,7 +128,8 @@ def run_action(boto_session,rule,entity,params):
 
     # Client for making changes / set up parameters
     sg_id = entity['id']
-    portTo = rule['portTo']
+    portTo = rule_to_delete['portTo']
+
 
     ec2_resource = boto_session.resource('ec2')
     sg = ec2_resource.SecurityGroup(sg_id)
@@ -189,12 +137,13 @@ def run_action(boto_session,rule,entity,params):
     # With or without split, we'll need to first remove the old rule before adding in the split one.
     if split == False:
 
-        responseCode = touch_sg(sg, direction, "revoke", port, portTo, sg_id)
+        responseCode = touch_sg(sg, direction, "revoke", port, portTo, sg_id, scope, protocol)
 
         if responseCode >= 400:
             text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = text_output + "Security Group rule from port %s to port %s successfully removed\n" % (port,portTo)
+            str_pot = 0 if port ==-1 else port
+            text_output = text_output + f"Security Group rule from port {str_pot} to port {portTo} successfully removed\n"
 
     # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are needed. One for the lower section and one for the upper.
     if split == True and port != 0:
@@ -205,30 +154,32 @@ def run_action(boto_session,rule,entity,params):
         if lower_port_number == port:
             lower_port_number = lower_port_number + 1
 
-            responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id)
+            responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id, scope, protocol)
 
             if responseCode >= 400:
                 text_output = "Unexpected error: %s \n" % str(result)
             else:
                 text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
                     lower_port_number, upper_port_number_to)
+                lower_port_number = lower_port_number - 1
 
         else:
             # In case that the port to revoke was the end of the range
             if upper_port_number_to == port:
                 upper_port_number_to = upper_port_number_to - 1
 
-                responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id)
+                responseCode = touch_sg(sg, direction, "authorize", lower_port_number, upper_port_number_to, sg_id, scope, protocol)
 
                 if responseCode >= 400:
                     text_output = "Unexpected error: %s \n" % str(result)
                 else:
                     text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
                         lower_port_number, upper_port_number_to)
+                    upper_port_number_to = upper_port_number_to +1
 
             # in case that the revoked port was in the range
             else:
-                responseCode = touch_sg(sg, direction, "authorize", lower_port_number, lower_port_number_to, sg_id)
+                responseCode = touch_sg(sg, direction, "authorize", lower_port_number, lower_port_number_to, sg_id, scope, protocol)
 
                 if responseCode >= 400:
                     text_output = "Unexpected error: %s \n" % str(result)
@@ -236,7 +187,7 @@ def run_action(boto_session,rule,entity,params):
                     text_output = text_output + "Security Group ingress rule from port %s to port %s successfully added\n" % (
                     lower_port_number, lower_port_number_to)
 
-                responseCode = touch_sg(sg, direction, "authorize", upper_port_number, upper_port_number_to, sg_id)
+                responseCode = touch_sg(sg, direction, "authorize", upper_port_number, upper_port_number_to, sg_id, scope, protocol)
 
                 if responseCode >= 400:
                     text_output = "Unexpected error: %s \n" % str(result)
@@ -248,7 +199,7 @@ def run_action(boto_session,rule,entity,params):
 
 
     if split == True:
-        responseCode = touch_sg(sg, direction, "revoke", lower_port_number, upper_port_number_to, sg_id)
+        responseCode = touch_sg(sg, direction, "revoke", lower_port_number, upper_port_number_to, sg_id, scope, protocol)
 
         if responseCode >= 400:
             text_output = "Unexpected error: %s \n" % str(result)
@@ -264,8 +215,84 @@ def run_action(boto_session,rule,entity,params):
 
 
 
+def get_params(params):
+    global text_output
+    params_dic = {}
+    try:
+        for param in params:
+            key_value = param.split("=")
+            key = key_value[0]
+            value = key_value[1]
 
-def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id):
+            if key == "split":
+                split = True
+                if value.lower() == "true":
+                    text_output = text_output + "Split matching for the port to be remediated is set to True\n"
+                elif value.lower() == "false":
+                    split = False
+                    text_output = text_output + "Split matching for the port to be remediated is set to False. If the port is contained within a larger scope, it will be skipped.\n"
+                else:
+                    text_output = text_output + "Split value doesn't match true or false. Defaulting to True\n"
+                params_dic[key] = split
+
+            if key == "protocol":
+                if value.lower() == "tcp":
+                    protocol = "TCP"
+                    text_output = text_output + "The protocol to be removed is TCP\n"
+                elif value.lower() == "udp":
+                    protocol = "UDP"
+                    text_output = text_output + "The protocol to be removed is UDP\n"
+                elif value.lower() == "all":
+                    protocol = "ALL"
+                    text_output = text_output + "The protocol to be removed is ALL protocols\n"
+                else:
+                    text_output = text_output + "Unsupported Protocol - currently the only supported options are - TCP,UDP,ALL"
+                    raise Exception(text_output)
+                params_dic[key] = protocol
+
+            if key == "scope":
+                scope = value
+                # TODO - SUPPORT IPV6 SCOPE AS WELL
+                scope_pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
+                if scope_pattern.match(scope):
+                    text_output = text_output + f"Scope to be removed found: {scope} \n"
+                else:
+                    text_output = text_output + "Scope doesn't match expected value (a.b.c.d/e). Skipping.\n" + usage
+                    raise Exception(text_output)
+                params_dic[key] = scope
+
+            if key == "direction":
+                if value.lower() == "inbound":
+                    direction = "inbound"
+                    text_output = text_output + "The rule to be removed is going to be for inbound traffic\n"
+                elif value.lower() == "outbound":
+                    direction = "outbound"
+                    text_output = text_output + "The rule to be removed is going to be for outbound traffic\n"
+                else:
+                    text_output = text_output + "Traffic direction doesn't match inbound or outbound. Skipping.\n" + usage
+                    raise Exception(text_output)
+                params_dic[key] = direction
+
+            if key == "port":
+                try:
+                    port = int(value)
+                    text_output = text_output + f"Port to be removed: {port} \n"
+                    params_dic[key] = port
+                except ValueError:
+                    text_output = text_output + "Port number was not a valid integer. Skipping.\n" + usage
+                    raise Exception(text_output)
+
+        return params_dic
+
+    except:
+        text_output = text_output + "Params handling error. Please check params and try again.\n" + usage
+        raise Exception(text_output)
+
+
+
+
+
+def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id, scope , protocol):
     result = {}
     try:
         if touch_type == "authorize":
