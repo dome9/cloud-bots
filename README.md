@@ -1,6 +1,6 @@
-<p align="center">
+<a align="center" href="https://cloudbots.dome9.com">
   <img width="150" src="cloudbotslogo.png">
-</p>
+</a>
 
 # [CloudBots](https://cloudbots.dome9.com) - an automatic remediation solution for public cloud platforms (AWS and [Azure](https://github.com/Dome9/cloud-bots-azure))
 
