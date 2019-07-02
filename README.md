@@ -23,6 +23,7 @@
       - [Configure the Continuous Compliance
         policy](#configure-the-continuous-compliance-policy)
   - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
+  - [Log Collection for Troubleshooting](#log-collection-for-troubleshooting)
 
 
 # Overview
