@@ -18,7 +18,7 @@ def sendEvent(output_message, SNS_TOPIC_ARN):
     print(f'{__file__} - output type: {output_type} - TopicArn: {SNS_TOPIC_ARN}')
     sns = boto3.client('sns')
     if output_type == 'JSON':
-        text_output = json.dumps(output_message)
+        text_output = output_message
         response = sns.publish(
             TopicArn=SNS_TOPIC_ARN,
             Message=json.dumps(text_output),
