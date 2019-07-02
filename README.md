@@ -5,8 +5,7 @@
 </p>
 
 <div align="center">
-    <h1><a target="_blank" href="https://cloudbots.dome9.com">CloudBots</a></h1>
-    <h1>An automatic remediation solution for public cloud platforms (AWS and <a href="https://github.com/Dome9/cloud-bots-azure" targe="_blank">Azure</a>)</h1>
+    <h1><a target="_blank" href="https://cloudbots.dome9.com">CloudBots</a> is an automatic remediation solution for public cloud platforms (AWS and <a href="https://github.com/Dome9/cloud-bots-azure" targe="_blank">Azure</a>)</h1>
 </div>
 
   - [Overview](#overview)
