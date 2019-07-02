@@ -4,7 +4,7 @@
     </a>
 </p>
 
-# [CloudBots](https://cloudbots.dome9.com) - an automatic remediation solution for public cloud platforms (AWS and [Azure](https://github.com/Dome9/cloud-bots-azure))
+# [CloudBots](https://cloudbots.dome9.com) - an automatic remediation solution for public cloud platforms (AWS and [Azure](https://github.com/Dome9/cloud-bots-azure)) {align=center}
 
   - [Overview](#overview)
       - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
