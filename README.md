@@ -1,4 +1,9 @@
-![](cloudbotslogo.png)
+
+<p align="center">
+  <img width="600" height="200" src="cloudbotslogo.png">
+</p>
+
+
 # [CloudBots](https://cloudbots.dome9.com) - an automatic remediation solution for public cloud platforms (AWS and [Azure](https://github.com/Dome9/cloud-bots-azure))
 
   - [Overview](#overview)
