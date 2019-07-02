@@ -231,7 +231,7 @@ AWS)
 
 # Log Collection for Troubleshooting
 
-The cloudbots send log information to Dome9, that is used for troubleshooting. By default, this is enabled for all bots. You can disable this in your AWS account. Select the Lambda function created by the CFT stack, and set the environment variable SEND_LOGS to False. This will apply to all bots in the account. By default, this is set to True, enabling logs.
+The CloudBots send log information to Dome9, that is used for troubleshooting. By default, this is enabled for all bots. You can disable this in your AWS account. Select the Lambda function created by the CFT stack, and set the environment variable SEND_LOGS to False. This will apply to all bots in the account.
 
 Each account is controlled by the variable for the Lambda function configured in that account.
 
