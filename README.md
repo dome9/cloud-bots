@@ -236,3 +236,10 @@ AWS)
 *status* is marked *Failed*
 
 *entity: id* is the id for the entity that failed the rule
+
+# Log Collection for Troubleshooting
+
+The CloudBots send log information to Dome9, that is used for troubleshooting. By default, this is enabled for all bots. You can disable this in your AWS account. Select the Lambda function created by the CFT stack, and set the environment variable SEND_LOGS to False. This will apply to all bots in the account.
+
+Each account is controlled by the variable for the Lambda function configured in that account.
+
