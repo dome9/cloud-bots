@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://cloudbots.dome9.com">
-      <img width="150" src="cloudbotslogo.png">
+      <img width="150" src="cloudbotslogo.svg">
     </a>
 </p>
 
