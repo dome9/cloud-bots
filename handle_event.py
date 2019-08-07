@@ -151,8 +151,10 @@ def handle_event(message, output_message):
                 )
 
             else:
-                # In single account mode, we don't want to try to run bots outside of this account therefore error
+                # In single account mode, we don't want to try to run bots outside of this account therefore error , the lambda will exit with error
                 bot_data['Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
+                output_message['Rules violations found'].append(bot_data.copy())
+                continue
 
         else:  # Boto will default to default session if we don't need assume_role credentials
             boto_session = boto3.Session(region_name=message_data.get('region'))
