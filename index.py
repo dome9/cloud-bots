@@ -20,6 +20,7 @@ def lambda_handler(event, context):
     try:  # Normally the event comes through as json
         source_message = json.loads(raw_message)
     except:  # If the event comes through as a dict, take it as it comes (this is usually when testing locally)
+        print(f'{__file__} - Failed to load the message to JSON going to try use it as dic')
         source_message = raw_message
 
     print(f'{__file__} - Source message - {source_message}')
