@@ -78,12 +78,18 @@ def run_action(boto_session, rule, entity, params):
 
             # In case we want to delete the SG with protocol = 'All'  traffic
             if (protocol == 'ALL'):
-                port = -1
-                portTo = -1
-                protocol = '-1'
-                split = False
-                rule_to_delete = rule
-                break
+                if(split == True):
+                    rule['port'] = 0
+                    rule['portTo'] = 65535
+                    protocol_to_remove = '-1'
+                    protocol = 'tcp'
+                else:
+                    port = -1
+                    portTo = -1
+                    protocol = '-1'
+                    split = False
+                    rule_to_delete = rule
+                    break
 
             # 2/3 of the conditions are good. Check for scope now.
             if port == rule['port'] and port == rule[
@@ -194,6 +200,11 @@ def run_action(boto_session, rule, entity, params):
                         upper_port_number, upper_port_number_to)
 
     if split == True:
+        if protocol_to_remove:
+            lower_port_number = -1
+            upper_port_number_to = 0
+            protocol = protocol_to_remove
+
         responseCode = touch_sg(sg, direction, 'revoke', lower_port_number, upper_port_number_to, sg_id, scope,
                                 protocol)
 
