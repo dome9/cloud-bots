@@ -103,7 +103,9 @@ roles to run bots in other accounts. It follows this workflow:
 
 ![multi mode](docs/pictures/cs2_multi_acct_workflow.png)
 
-# Onboarding
+# Deploy CloudBots to your AWS accounts
+
+To use the CloudBots, you have to set up your AWS account(s) and, if are using Dome9, your Dome9 account.
 
 ## Setup your AWS account(s) for CloudBots
 
@@ -156,28 +158,30 @@ On the AWS CFT console, for your account, perform these steps:
 This script will create the IAM role and policy and the cross-account
 role for the additional account.
 
-# Setup your Dome9 account
+## Setup your Dome9 account
 
-On Dome9 you must add remediation tags to rules in a compliance ruleset
+On Dome9 you must add remediation tags to rules in a compliance ruleset.
 
-## Configure the rules
+### Configure the rules
 
 Follow these steps in your Dome9 account to tag the compliance rules &
 rulesets to use bots as a remediation step.
 
-1.  In the Dome9 console, navigate to the Rulesets page in the
+1.  In the Dome9 web application, navigate to the Rulesets page in the
     Compliance & Governance menu.
 
-2.  Select the rules for which you want to add a remediation step.
+1.  Select or create a ruleset that will be used for the cloudbots.
+ 
+1.  Select the rules for which you want to add a remediation step.
 
-3.  In the Compliance Section add a row with the following string:
+1.  In the Compliance Section add a row with the following string:
     `AUTO: <bot-name> <params>` where *bot-name* is the name of the bot,
     and *params* is a list of arguments for the bot (if any).
     
     For example, `AUTO: ec2_stop_instance` will run the bot to stop an
     EC2 instance.
 
-## Configure the Continuous Compliance policy
+### Configure a Dome9 Continuous Compliance policy
 
 Once the rules in the ruleset have been tagged for remediation, set up a
 Continuous Compliance policy to run the ruleset, and send findings to
@@ -207,7 +211,7 @@ send events for previous findings, follow these steps:
     Policy (the one created above), then click **SEND**. Dome9 will send
     event messages to the SNS for findings.
 
-# Use the CloudBots without Dome9
+## Use the CloudBots without a Dome9 account
 
 You can use the CloudBots without a Dome9 account. In this case you must
 send messages to the SNS for each event that requires remediation. The
@@ -231,7 +235,9 @@ message should have the following format:
       }
     }
 
-where *account: id* and *accountNumber* is your AWS account number (from
+where:
+
+*account: id* and *accountNumber* are your AWS account number (from
 AWS)
 
 *status* is marked *Failed*
@@ -243,4 +249,3 @@ AWS)
 The CloudBots send log information to Dome9, that is used for troubleshooting. By default, this is enabled for all bots. You can disable this in your AWS account. Select the Lambda function created by the CFT stack, and set the environment variable SEND_LOGS to False. This will apply to all bots in the account.
 
 Each account is controlled by the variable for the Lambda function configured in that account.
-
