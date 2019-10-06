@@ -14,6 +14,41 @@
       - [How does it work?](#how-does-it-work)
       - [The Bots](#the-bots)
       - [Deployment modes](#deployment-modes)
+          - [Single account mode](#single-account-mode)
+          - [Multi mode](#multi-mode)
+  - [Deploy CloudBots to your AWS
+    accounts](#deploy-cloudbots-to-your-aws-accounts)
+      - [Setup your AWS account(s) for
+        CloudBots](#setup-your-aws-accounts-for-cloudbots)
+      - [Onboarding for Multi mode](#onboarding-for-multi-mode)
+      - [Setup your Dome9 account](#setup-your-dome9-account)
+          - [Configure the rules](#configure-the-rules)
+          - [Configure a Dome9 Continuous Compliance
+            policy](#configure-a-dome9-continuous-compliance-policy)
+      - [Use the CloudBots without a Dome9
+        account](#use-the-cloudbots-without-a-dome9-account)
+  - [Log Collection for
+    Troubleshooting](#log-collection-for-troubleshooting)
+
+<p align="center">
+
+<a href="https://cloudbots.dome9.com">
+<img width="150" src="cloudbotslogo.svg"> </a>
+
+</p>
+
+<div data-align="center">
+
+    <h1><a target="_blank" href="https://cloudbots.dome9.com">CloudBots</a> is an automatic remediation solution for public cloud platforms (AWS, <a href="https://github.com/Dome9/cloud-bots-azure" targe="_blank">Azure</a> and <a href="https://github.com/Dome9/cloud-bots-gcp" targe="_blank">GCP</a>)</h1>
+
+</div>
+
+  - [Overview](#overview)
+      - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
+      - [What does it do?](#what-does-it-do)
+      - [How does it work?](#how-does-it-work)
+      - [The Bots](#the-bots)
+      - [Deployment modes](#deployment-modes)
   - [Onboarding](#onboarding)
       - [Setup your AWS account(s) for
         CloudBots](#setup-your-aws-accounts-for-cloudbots)
@@ -23,8 +58,8 @@
       - [Configure the Continuous Compliance
         policy](#configure-the-continuous-compliance-policy)
   - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
-  - [Log Collection for Troubleshooting](#log-collection-for-troubleshooting)
-
+  - [Log Collection for
+    Troubleshooting](#log-collection-for-troubleshooting)
 
 # Overview
 
@@ -90,7 +125,7 @@ AWS accounts.
 
 ### Single account mode
 
-The default mode is 'single' account. Remediations will be applied to
+The default mode is ‘single’ account. Remediations will be applied to
 entities in a single account. It follows this workflow:
 
 ![single mode](docs/pictures/data-flow.png)
@@ -105,17 +140,19 @@ roles to run bots in other accounts. It follows this workflow:
 
 # Deploy CloudBots to your AWS accounts
 
-To use the CloudBots, you have to set up your AWS account(s) and, if are using Dome9, your Dome9 account.
+To use the CloudBots, you have to set up your AWS account(s) and, if are
+using Dome9, your Dome9 account.
 
 ## Setup your AWS account(s) for CloudBots
 
 Follow these steps for each region in your account in which you want to
 deploy the bots.
 
-1.  Click [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml)
-    and select the region in which you wish to deploy the stack. This will run
-    a script in the CFT console to deploy the cloudbot stack in the
-    selected region.
+1.  Click
+    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml)
+    and select the region in which you wish to deploy the stack. This
+    will run a script in the CFT console to deploy the cloudbot stack in
+    the selected region.
 2.  In the **Select Template**, click **Next** (no need to make a
     selection)
 3.  In the **Parameters** section select the deployment mode, *single*
@@ -125,10 +162,10 @@ deploy the bots.
     selections)
 5.  In the **Review** page, select the options:
 
-`  I acknowledge that AWS CloudFormation might create IAM resources `
+`I acknowledge that AWS CloudFormation might create IAM resources`
 
-`  I acknowledge that AWS CloudFormation might create IAM resources with
-custom names. `
+`I acknowledge that AWS CloudFormation might create IAM resources with
+custom names.`
 
 6.  Click **Create Change Set**, then **Execute**. The stack will be
     created in your AWS account. It will appear as *dome9CloudBots* in
@@ -170,11 +207,11 @@ rulesets to use bots as a remediation step.
 1.  In the Dome9 web application, navigate to the Rulesets page in the
     Compliance & Governance menu.
 
-1.  Select or create a ruleset that will be used for the cloudbots.
- 
-1.  Select the rules for which you want to add a remediation step.
+2.  Select or create a ruleset that will be used for the cloudbots.
 
-1.  In the Compliance Section add a row with the following string:
+3.  Select the rules for which you want to add a remediation step.
+
+4.  In the Compliance Section add a row with the following string:
     `AUTO: <bot-name> <params>` where *bot-name* is the name of the bot,
     and *params* is a list of arguments for the bot (if any).
     
@@ -190,9 +227,9 @@ the SNS.
 1.  Navigate to the **Policies** page in the Compliance & Governance
     menu.
 2.  Click **ADD POLICY** (on the right).
-3.  Select the account from the list, then click **NEXT**. For 'single'
+3.  Select the account from the list, then click **NEXT**. For ‘single’
     mode, this will be the one account in which the bots are deployed.
-    For 'multi' mode, select the accounts (they must be configured with
+    For ‘multi’ mode, select the accounts (they must be configured with
     cross-account roles).
 4.  Select the ruleset from the list, then click **NEXT**.
 5.  Click **ADD NOTIFICATION**.
@@ -237,8 +274,7 @@ message should have the following format:
 
 where:
 
-*account: id* and *accountNumber* are your AWS account number (from
-AWS)
+*account: id* and *accountNumber* are your AWS account number (from AWS)
 
 *status* is marked *Failed*
 
@@ -246,6 +282,11 @@ AWS)
 
 # Log Collection for Troubleshooting
 
-The CloudBots send log information to Dome9, that is used for troubleshooting. By default, this is enabled for all bots. You can disable this in your AWS account. Select the Lambda function created by the CFT stack, and set the environment variable SEND_LOGS to False. This will apply to all bots in the account.
+The CloudBots send log information to Dome9, that is used for
+troubleshooting. By default, this is enabled for all bots. You can
+disable this in your AWS account. Select the Lambda function created by
+the CFT stack, and set the environment variable SEND\_LOGS to False.
+This will apply to all bots in the account.
 
-Each account is controlled by the variable for the Lambda function configured in that account.
+Each account is controlled by the variable for the Lambda function
+configured in that account.
