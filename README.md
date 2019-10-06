@@ -175,7 +175,7 @@ custom names.`
     save them; they will be used to setup the SNS to trigger the bots,
     and the output reporting channel.
 
-## Onboarding for Multi mode
+## Deploy for Multi mode
 
 For multi-mode, you will setup one account as above for the single mode,
 and then set up cross account roles in each additional account.
