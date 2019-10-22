@@ -14,15 +14,14 @@
       - [How does it work?](#how-does-it-work)
       - [The Bots](#the-bots)
       - [Deployment modes](#deployment-modes)
-  - [Onboarding](#onboarding)
-      - [Setup your AWS account(s) for
-        CloudBots](#setup-your-aws-accounts-for-cloudbots)
-      - [Onboarding for Multi mode](#onboarding-for-multi-mode)
+  - [Deployment](#deployment)
+      - [Single-account mode](#single-account-mode)
+      - [Multi-account mode](#multi-account-mode)
   - [Setup your Dome9 account](#setup-your-dome9-account)
       - [Configure the rules](#configure-the-rules)
       - [Configure the Continuous Compliance
         policy](#configure-the-continuous-compliance-policy)
-  - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
+  - [Using the Cloud Bots without Dome9 (or in standalone mode)](#using-the-cloud-Bots-without-Dome9-or-in-standalone-mode)
   - [Log Collection for Troubleshooting](#log-collection-for-troubleshooting)
 
 
