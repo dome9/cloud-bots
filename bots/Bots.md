@@ -358,6 +358,8 @@ Put protocol=* and the bot will remove the open rule
 Set Split to True
 AUTO: sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0   
 
+Limitations: IPv6 is not supported
+
 ## tag\_ec2\_resource
 
 What it does: Tags an ec2 instance  
