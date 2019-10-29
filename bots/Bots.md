@@ -247,7 +247,7 @@ Usage: AUTO: mark\_for\_stop\_ec2\_resource <time>\<unit(m,h,d)\>
 Example: AUTO: mark\_for\_stop\_ec2\_resource 3h  
 Note: This is meant to be used in conjunction with a more aggressive
 action like stopping or termanating an instance. The first step will be
-to tag an instance with the time that we want to tigger the remediation
+to tag an instance with the time that we want to trigger the remediation
 bot.  
 From there, a rule like "Instance should not have tags with \[
 key='marked\_for\_stop' and value before(1, 'minutes') \]" can be ran to
