@@ -29,20 +29,6 @@
         account](#use-the-cloudbots-without-a-dome9-account)
   - [Log Collection for
     Troubleshooting](#log-collection-for-troubleshooting)
-
-<p align="center">
-
-<a href="https://cloudbots.dome9.com">
-<img width="150" src="cloudbotslogo.svg"> </a>
-
-</p>
-
-<div data-align="center">
-
-    <h1><a target="_blank" href="https://cloudbots.dome9.com">CloudBots</a> is an automatic remediation solution for public cloud platforms (AWS, <a href="https://github.com/Dome9/cloud-bots-azure" targe="_blank">Azure</a> and <a href="https://github.com/Dome9/cloud-bots-gcp" targe="_blank">GCP</a>)</h1>
-
-</div>
-
   - [Overview](#overview)
       - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
       - [What does it do?](#what-does-it-do)
