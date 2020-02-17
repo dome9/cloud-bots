@@ -18,8 +18,9 @@ log delivery policy name is set as: vpcFlowLogDelivery
 log delivery role is set as: vpcFlowLogDelivery
 '''
 
-DESTINATION_INDEX = 0
-TRAFFIC_TYPE_INDEX = 1
+
+TRAFFIC_TYPE_INDEX = 0
+DESTINATION_INDEX = 1
 S3_ARN_INDEX = 2
 
 import boto3
