@@ -1,11 +1,11 @@
 <p align="center">
-    <a href="https://cloudbots.dome9.com">
-      <img width="150" src="cloudbotslogo.svg">
-    </a>
+<a href="https://cloudbots.dome9.com">
+<img width="150" src="cloudbotslogo.svg"> </a>
 </p>
 
 <div align="center">
     <h1><a target="_blank" href="https://cloudbots.dome9.com">CloudBots</a> is an automatic remediation solution for public cloud platforms (AWS, <a href="https://github.com/Dome9/cloud-bots-azure" targe="_blank">Azure</a> and <a href="https://github.com/Dome9/cloud-bots-gcp" targe="_blank">GCP</a>)</h1>
+
 </div>
 
   - [Overview](#overview)
@@ -20,33 +20,16 @@
     accounts](#deploy-cloudbots-to-your-aws-accounts)
       - [Setup your AWS account(s) for
         CloudBots](#setup-your-aws-accounts-for-cloudbots)
-      - [Onboarding for Multi mode](#onboarding-for-multi-mode)
+      - [Deploy for Multi mode](#deploy-for-multi-mode)
       - [Setup your Dome9 account](#setup-your-dome9-account)
-          - [Configure the rules](#configure-the-rules)
+          - [Configure remediations](#configure-remediations)
           - [Configure a Dome9 Continuous Compliance
             policy](#configure-a-dome9-continuous-compliance-policy)
       - [Use the CloudBots without a Dome9
         account](#use-the-cloudbots-without-a-dome9-account)
   - [Log Collection for
     Troubleshooting](#log-collection-for-troubleshooting)
-  - [Overview](#overview)
-      - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
-      - [What does it do?](#what-does-it-do)
-      - [How does it work?](#how-does-it-work)
-      - [The Bots](#the-bots)
-      - [Deployment modes](#deployment-modes)
-  - [Onboarding](#onboarding)
-      - [Setup your AWS account(s) for
-        CloudBots](#setup-your-aws-accounts-for-cloudbots)
-      - [Onboarding for Multi mode](#onboarding-for-multi-mode)
-  - [Setup your Dome9 account](#setup-your-dome9-account)
-      - [Configure the rules](#configure-the-rules)
-      - [Configure the Continuous Compliance
-        policy](#configure-the-continuous-compliance-policy)
-  - [Use the CloudBots without Dome9](#use-the-cloudbots-without-dome9)
-  - [Log Collection for
-    Troubleshooting](#log-collection-for-troubleshooting)
-
+	
 # Overview
 
 ## What are Dome9 CloudBots?
@@ -183,26 +166,44 @@ role for the additional account.
 
 ## Setup your Dome9 account
 
-On Dome9 you must add remediation tags to rules in a compliance ruleset.
+On Dome9 you define remediations, which will apply to selected rules in
+rulesets, and, optionally, for selected cloud accounts.
 
-### Configure the rules
+### Configure remediations
 
-Follow these steps in your Dome9 account to tag the compliance rules &
-rulesets to use bots as a remediation step.
+Follow these steps in your Dome9 account to create remediations.
 
-1.  In the Dome9 web application, navigate to the Rulesets page in the
-    Compliance & Governance menu.
+1.  In Dome9, navigate to the **Remediations** page in the **Posture
+    Management** menu.
 
-2.  Select or create a ruleset that will be used for the cloudbots.
+2.  Click **CREATE NEW REMEDIATION** (on the right).
 
-3.  Select the rules for which you want to add a remediation step.
+3.  Select the ruleset, from the list. The new remediation will apply to
+    rules in this ruleset (as selected by the additional selection
+    options).
 
-4.  In the Compliance Section add a row with the following string:
-    `AUTO: <bot-name> <params>` where *bot-name* is the name of the bot,
-    and *params* is a list of arguments for the bot (if any).
+4.  Select from these options, to select the rules in the ruleset. You
+    can select more than one option. All selected options will be
+    applied.
     
-    For example, `AUTO: ec2_stop_instance` will run the bot to stop an
-    EC2 instance.
+    1.  **Remediate by Rule** - select the rule in the ruleset, from a
+        list;
+    2.  **Remediate by Cloud Account** - select a specific cloud
+        account; if selected, all rules in the selected ruleset, for the
+        selected account, will be selected.
+    3.  **Remediate by Entity** - select a specific entity; all rules in
+        the selected ruleset, that apply to this entity, will be
+        selected.
+
+5.  Select a CloudBot, from the list. This is the remediation action
+    that will be applied to the cloud entities selected in the previous
+    step.
+
+6.  Optionally, add a comment to the remediation (it will be visible to
+    other users who use this remediation), and then click **SAVE**.
+
+The remediation will be applied to all entities selected, if compliance
+rules applied to them fail.
 
 ### Configure a Dome9 Continuous Compliance policy
 
@@ -210,8 +211,8 @@ Once the rules in the ruleset have been tagged for remediation, set up a
 Continuous Compliance policy to run the ruleset, and send findings to
 the SNS.
 
-1.  Navigate to the **Policies** page in the Compliance & Governance
-    menu.
+1.  Navigate to the **Compliance Policies** page in the **Posture
+    Management** menu.
 2.  Click **ADD POLICY** (on the right).
 3.  Select the account from the list, then click **NEXT**. For ‘single’
     mode, this will be the one account in which the bots are deployed.
@@ -226,7 +227,7 @@ the SNS.
 **Note:** Dome9 will send event messages to the SNS for new findings. To
 send events for previous findings, follow these steps:
 
-1.  Navigate to the **Policies** page.
+1.  Navigate to the **Compliance Policies** page.
 2.  Find the ruleset and account in the list, and hover over the right
     of the row, then click on the *Send All Alerts* icon.
     ![](docs/pictures/send_all_events_button.png)
