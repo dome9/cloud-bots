@@ -7,8 +7,8 @@ Example: AUTO: sg_single_rule_delete split=false protocol=TCP scope=0.0.0.0/0 di
 Sample GSL: SecurityGroup should not have inboundRules with [scope = '0.0.0.0/0' and port<=22 and portTo>=22]
 
 Conditions and caveats: Deleting a single rule on a security group can be difficult because the problematic port can be nested within a wider range of ports. If SSH is open because a SG has all of TCP open, do you want to delete the whole rule or would you break up the SG into the same scope but port 0-21 and a second rule for 23-end of TCP port range?
-Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped. 
-If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30). 
+Currently the way this is being addressed is using the 'split' parameter. If it's set as false, CloudBots will only look for the specific port in question. If it's nested within a larger port scope, it'll be skipped.
+If you set split to true, then the whole rule that the problematic port is nested in will be removed and 2 split rules will be added in its place (ex: if port 1-30 is open and you want to remove SSH, the new rules will be for port 1-21 and port 23-30).
 
 If you want to delete a rule that is open on any ports:
 Put Port 0 as the port to be deleted and the bot will remove the rule
@@ -46,7 +46,7 @@ def run_action(boto_session, rule, entity, params):
     global text_output, usage, portTo
 
     result = {}
-
+    protocol_to_remove = ''
     # Param retrieving
     try:
         params_dic = get_params(params)
@@ -81,10 +81,10 @@ def run_action(boto_session, rule, entity, params):
 
             # In case we want to delete the SG with protocol = 'All'  traffic
             if (protocol == 'ALL'):
-                if(split == True):
+                if (split == True):
                     rule['port'] = 0
                     rule['portTo'] = 65535
-                    protocol_to_remove = '-1'
+                    protocol_to_remove = '-1'  # -1 specify protocol = All
                     protocol = 'tcp'
                 else:
                     port = -1
@@ -108,8 +108,8 @@ def run_action(boto_session, rule, entity, params):
                 upper_port_number_to = rule['portTo']
                 break
 
-            if split == True and rule['port'] <= port and rule[
-                'portTo'] >= port:  # The port to delete is within a range of ports and will need to be extracted.
+            # The port to delete is within a range of ports and will need to be extracted.
+            if split == True and rule['port'] <= port <= rule['portTo']:
                 rule_to_delete = rule
                 # If port 22 is the issue, and the rule in question defines port 20-30:
                 # lower_port_number = 20
@@ -147,7 +147,8 @@ def run_action(boto_session, rule, entity, params):
             str_pot = 0 if port == -1 else port
             text_output = text_output + f'Security Group rule from port {str_pot} to port {portTo} successfully removed\n'
 
-    # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are needed. One for the lower section and one for the upper.
+    # If split is enabled, we'll need to re-add back in the rest of the ports that were deleted. Two calls are
+    # needed. One for the lower section and one for the upper.
     if split == True and port != 0:
         lower_port_number_to = port - 1
         upper_port_number = port + 1
@@ -181,7 +182,7 @@ def run_action(boto_session, rule, entity, params):
                         lower_port_number, upper_port_number_to)
                     upper_port_number_to = upper_port_number_to + 1
 
-            # in case that the revoked port was in the range
+
             # in case that the revoked port was in the range
             else:
                 responseCode = touch_sg(sg, direction, 'authorize', lower_port_number, lower_port_number_to, sg_id,
@@ -202,10 +203,10 @@ def run_action(boto_session, rule, entity, params):
                     text_output = text_output + 'Security Group ingress rule from port %s to port %s successfully added\n' % (
                         upper_port_number, upper_port_number_to)
 
-    if split == True:
-        if protocol_to_remove:
-            lower_port_number = -1
-            upper_port_number_to = 0
+    if split:
+        if '-1' == protocol_to_remove:  # -1 specify all protocols - bug fixed : '-1' cannot use as boolean
+            lower_port_number = 0
+            upper_port_number_to = -1
             protocol = protocol_to_remove
 
         responseCode = touch_sg(sg, direction, 'revoke', lower_port_number, upper_port_number_to, sg_id, scope,
