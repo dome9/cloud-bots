@@ -31,6 +31,9 @@
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
+  - [s3\_block\_public\_access](#s3_block_public_access)
+  
+  
   
 ###[Optional Bots](#optional-bots)
 - [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
@@ -404,6 +407,28 @@ arn:aws:s3:::my-bucket/my-logs/
 
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
+
+## s3\_block\_public\_access
+
+What it does: turn on S3 Bucket Block public access
+Usage: AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=<true|false>  BlockPublicPolicy_NewPUTRequests=<true|false>
+Limitations: none
+Notes:
+    -  before running this bot, ensure that your applications will work correctly without public access
+    - works with JSON - Full / Basic entity findings of Dome9
+Examples:
+    Block public access to buckets and objects granted through NEW AND OLD public ACLs and Bucket Policies:
+    AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=true  BlockPublicPolicy_NewPUTRequests=true
+    
+   Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
+   ( granted through new public ACLs and Bucket Policies Configuration Stays the same ):
+   AUTO: s3_block_public_access
+
+   Block public access to buckets and objects granted through any existing ACLs and Bucket Policies But NOT for
+   new public ACLs and Bucket Policies:
+   AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=false  BlockPublicPolicy_NewPUTRequests=false
+
+
 
 # Optional Bots
 
