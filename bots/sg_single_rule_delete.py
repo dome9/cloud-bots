@@ -204,7 +204,7 @@ def run_action(boto_session, rule, entity, params):
                         upper_port_number, upper_port_number_to)
 
     if split:
-        if '-1' == protocol_to_remove:  # -1 specify all protocols - bug fixed : '-1' cannot use as boolean
+        if protocol_to_remove == '-1':  # -1 specify all protocols - bug fixed : '-1' cannot use as boolean
             lower_port_number = 0
             upper_port_number_to = -1
             protocol = protocol_to_remove
