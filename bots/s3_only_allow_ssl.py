@@ -1,7 +1,7 @@
 """
-## s3_only_allow_SSL
+## s3_only_allow_ssl
 What it does: Ensure that S3 Buckets enforce encryption of data transfers using Secure Sockets Layer (SSL)
-Usage: AUTO: s3_only_allow_SSL
+Usage: AUTO: s3_only_allow_ssl
 Note: The bot looks at the bucket policy and adds to the current policy the missing actions(s3:GetObject and s3:PutObject)
       and the SSL statement.
       if no policy in the bucket an SSL policy will add to the bucket
