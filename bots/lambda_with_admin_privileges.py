@@ -1,0 +1,60 @@
+"""
+## lambda_with_admin_privileges
+What it does: For each lambda it check all policy that grant blanket permissions ('*') to resources and
+             detach it from the lambda role
+Usage: AUTO: lambda_with_admin_privileges
+Note: The bot will detach the policies that have admin privileges from the lambda role so you will need to configure the specific
+     policies to grant positive permissions to specific AWS services or actions
+Limitations:None
+"""
+
+from botocore.exceptions import ClientError
+
+
+def run_action(boto_session, rule, entity, params):
+    text_output = ""
+
+    # Create an iam client
+    iam_client = boto_session.client('iam')
+
+    policy = entity["executionRole"]
+    role_name = policy["combinedPolicies"][0]["name"]
+    try:
+        arn_list = get_all_policies(policy)
+        print(arn_list)
+
+        for arn in arn_list:
+            result = iam_client.detach_role_policy(
+                RoleName=role_name,
+                PolicyArn=arn
+            )
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = "Unexpected error: %s \n" % str(result)
+            else:
+                policy_name = arn.split('/')[-1]
+                text_output = text_output + ' detach policy: %s from lambda role: %s' % (policy_name, role_name)
+
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
+
+    return text_output
+
+
+# this function find all the polices that grant blanket permissions ('*') to resource
+def get_all_policies(policy):
+    arn_list = []
+
+    try:
+        for policy_name in policy['combinedPolicies']:  # for any policy
+            for Statement in policy_name['policyDocument']['Statement']:  # check the Statement of the policy
+                if Statement['Effect'] == "Allow" and 'Resource' in Statement and "*" in str(Statement['Resource']):
+                    arn_list.append(policy_name['id'])
+
+        arn_list = list(dict.fromkeys(arn_list))  # remove duplicate in the list
+
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
+        return text_output
+
+    return arn_list
