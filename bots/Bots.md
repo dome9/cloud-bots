@@ -32,6 +32,7 @@
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   - [s3\_block\_public\_access](#s3_block_public_access)
+  - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   
   
   
@@ -411,23 +412,53 @@ is set as: vpcFlowLogDelivery
 ## s3\_block\_public\_access
 
 What it does: turn on S3 Bucket Block public access
-Usage: AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=<true|false>  BlockPublicPolicy_NewPUTRequests=<true|false>
+
+Usage:  s3_block_public_access <BlockNewPublicAcls> <BlockNewPublicPolicy>
+
+Example: AUTO: s3_block_public_access <true|false|-> <true|false|->
+When - set for ignore the specific attribute if its optional so usage will be
+
 Limitations: none
+
 Notes:
     -  before running this bot, ensure that your applications will work correctly without public access
-    - works with JSON - Full / Basic entity findings of Dome9
-Examples:
-    Block public access to buckets and objects granted through NEW AND OLD public ACLs and Bucket Policies:
-    AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=true  BlockPublicPolicy_NewPUTRequests=true
     
-   Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
-   ( granted through new public ACLs and Bucket Policies Configuration Stays the same ):
-   AUTO: s3_block_public_access
+Another Examples:
 
-   Block public access to buckets and objects granted through any existing ACLs and Bucket Policies But NOT for
-   new public ACLs and Bucket Policies:
-   AUTO: s3_block_public_access BlockPublicAcls_NewPUTRequests=false  BlockPublicPolicy_NewPUTRequests=false
+    Block public access to buckets and objects granted through NEW AND OLD public ACLs and Bucket Policies:
+    AUTO: s3_block_public_access true true
 
+    Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
+    ( granted through new public ACLs and Bucket Policies Configuration Stays Unchanged ):
+    AUTO: s3_block_public_access - -
+
+    Block public access to buckets and objects granted through any existing ACLs and Bucket Policies BUT NOT for
+    new public ACLs and Bucket Policies added/created:
+    AUTO: s3_block_public_access false false
+
+     Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
+     BUT NOT for new public ACLs ,   new Bucket Policies Configuration Stays Unchanged :
+    AUTO: s3_block_public_access false -
+
+## sg\_modify\_scope\_by\_port
+
+What it does: Security group rule modify scope by a given port and scope. 
+
+Direction can be : inbound or outbound
+
+Usage: AUTO: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
+        When '*' set for replacing any rule with the specific port
+        
+Examples:
+        AUTO: sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound 
+        AUTO: sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
+        
+Notes:
+    -  if the port is in a rule's port range the bot will change the rule's ip to desire ip , to avoid that
+      specify existing rule's scope instead of using '*'
+    - to split the rule around the port you can use the bot : #sg_single_rule_delete
+
+Limitations: IPv6 is not supported yet
 
 
 # Optional Bots
