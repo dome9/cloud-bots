@@ -1,10 +1,10 @@
 """
 ## cloudtrail_enable_log_file_validation
 What it does: Enable log file validation in cloudTrail
-Usage: AUTO: cloudtrail_enable_log_file_validation.py
+Usage: AUTO: cloudtrail_enable_log_file_validation
 Limitations: None
-Defaults:
 """
+
 from botocore.exceptions import ClientError
 
 
@@ -12,18 +12,18 @@ def run_action(boto_session, rule, entity, params):
     # create a cloudTrail session
     cloudTrail_client = boto_session.client('cloudtrail')
 
-    cloudTrail_name = entity['name']
+    cloudTrail = entity['id']
 
     try:
         result = cloudTrail_client.update_trail(
-            Name=cloudTrail_name,
+            Name=cloudTrail,
             EnableLogFileValidation=True,
         )
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
             text_output = "Unexpected error: %s \n" % str(result)
         else:
-            text_output = "enable log File validation in CloudTrail: %s  \n" % cloudTrail_name
+            text_output = "Enable log File validation in CloudTrail: %s" % cloudTrail.split('/')[-1]
 
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e

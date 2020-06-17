@@ -20,7 +20,7 @@
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
   - [igw\_delete](#igw_delete)
   - [kms\_enable\_rotation](#kms_enable_rotation)
-  - [lambda\_with\_admin\_privileges](#lambda_with_admin_privileges)
+  - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [s3\_delete\_acls](#s3_delete_acls)
@@ -28,7 +28,7 @@
   - [s3\_enable\_encryption](#s3_enable_encryption)
   - [s3\_enable\_logging](#s3_enable_logging)
   - [s3\_enable\_versioning](#s3_enable_versioning)
-  - [s3\_enable\_versioning](#s3_only_allow_ssl)
+  - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
@@ -66,9 +66,9 @@ Limitations: none
 
 ## cloudtrail\_enable\_log\_file\_validation
 What it does: Enable log file validation in cloudTrail
-Usage: AUTO: cloudtrail_enable_log_file_validation.py
+Usage: AUTO: cloudtrail_enable_log_file_validation
 Limitations: None
-Defaults:
+
 
 ## cloudtrail\_send\_to\_cloudwatch
 
@@ -249,12 +249,12 @@ Sample GSL: KMS where isCustomerManaged=true and deletionDate\!=0 should
 have rotationStatus=true Limitations: Edits can not be made to AWS maged
 keys. Only customer managed keys can be edited.
 
-## lambda\_with\_admin\_privileges
-What it does: For each lambda it check all policy that grant blanket permissions ('*') to resources and
-             detach it from the lambda role
-Usage: AUTO: lambda_with_admin_privileges
+## lambda\_detach\_blanket\_permissions
+What it does: For lambda that failed, it check all the policies that grant blanket permissions ('*') to resources and
+              detach it from the lambda role
+Usage: AUTO: lambda_detach_blanket_permissions
 Note: The bot will detach the policies that have admin privileges from the lambda role so you will need to configure the specific
-     policies to grant positive permissions to specific AWS services or actions
+      policies to grant positive permissions to specific AWS services or actions
 Limitations:None
 
 ## mark\_for\_stop\_ec2\_resource
@@ -333,10 +333,10 @@ Limitations: none
 
 ## s3\_only\_allow\_ssl
 What it does: Ensure that S3 Buckets enforce encryption of data transfers using Secure Sockets Layer (SSL)
-Usage: AUTO: s3_only_allow_SSL
+Usage: AUTO: s3_only_allow_ssl
 Note: The bot looks at the bucket policy and adds to the current policy the missing actions(s3:GetObject and s3:PutObject)
       and the SSL statement.
-      if no policy in the bucket an SSL policy will add to the bucket
+      if no policy in the bucket, an SSL policy will add to the bucket
 Limitations: none
 
 ## sg\_delete

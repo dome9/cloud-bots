@@ -1,10 +1,10 @@
 """
-## lambda_with_admin_privileges
-What it does: For each lambda it check all policy that grant blanket permissions ('*') to resources and
-             detach it from the lambda role
-Usage: AUTO: lambda_with_admin_privileges
+## lambda_detach_blanket_permissions
+What it does: For lambda that failed, it check all the policies that grant blanket permissions ('*') to resources and
+              detach it from the lambda role
+Usage: AUTO: lambda_detach_blanket_permissions
 Note: The bot will detach the policies that have admin privileges from the lambda role so you will need to configure the specific
-     policies to grant positive permissions to specific AWS services or actions
+      policies to grant positive permissions to specific AWS services or actions
 Limitations:None
 """
 
@@ -17,23 +17,24 @@ def run_action(boto_session, rule, entity, params):
     # Create an iam client
     iam_client = boto_session.client('iam')
 
-    policy = entity["executionRole"]
-    role_name = policy["combinedPolicies"][0]["name"]
+    policy = entity.get('executionRole')
+    role_name = policy.get('name')
+
     try:
-        arn_list = get_all_policies(policy)
-        print(arn_list)
+        arn_list = get_admin_policies(policy)
 
         for arn in arn_list:
-            result = iam_client.detach_role_policy(
-                RoleName=role_name,
-                PolicyArn=arn
-            )
-            responseCode = result['ResponseMetadata']['HTTPStatusCode']
-            if responseCode >= 400:
-                text_output = "Unexpected error: %s \n" % str(result)
-            else:
+            try:
+                iam_client.detach_role_policy(
+                    RoleName=role_name,
+                    PolicyArn=arn
+                )
+
                 policy_name = arn.split('/')[-1]
                 text_output = text_output + ' detach policy: %s from lambda role: %s' % (policy_name, role_name)
+
+            except ClientError as e:
+                text_output = "Unexpected error: %s \n" % e
 
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
@@ -41,8 +42,10 @@ def run_action(boto_session, rule, entity, params):
     return text_output
 
 
-# this function find all the polices that grant blanket permissions ('*') to resource
-def get_all_policies(policy):
+# The function find all the polices that grant blanket permissions ('*') to resource and return
+# the polices arn in a list
+def get_admin_policies(policy):
+
     arn_list = []
 
     try:
