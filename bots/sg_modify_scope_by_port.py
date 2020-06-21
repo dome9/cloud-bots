@@ -28,7 +28,7 @@ checks if a rule exists in a security group , returns false/true
 """
 
 
-def rule_exists(sg, rule, direction, scope):
+def is_rule_exists_in_sg(sg, rule, direction, scope):
     if direction.lower() == 'inbound':
         for perm in sg.ip_permissions:
             if perm['FromPort'] == rule[PORT_FROM] and perm['ToPort'] == rule[PORT_TO] and \
@@ -83,10 +83,11 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
 
+        # check if one is existing first ! avoid duplicates and exception
+        found = is_rule_exists_in_sg(sg, rule, direction, scope)
+        if found:
+            return text_output
         try:
-            # check if one is existing first ! avoid duplicates and exception
-            if rule_exists(sg, rule, direction, scope):
-                return text_output
 
             sg.authorize_ingress(
                 CidrIp=scope,
@@ -101,6 +102,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
+
     elif direction == 'outbound':
         try:
             sg.revoke_egress(
@@ -113,12 +115,6 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                                 'CidrIp': rule[SCOPE]
                             },
                         ],
-                        # 'Ipv6Ranges': [ # future work
-                        #     {
-                        #         'CidrIpv6': 'string',
-                        #         'Description': 'string'
-                        #     },
-                        # ],
                         'ToPort': rule[PORT_TO]
                     },
                 ]
@@ -129,11 +125,12 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
 
-        try:
-            # check if one is existing first ! avoid duplicates and exception
-            if rule_exists(sg, rule, direction, scope):
-                return text_output
+        # check if one is existing first ! avoid duplicates and exception
+        found = is_rule_exists_in_sg(sg, rule, direction, scope)
+        if found:
+            return text_output
 
+        try:
             sg.authorize_egress(
                 IpPermissions=[  # only IpPermissions supported with this func !
                     {
@@ -144,12 +141,6 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                                 'CidrIp': scope
                             },
                         ],
-                        # 'Ipv6Ranges': [ # future work
-                        #     {
-                        #         'CidrIpv6': 'string',
-                        #         'Description': 'string'
-                        #     },
-                        # ],
                         'ToPort': rule[PORT_TO]
                     },
                 ]
