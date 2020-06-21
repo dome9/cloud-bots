@@ -36,11 +36,8 @@ def run_action(boto_session, rule, entity, params):
                 'RestrictPublicBuckets': True
             }
         )
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
-        else:
-            text_output = text_output + "Bucket's Public Access Block enabled: %s \n" % bucket_id
+        text_output = text_output + "Bucket's Public Access Block enabled: %s" % bucket_id + ', ' \
+                                    'NEW and OLD public ACLs and Bucket Policies are Blocked now. '
 
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
