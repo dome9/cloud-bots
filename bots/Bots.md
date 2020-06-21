@@ -31,7 +31,6 @@
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
-  - [s3\_block\_public\_access](#s3_block_public_access)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   
   
@@ -409,36 +408,6 @@ arn:aws:s3:::my-bucket/my-logs/
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
 
-## s3\_block\_public\_access
-
-What it does: turn on S3 Bucket Block public access
-
-Usage:  s3_block_public_access <BlockNewPublicAcls> <BlockNewPublicPolicy>
-
-Example: AUTO: s3_block_public_access <true|false|-> <true|false|->
-When - set for ignore the specific attribute if its optional so usage will be
-
-Limitations: none
-
-Notes:
-    -  before running this bot, ensure that your applications will work correctly without public access
-    
-Another Examples:
-
-    Block public access to buckets and objects granted through NEW AND OLD public ACLs and Bucket Policies:
-    AUTO: s3_block_public_access true true
-
-    Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
-    ( granted through new public ACLs and Bucket Policies Configuration Stays Unchanged ):
-    AUTO: s3_block_public_access - -
-
-    Block public access to buckets and objects granted through any existing ACLs and Bucket Policies BUT NOT for
-    new public ACLs and Bucket Policies added/created:
-    AUTO: s3_block_public_access false false
-
-     Block public access to buckets and objects granted through any existing ACLs and Bucket Policies
-     BUT NOT for new public ACLs ,   new Bucket Policies Configuration Stays Unchanged :
-    AUTO: s3_block_public_access false -
 
 ## sg\_modify\_scope\_by\_port
 
