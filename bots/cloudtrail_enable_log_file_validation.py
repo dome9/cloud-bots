@@ -19,11 +19,7 @@ def run_action(boto_session, rule, entity, params):
             Name=cloudTrail,
             EnableLogFileValidation=True,
         )
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = "Unexpected error: %s \n" % str(result)
-        else:
-            text_output = "Enable log File validation in CloudTrail: %s" % cloudTrail.split('/')[-1]
+        text_output = "Enable log File validation in CloudTrail: %s" % cloudTrail.split('/')[-1]
 
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
