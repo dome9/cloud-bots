@@ -15,7 +15,7 @@ def run_action(boto_session, rule, entity, params):
     cloudTrail = entity['id']
 
     try:
-        result = cloudTrail_client.update_trail(
+        cloudTrail_client.update_trail(
             Name=cloudTrail,
             EnableLogFileValidation=True,
         )
