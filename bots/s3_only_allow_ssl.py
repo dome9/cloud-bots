@@ -113,7 +113,8 @@ def get_missing_statements(bucket_name, account_number, options):
     missing_action = find_missing_action(options)
 
     if missing_action == 'ssl':  # need to add only ssl action
-        SSL_STAT.get("Resource").replace("bucketName", bucket_name)
+
+        SSL_STAT["Resource"] = SSL_STAT.get("Resource").replace("bucketName", bucket_name)
         return SSL_STAT, None
 
     elif missing_action == 'Get':  # need to add only 's3:PutObject' action
