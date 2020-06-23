@@ -4,8 +4,8 @@
 # Usage: AUTO: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
         When '*' set for replacing any rule with the specific port
 # Examples:
-        AUTO: sg_modify_security_group_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
-        AUTO: sg_modify_security_group_scope_by_port 22 * 10.0.0.0/24 inbound
+        AUTO: sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
+        AUTO: sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
 #Notes:
     -  if the port is in a rule's port range the bot will change the rule's ip to desire ip , to avoid that
       specify existing rule's scope instead of using '*'
