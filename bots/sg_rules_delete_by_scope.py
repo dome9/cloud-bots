@@ -1,6 +1,6 @@
 """
 ## sg_rules_delete_by_scope
-What it does: Deletes all rules on a security group with a specific scope
+What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
 Usage: AUTO: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
 
 Example: AUTO: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
@@ -11,13 +11,14 @@ Parameters:
     protocol: TCP/ UDP/ *
 -When '*' is any value of the parameter
 
-Another Examples:
+Other Examples:
     all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
     sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
 
     all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
     sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
-
+Notes :
+    - make sure
 Limitations: IPv6 is not supported
 
 """
@@ -106,10 +107,10 @@ def run_action(boto_session, rule, entity, params):
 
     ec2_resource = boto_session.resource('ec2')
     sg = ec2_resource.SecurityGroup(sg_id)
-    temp =str(port)
+    port = str(port)
     for rule in entity[f'{direction}Rules']:
         if scope == rule[SCOPE]:
-            if int(port) == rule[PORT_FROM] == rule[PORT_TO] or str(port) == "*":
+            if port == '*' or int(port) == rule[PORT_FROM] == rule[PORT_TO]:
                 if protocol == rule[PROTOCOL] or protocol == '*':
                     if rule[PROTOCOL] == 'ALL':
                         rule[PROTOCOL] = ALL_TRAFFIC_PROTOCOL  # '-1'
