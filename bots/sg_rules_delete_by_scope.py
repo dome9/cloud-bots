@@ -18,7 +18,8 @@ Other Examples:
     all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
     sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
 Notes :
-    - make sure
+    -  before running this bot, ensure that your applications will work correctly without those rules
+    - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
 Limitations: IPv6 is not supported
 
 """
