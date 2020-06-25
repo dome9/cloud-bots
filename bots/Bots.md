@@ -34,6 +34,7 @@
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
+  - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   
 ###[Optional Bots](#optional-bots)
 - [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
@@ -431,6 +432,17 @@ arn:aws:s3:::my-bucket/my-logs/
 
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
+
+## s3\_block\_all\_public\_access
+What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
+through Future New AND Existing public ACLs and Bucket Policies.
+
+Usage:  s3_block_public_all_access
+
+Limitations: none
+
+Notes:
+    -  before running this bot, ensure that your applications will work correctly without public access
 
 # Optional Bots
 
