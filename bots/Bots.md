@@ -433,7 +433,7 @@ arn:aws:s3:::my-bucket/my-logs/
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
 
-## s3_block_all_public_access
+## s3\_block\_all\_public\_access
 What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
 through Future New AND Existing public ACLs and Bucket Policies.
 

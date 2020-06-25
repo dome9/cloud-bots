@@ -1,7 +1,7 @@
 
 """
 ## s3_block_all_public_access
-What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
+What it does: turn on S3 Bucket's Block all Public Access : Block public access to buckets and objects granted
 through Future New AND Existing public ACLs and Bucket Policies.
 
 Usage:  s3_block_public_all_access
