@@ -53,7 +53,7 @@ checks for ip validity , fix it to be right
 """
 
 
-def fix_malformed(rule):
+def verify_scope_is_cidr(rule):
     ip = re.split('/|\.', str(rule[SCOPE]))  # break ip to blocks
     rule[SCOPE] = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + ip[3] + '/' + ip[4]
     pass
@@ -66,7 +66,7 @@ creates & removes the specified rules from a security group
 
 def update_sg(sg, sg_id, rule, scope, direction, text_output):
     # make sure that scope is in CIDR notation for example, 203.0.113.0/24
-    fix_malformed(rule)
+    verify_scope_is_cidr(rule)
 
     if direction == 'inbound':
         try:
@@ -83,6 +83,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
+            return text_output
 
         # check if one is existing first ! avoid duplicates and exception
         found = is_rule_exists_in_sg(sg, rule, direction, scope)
@@ -103,6 +104,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
+            return text_output
 
     elif direction == 'outbound':
         try:
@@ -125,6 +127,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
+            return text_output
 
         # check if one is existing first ! avoid duplicates and exception
         found = is_rule_exists_in_sg(sg, rule, direction, scope)
@@ -152,6 +155,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
+            return text_output
     else:
         text_output = text_output + f'Error unknown direction ; \n'
 
@@ -165,16 +169,14 @@ def run_action(boto_session, rule, entity, params):
     try:
         port, change_from_scope, change_to_scope, direction = params
     except Exception as e:
-        text_output = text_output + 'Params handling error. Please check parameters and try again.\n ' + e + '\n' \
-                      + 'Usage: AUTO: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> ' \
-                        '<direction> '
+        text_output = text_output + 'Params handling error. Please check parameters and try again.\n ' + e + '\n'
         raise Exception(text_output)
 
     ec2_resource = boto_session.resource('ec2')
     sg = ec2_resource.SecurityGroup(sg_id)
 
     for rule in entity[f'{direction}Rules']:
-        if rule[PORT_FROM] <= int(port) <= rule[PORT_TO] and change_to_scope != rule[SCOPE]:
+        if rule[PORT_FROM] <= int(port) <= rule[PORT_TO]:
             if change_from_scope == rule[SCOPE] or change_from_scope == '*':
                 if rule[PROTOCOL] == 'ALL':
                     rule[PROTOCOL] = ALL_TRAFFIC_PROTOCOL  # '-1'
