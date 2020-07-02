@@ -353,6 +353,30 @@ What it does: Deletes all ingress and egress rules from a SG
 Usage: AUTO: sg\_rules\_delete  
 Limitations: none
 
+## sg_rules_delete_by_scope
+
+What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
+Usage: AUTO: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
+
+Example: AUTO: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
+Parameters:
+    scope: a.b.c.d/e
+    direction: inbound/ outbound
+    port: number/ *
+    protocol: TCP/ UDP/ *
+-When '*' is any value of the parameter
+
+Other Examples:
+    all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
+    sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
+
+    all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
+    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
+Notes :
+    -  before running this bot, ensure that your applications will work correctly without those rules
+    - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
+Limitations: IPv6 is not supported
+
 ## sg\_single\_rule\_delete
 
 What it does: Deletes a single rule on a security group Usage: AUTO:
@@ -432,30 +456,6 @@ arn:aws:s3:::my-bucket/my-logs/
 
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
-
-## sg_rules_delete_by_scope
-
-What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
-Usage: AUTO: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
-
-Example: AUTO: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
-Parameters:
-    scope: a.b.c.d/e
-    direction: inbound/ outbound
-    port: number/ *
-    protocol: TCP/ UDP/ *
--When '*' is any value of the parameter
-
-Other Examples:
-    all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
-    sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
-
-    all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
-    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
-Notes :
-    -  before running this bot, ensure that your applications will work correctly without those rules
-    - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
-Limitations: IPv6 is not supported
 
 
 # Optional Bots
