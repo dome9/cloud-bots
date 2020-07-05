@@ -18,6 +18,8 @@ Other Examples:
     all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
     sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
 Notes :
+    - the bot deletes the rule without splitting ports ( do not create new rules without the deleted port)
+      for deleting rule with split use - sg_single_rule_delete bot .
     -  before running this bot, ensure that your applications will work correctly without those rules
     - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
 Limitations: IPv6 is not supported
@@ -34,14 +36,24 @@ ALL_TRAFFIC_PORT = 0
 ALL_TRAFFIC_PROTOCOL = '-1'
 
 """
-checks for ip validity , fix it to be right
+checks for ip validity ,else fix it to be right
 """
 
 
-def fix_malformed(rule):
+def verify_scope_is_cidr(rule):
     ip = re.split('/|\.', str(rule[SCOPE]))  # break ip to blocks
     rule[SCOPE] = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + ip[3] + '/' + ip[4]
     pass
+
+
+"""
+returns a string of rule's id by scope,port,direction,etc.
+"""
+
+
+def stringify_rule(rule):
+    return 'rule: ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(rule[PORT_TO]) + ',' + \
+           rule[PROTOCOL].lower() + ' '
 
 
 """
@@ -49,9 +61,9 @@ creates & removes the specified rules from a security group
 """
 
 
-def delete_sg(sg, sg_id, rule,direction, text_output):
+def delete_sg(sg, sg_id, rule, direction, text_output):
     # make sure that scope is in CIDR notation for example, 203.0.113.0/24
-    fix_malformed(rule)
+    verify_scope_is_cidr(rule)
 
     if direction == 'inbound':
         try:
@@ -62,9 +74,7 @@ def delete_sg(sg, sg_id, rule,direction, text_output):
                 GroupId=sg_id,
                 IpProtocol=rule[PROTOCOL].lower()
             )
-            text_output = text_output + ' rule : ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + \
-                          str(sg_id) + ',' + rule[PROTOCOL].lower() + ' deleted successfully ;'
+            text_output = text_output + stringify_rule(rule) + 'deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -85,8 +95,7 @@ def delete_sg(sg, sg_id, rule,direction, text_output):
                     },
                 ]
             )
-            text_output = text_output + ' rule : ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + str(sg_id) + ',' + rule[PROTOCOL].lower() + ' deleted successfully ;'
+            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -98,13 +107,14 @@ def delete_sg(sg, sg_id, rule,direction, text_output):
 
 
 def run_action(boto_session, rule, entity, params):
-    text_output = 'Run bot sg_rules_delete_by_scope.'
+    text_output = 'Run Bot sg_rules_delete_by_scope. '
     sg_id = entity['id']
     # Param retrieving
     try:
         scope, direction, port, protocol = params  # get params
     except Exception as e:
-        return e
+        text_output = text_output + f'Params handling error. Please check parameters and try again. Error: {e}'
+        raise Exception(text_output)
 
     ec2_resource = boto_session.resource('ec2')
     sg = ec2_resource.SecurityGroup(sg_id)
@@ -112,11 +122,11 @@ def run_action(boto_session, rule, entity, params):
     for rule in entity[f'{direction}Rules']:
         if scope == rule[SCOPE]:
             if port == '*' or int(port) == rule[PORT_FROM] == rule[PORT_TO]:
-                if protocol == rule[PROTOCOL] or protocol == '*':
+                if protocol.lower() == rule[PROTOCOL].lower() or protocol == '*':
                     if rule[PROTOCOL] == 'ALL':
                         rule[PROTOCOL] = ALL_TRAFFIC_PROTOCOL  # '-1'
-                    text_output = text_output + ' rule was found in security group with port in range ;'
-                    text_output = delete_sg(sg, sg_id, rule,  direction, text_output)
+                    text_output = text_output + stringify_rule(rule) + 'rule was found in security group with port in range; '
+                    text_output = delete_sg(sg, sg_id, rule, direction, text_output)
 
         else:
             continue
