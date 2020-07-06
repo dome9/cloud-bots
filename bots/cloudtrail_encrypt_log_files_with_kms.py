@@ -9,7 +9,7 @@ Limitations:None
 import json
 from botocore.exceptions import ClientError
 
-BUCKET_POLICY = {
+KMS_POLICY = {
     "Version": "2012-10-17",
     "Statement": [
 
@@ -135,12 +135,12 @@ def create_kms_policy(iam_client, account_id):
             "kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
         DECRYPT_STAT["Condition"]["StringEquals"]['kms:CallerAccount'] = account_id
 
-        BUCKET_POLICY['Statement'].append(IAM_STAT)
-        BUCKET_POLICY['Statement'].append(ENCRYPT_STAT)
-        BUCKET_POLICY['Statement'].append(DESCRIBE_STAT)
-        BUCKET_POLICY['Statement'].append(DECRYPT_STAT)
+        KMS_POLICY['Statement'].append(IAM_STAT)
+        KMS_POLICY['Statement'].append(ENCRYPT_STAT)
+        KMS_POLICY['Statement'].append(DESCRIBE_STAT)
+        KMS_POLICY['Statement'].append(DECRYPT_STAT)
 
-        text_output = json.dumps(BUCKET_POLICY)
+        text_output = json.dumps(KMS_POLICY)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
