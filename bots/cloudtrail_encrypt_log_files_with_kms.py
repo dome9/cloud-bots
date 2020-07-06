@@ -1,7 +1,7 @@
 """
 ## cloudtrail_encrypt_log_files_with_kms
-What it does: create Customer keys with policy and then use the key to encrypt log file in the cloudTrial
-Pre-set Settings:
+What it does: create Customer keys with the correct policy for encrypt logs file,
+              and then use the key to encrypt log file in the cloudTrial
 Note: This bot create a new Customer keys
 Limitations:None
 """
@@ -9,13 +9,14 @@ Limitations:None
 import json
 from botocore.exceptions import ClientError
 
+
 KMS_POLICY = {
     "Version": "2012-10-17",
     "Statement": [
 
     ]
 }
-IAM_STAT = {
+IAM_STATEMENT = {
     "Sid": "Enable IAM User Permissions",
     "Effect": "Allow",
     "Principal": {
@@ -24,7 +25,7 @@ IAM_STAT = {
     "Action": "kms:*",
     "Resource": "*"
 }
-ENCRYPT_STAT = {
+ENCRYPT_STATEMENT = {
     "Sid": "Allow CloudTrail to encrypt logs",
     "Effect": "Allow",
     "Principal": {
@@ -38,7 +39,7 @@ ENCRYPT_STAT = {
         }
     }
 }
-DESCRIBE_STAT = {
+DESCRIBE_STATEMENT = {
     "Sid": "Allow CloudTrail to describe key",
     "Effect": "Allow",
     "Principal": {
@@ -47,7 +48,7 @@ DESCRIBE_STAT = {
     "Action": "kms:DescribeKey",
     "Resource": "*"
 }
-DECRYPT_STAT = {
+DECRYPT_STATEMENT = {
     "Sid": "Allow principals in the account to decrypt log files",
     "Effect": "Allow",
     "Principal": {
@@ -84,6 +85,10 @@ def run_action(boto_session, rule, entity, params):
 
         key_id = create_customer_key(kms_client, iam_client, account_id)
 
+        kms_client.enable_key_rotation(
+            KeyId=key_id
+        )
+
         cloudtrail_client.update_trail(
             Name=cloudTrail_name,
             KmsKeyId=key_id,
@@ -98,7 +103,7 @@ def run_action(boto_session, rule, entity, params):
     return text_output
 
 
-# The function get the policy and create a customer key
+# The function create a customer key by creating the correct policy
 def create_customer_key(kms_client, iam_client, account_id):
     try:
 
@@ -117,28 +122,25 @@ def create_customer_key(kms_client, iam_client, account_id):
     return text_output
 
 
-# Create a kms policy with Allow CloudTrail to encrypt logs
+# Create a kms policy with Allow CloudTrail to encrypt decrypt and describe logs files
 def create_kms_policy(iam_client, account_id):
     try:
 
-        result = iam_client.get_user()
+        result = iam_client.get_user()  # To get the iam user for the policy
         user_name = result['User']['UserName']
 
-        IAM_STAT["Principal"]["AWS"] = IAM_STAT.get("Principal").get("AWS").replace("user_name", user_name)
-        IAM_STAT["Principal"]["AWS"] = IAM_STAT.get("Principal").get("AWS").replace("account_id", account_id)
-        ENCRYPT_STAT["Condition"]["StringLike"]["kms:EncryptionContext:aws:cloudtrail:arn"] = ENCRYPT_STAT.get(
-            "Condition").get(
-            "StringLike").get(
-            "kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
-        DECRYPT_STAT["Condition"]["StringLike"]["kms:EncryptionContext:aws:cloudtrail:arn"] = DECRYPT_STAT.get("Condition").get(
-            "StringLike").get(
-            "kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
-        DECRYPT_STAT["Condition"]["StringEquals"]['kms:CallerAccount'] = account_id
+        IAM_STATEMENT["Principal"]["AWS"] = IAM_STATEMENT.get("Principal").get("AWS").replace("user_name", user_name)
+        IAM_STATEMENT["Principal"]["AWS"] = IAM_STATEMENT.get("Principal").get("AWS").replace("account_id", account_id)
 
-        KMS_POLICY['Statement'].append(IAM_STAT)
-        KMS_POLICY['Statement'].append(ENCRYPT_STAT)
-        KMS_POLICY['Statement'].append(DESCRIBE_STAT)
-        KMS_POLICY['Statement'].append(DECRYPT_STAT)
+        ENCRYPT_STATEMENT["Condition"]["StringLike"]["kms:EncryptionContext:aws:cloudtrail:arn"] = ENCRYPT_STATEMENT.get("Condition").get("StringLike").get("kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
+
+        DECRYPT_STATEMENT["Condition"]["StringLike"]["kms:EncryptionContext:aws:cloudtrail:arn"] = DECRYPT_STATEMENT.get("Condition").get("StringLike").get("kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
+        DECRYPT_STATEMENT["Condition"]["StringEquals"]['kms:CallerAccount'] = account_id
+
+        KMS_POLICY['Statement'].append(IAM_STATEMENT)
+        KMS_POLICY['Statement'].append(ENCRYPT_STATEMENT)
+        KMS_POLICY['Statement'].append(DESCRIBE_STATEMENT)
+        KMS_POLICY['Statement'].append(DECRYPT_STATEMENT)
 
         text_output = json.dumps(KMS_POLICY)
 
