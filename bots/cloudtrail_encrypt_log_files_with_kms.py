@@ -78,7 +78,7 @@ def run_action(boto_session, rule, entity, params):
     # create a kms session
     kms_client = boto_session.client('kms')
 
-    cloudTrail_name = entity['name']
+    cloudTrail_name = entity['id']
     account_id = entity['accountNumber']
 
     try:
@@ -95,7 +95,7 @@ def run_action(boto_session, rule, entity, params):
             EnableLogFileValidation=True,
         )
 
-        text_output = "CloudTrial %s encrypt log file with kms %s." % (cloudTrail_name, key_id)
+        text_output = "CloudTrial %s encrypt log file with kms %s." % (cloudTrail_name.split('/')[-1], key_id)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
