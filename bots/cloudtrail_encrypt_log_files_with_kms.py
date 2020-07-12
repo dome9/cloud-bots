@@ -12,9 +12,7 @@ from botocore.exceptions import ClientError
 
 KMS_POLICY = {
     "Version": "2012-10-17",
-    "Statement": [
-
-    ]
+    "Statement": []
 }
 IAM_STATEMENT = {
     "Sid": "Enable IAM User Permissions",
@@ -85,17 +83,14 @@ def run_action(boto_session, rule, entity, params):
 
         key_id = create_customer_key(kms_client, iam_client, account_id)
 
-        kms_client.enable_key_rotation(
-            KeyId=key_id
-        )
-
+        # Enable the encryption in the cloudtrail
         cloudtrail_client.update_trail(
             Name=cloudTrail_name,
             KmsKeyId=key_id,
             EnableLogFileValidation=True,
         )
 
-        text_output = "CloudTrial %s encrypt log file with kms %s." % (cloudTrail_name.split('/')[-1], key_id)
+        text_output = "CloudTrial: %s encrypt log file with key: %s." % (cloudTrail_name.split('/')[-1], key_id)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
@@ -103,7 +98,8 @@ def run_action(boto_session, rule, entity, params):
     return text_output
 
 
-# The function create a customer key by creating the correct policy
+# The function create a customer key by creating the correct policy.
+# The function also enable key rotation and add an alias to the key
 def create_customer_key(kms_client, iam_client, account_id):
     try:
 
@@ -114,6 +110,17 @@ def create_customer_key(kms_client, iam_client, account_id):
         )
 
         key_id = result['KeyMetadata']['KeyId']
+
+        # Rotate the key
+        kms_client.enable_key_rotation(
+            KeyId=key_id
+        )
+        # Create an alias for the key
+        kms_client.create_alias(
+            AliasName='alias/CK-CloudTrail',
+            TargetKeyId=key_id
+        )
+
         text_output = key_id
 
     except ClientError as e:
@@ -129,6 +136,7 @@ def create_kms_policy(iam_client, account_id):
         result = iam_client.get_user()  # To get the iam user for the policy
         user_name = result['User']['UserName']
 
+        # Add user name and account id to statements
         IAM_STATEMENT["Principal"]["AWS"] = IAM_STATEMENT.get("Principal").get("AWS").replace("user_name", user_name)
         IAM_STATEMENT["Principal"]["AWS"] = IAM_STATEMENT.get("Principal").get("AWS").replace("account_id", account_id)
 
@@ -137,6 +145,7 @@ def create_kms_policy(iam_client, account_id):
         DECRYPT_STATEMENT["Condition"]["StringLike"]["kms:EncryptionContext:aws:cloudtrail:arn"] = DECRYPT_STATEMENT.get("Condition").get("StringLike").get("kms:EncryptionContext:aws:cloudtrail:arn").replace("account_id", account_id)
         DECRYPT_STATEMENT["Condition"]["StringEquals"]['kms:CallerAccount'] = account_id
 
+        # Add the statements to the policy
         KMS_POLICY['Statement'].append(IAM_STATEMENT)
         KMS_POLICY['Statement'].append(ENCRYPT_STATEMENT)
         KMS_POLICY['Statement'].append(DESCRIBE_STATEMENT)
