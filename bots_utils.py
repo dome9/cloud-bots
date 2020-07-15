@@ -20,16 +20,18 @@ Security Groups relates functions :
 
 """
 returns a string of rule's id by scope,port,direction,etc.
+Example rule: {'protocol': 'TCP', 'port': 22, 'portTo': 22, 'scope': '0.0.0.0/0', 'scopeMetaData': 'null', 'serviceType': 'CIDR'}
 """
 
 
 def stringify_rule(rule):
-    return 'rule_id: ' + rule[SCOPE] + ', ' + str(rule[PORT_FROM]) + ', ' + str(rule[PORT_TO]) + ', ' + \
-           rule[PROTOCOL].lower() + '; '
+    return 'rule_id: ' + rule[PROTOCOL].lower() + ' ' + rule[SCOPE] + ' port_range: ' + str(
+        rule[PORT_FROM]) + '->' + str(rule[PORT_TO]) + ' '
 
 
 """
 checks for ip validity as cidr, fix it to be right otherwise
+Example rule: {'protocol': 'TCP', 'port': 22, 'portTo': 22, 'scope': '0.0.0.0/0', 'scopeMetaData': 'null', 'serviceType': 'CIDR'}
 """
 
 
