@@ -2,11 +2,11 @@
 ##sg_modify_scope_by_port
 # What it does: modify Security Group's rules scope by a given port , new and old scope(optional).
 # Direction can be : inbound or outbound
-# Usage: AUTO: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
+# Usage: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
        - When '*' set for replacing any rule with the specific port
 # Examples:
-        AUTO: sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
-        AUTO: sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
+        sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
+        sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
 #Notes:
     -  if the port is in a rule's port range, the bot will change the rule's ip to desire ip , to avoid that
       specify existing rule's scope instead of using '*'
@@ -28,24 +28,42 @@ ALL_TRAFFIC_PROTOCOL = '-1'
 checks if a rule exists in a security group , returns false/true 
 """
 
+"""
+returns a string of rule's id by scope,port,direction,etc.
+"""
+
+
+def stringify_rule(rule):
+    return 'rule: ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(rule[PORT_TO]) + ',' + \
+       rule[PROTOCOL].lower() + ' '
+
+
+"""
+compare the 2 forms of representation for security group rules and find if a rule exists in ip permissions 
+"""
+
+
+def find_rule_in_ip_permissions(perm,rule,direction,scope):
+    if perm['FromPort'] == rule[PORT_FROM] and perm['ToPort'] == rule[PORT_TO] and perm['IpProtocol'] == rule[PROTOCOL].lower():
+        for ip in perm['IpRanges']:
+            if ip['CidrIp'] == scope:  # found same rule exists already
+                return True
+    return False
+
+
+
 
 def is_rule_exists_in_sg(sg, rule, direction, scope):
+
     if direction.lower() == 'inbound':
         for perm in sg.ip_permissions:
-            if perm['FromPort'] == rule[PORT_FROM] and perm['ToPort'] == rule[PORT_TO] and \
-                    perm['IpProtocol'] == rule[PROTOCOL].lower():
-                for ip in perm['IpRanges']:
-                    if ip['CidrIp'] == scope:  # found same rule exists
-                        return True;
-        return False
+            return find_rule_in_ip_permissions(perm, rule, direction, scope)
+
     if direction.lower() == 'outbound':
         for perm in sg.ip_permissions_egress:
-            if perm['FromPort'] == rule[PORT_FROM] and perm['ToPort'] == rule[PORT_TO] and \
-                    perm['IpProtocol'] == rule[PROTOCOL].lower():
-                for ip in perm['IpRanges']:
-                    if ip['CidrIp'] == scope:  # found same rule exists
-                        return True;
-        return False
+            return find_rule_in_ip_permissions(perm, rule, direction, scope)
+
+    return False
 
 
 """
@@ -77,9 +95,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                 GroupId=sg_id,
                 IpProtocol=rule[PROTOCOL].lower()
             )
-            text_output = text_output + ' rule : ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + \
-                          str(sg_id) + ',' + rule[PROTOCOL].lower() + ' deleted successfully ;'
+            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -98,32 +114,30 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                 GroupId=sg_id,
                 IpProtocol=rule[PROTOCOL].lower()
             )
-            text_output = text_output + ' rule : ' + scope + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + \
-                          str(sg_id) + ',' + rule[PROTOCOL].lower() + ' created successfully ;'
+            text_output = text_output + stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
             return text_output
 
     elif direction == 'outbound':
+        ip_perm = [
+            {
+                'FromPort': rule[PORT_FROM],
+                'IpProtocol': rule[PROTOCOL].lower(),
+                'IpRanges': [
+                    {
+                        'CidrIp': rule[SCOPE]
+                    },
+                ],
+                'ToPort': rule[PORT_TO]
+            },
+        ]
         try:
             sg.revoke_egress(
-                IpPermissions=[ # only IpPermissions supported with this func !
-                    {
-                        'FromPort': rule[PORT_FROM],
-                        'IpProtocol': rule[PROTOCOL].lower(),
-                        'IpRanges': [
-                            {
-                                'CidrIp': rule[SCOPE]
-                            },
-                        ],
-                        'ToPort': rule[PORT_TO]
-                    },
-                ]
+                IpPermissions=ip_perm  # only IpPermissions supported with this func !
             )
-            text_output = text_output + ' rule : ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + str(sg_id) + ',' + rule[PROTOCOL].lower() + ' deleted successfully ;'
+            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -133,25 +147,13 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
         found = is_rule_exists_in_sg(sg, rule, direction, scope)
         if found:
             return text_output
-
         try:
+            ip_perm[0]['IpRanges'][0]['CidrIp'] = scope  # ip permissions to create of a new rule
+            # must have user's scope
             sg.authorize_egress(
-                IpPermissions=[  # only IpPermissions supported with this func !
-                    {
-                        'FromPort': rule[PORT_FROM],
-                        'IpProtocol': rule[PROTOCOL].lower(),
-                        'IpRanges': [
-                            {
-                                'CidrIp': scope
-                            },
-                        ],
-                        'ToPort': rule[PORT_TO]
-                    },
-                ]
-
+                IpPermissions=ip_perm  # only IpPermissions supported with this func !
             )
-            text_output = text_output + ' rule : ' + scope + ',' + str(rule[PORT_FROM]) + ',' + str(
-                rule[PORT_TO]) + ',' + str(sg_id) + ',' + rule[PROTOCOL].lower() + ' created successfully ;'
+            text_output = text_output + stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
@@ -169,7 +171,8 @@ def run_action(boto_session, rule, entity, params):
     try:
         port, change_from_scope, change_to_scope, direction = params
     except Exception as e:
-        text_output = text_output + 'Params handling error. Please check parameters and try again.\n ' + e + '\n'
+        text_output = text_output + 'Params handling error. Please check parameters and try again. \n ' + e + '\n'
+        + 'Usage: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>'
         raise Exception(text_output)
 
     ec2_resource = boto_session.resource('ec2')
