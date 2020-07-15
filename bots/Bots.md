@@ -36,6 +36,7 @@
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
+  - [sg\_rules\_delete\_by\_scope](#sg_rules_delete_by_scope)
   
   
 ###[Optional Bots](#optional-bots)
@@ -381,6 +382,31 @@ Limitations: IPv6 is not supported yet
 What it does: Deletes all ingress and egress rules from a SG  
 Usage: AUTO: sg\_rules\_delete  
 Limitations: none
+
+## sg_rules_delete_by_scope
+
+What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
+Usage: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
+
+Example: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
+Parameters:
+    scope: a.b.c.d/e
+    direction: inbound/ outbound
+    port: number/ *
+    protocol: TCP/ UDP/ *
+-When '*' is any value of the parameter
+
+Other Examples:
+all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
+sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
+
+all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
+    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
+    
+Notes :
+    -  before running this bot, ensure that your applications will work correctly without those rules
+    - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
+Limitations: IPv6 is not supported
 
 ## sg\_single\_rule\_delete
 
