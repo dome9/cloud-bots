@@ -23,6 +23,7 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
   - [s3\_enable\_encryption](#s3_enable_encryption)
@@ -30,11 +31,12 @@
   - [s3\_enable\_versioning](#s3_enable_versioning)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
+  - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
-  - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
+  
   
 ###[Optional Bots](#optional-bots)
 - [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
@@ -298,6 +300,17 @@ Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
 
+## s3\_block\_all\_public\_access
+What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
+through Future New AND Existing public ACLs and Bucket Policies.
+
+Usage:  s3_block_public_all_access
+
+Limitations: none
+
+Notes:
+    -  before running this bot, ensure that your applications will work correctly without public access
+
 ## s3\_delete\_acls
 
 What it does: Deletes all ACLs from a bucket. If there is a bucket
@@ -346,6 +359,22 @@ What it does: Deletes a security group
 Usage: AUTO: sg\_delete  
 Limitations: This will fail if there is something still attached to the
 SG.
+
+##sg\_modify\_scope\_by\_port
+
+What it does: modify Security Group's rules scope by a given port , new and old scope(optional).
+Direction can be : inbound or outbound
+Usage: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
+       - When '*' set for replacing any rule with the specific port
+Examples:
+        sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
+        sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
+Notes:
+    -  if the port is in a rule's port range, the bot will change the rule's ip to desire ip , to avoid that
+      specify existing rule's scope instead of using '*'
+    - to split the rule around the port you can use the bot : #sg_single_rule_delete
+
+Limitations: IPv6 is not supported yet
 
 ## sg\_rules\_delete
 
@@ -433,16 +462,6 @@ arn:aws:s3:::my-bucket/my-logs/
 log delivery policy name is set as: vpcFlowLogDelivery log delivery role
 is set as: vpcFlowLogDelivery
 
-## s3\_block\_all\_public\_access
-What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
-through Future New AND Existing public ACLs and Bucket Policies.
-
-Usage:  s3_block_public_all_access
-
-Limitations: none
-
-Notes:
-    -  before running this bot, ensure that your applications will work correctly without public access
 
 # Optional Bots
 
