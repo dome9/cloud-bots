@@ -1,9 +1,8 @@
 """
 ## sg_rules_delete_by_scope
 What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
-Usage: AUTO: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
+Usage: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
 
-Example: AUTO: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
 Parameters:
     scope: a.b.c.d/e
     direction: inbound/ outbound
@@ -11,12 +10,15 @@ Parameters:
     protocol: TCP/ UDP/ *
 -When '*' is any value of the parameter
 
-Other Examples:
+Examples:
+    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
+
     all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
     sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
 
     all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
     sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
+
 Notes :
     - the bot deletes the rule without splitting ports ( do not create new rules without the deleted port)
       for deleting rule with split use - sg_single_rule_delete bot .
