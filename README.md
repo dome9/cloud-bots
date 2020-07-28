@@ -9,7 +9,7 @@
 </div>
 
   - [Overview](#overview)
-      - [What are Dome9 CloudBots?](#what-are-dome9-cloudbots)
+      - [What are CloudGuard CloudBots?](#what-are-dome9-cloudbots)
       - [What does it do?](#what-does-it-do)
       - [How does it work?](#how-does-it-work)
       - [The Bots](#the-bots)
@@ -21,28 +21,28 @@
       - [Setup your AWS account(s) for
         CloudBots](#setup-your-aws-accounts-for-cloudbots)
       - [Deploy for Multi mode](#deploy-for-multi-mode)
-      - [Setup your Dome9 account](#setup-your-dome9-account)
+      - [Setup your CloudGuard account](#setup-your-dome9-account)
           - [Configure remediations](#configure-remediations)
-          - [Configure a Dome9 Continuous Compliance
+          - [Configure a Cloudguard Continuous Compliance
             policy](#configure-a-dome9-continuous-compliance-policy)
-      - [Use the CloudBots without a Dome9
+      - [Use the CloudBots without a CloudGuard
         account](#use-the-cloudbots-without-a-dome9-account)
   - [Log Collection for
     Troubleshooting](#log-collection-for-troubleshooting)
 	
 # Overview
 
-## What are Dome9 CloudBots?
+## What are CloudGuard CloudBots?
 
-Cloud-Bots is an autoremediation solution for AWS, built on top of the
-CloudGuard Dome9 Continuous Compliance capabilities.
+Cloud-Bots is an autoremediation solution for AWS, built on top of 
+CloudGuard Continuous Compliance capabilities.
 
-They can also be used standalone, without Dome9, to remedy issues in AWS
+They can also be used standalone, without CloudGuard, to remedy issues in AWS
 accounts. Details are included how to configure and trigger them.
 
 ## What does it do?
 
-You can configure Dome9 Continuous Compliance to assess your cloud
+You can configure CloudGuard Continuous Compliance to assess your cloud
 accounts with rulesets, to continuously check the compliance of your
 accounts, and issue reports and findings in near real-time for issues
 that are found.
@@ -59,20 +59,20 @@ enable rotation. Similarly, a rule that checks whether CloudTrail is
 enabled could trigger the bot *cloud\_trailenable*, to create and enable
 a CloudTrail.
 
-You can also use the CloudBots without Dome9, using the same triggers,
+You can also use the CloudBots without CloudGuard, using the same triggers,
 but sourced from your application (details for configuring this
 included).
 
 ## How does it work?
 
-To use Dome9 cloudbots, you deploy a CFT stack in your AWS account (or
+To use CloudGuard cloudbots, you deploy a CFT stack in your AWS account (or
 one of your accounts). This stack has the bots, and an AWS Lambda
 function that runs the bots.
 
 You also create an SNS in your AWS account, which is triggers the Lambda
 function. Finally, to connect a specific compliance rule in a ruleset
 with a bot, you add a remediation flag in the rule. If this rule fails
-during a compliance assessment, the Dome9 Compliance Engine will send an
+during a compliance assessment, the CloudGuard Compliance Engine will send an
 event message to the SNS, with details about the bot to be triggered
 (and any parameters that are needed when it is run). This will trigger
 the Lambda function, which runs the specified bot on the entity in
@@ -110,7 +110,7 @@ roles to run bots in other accounts. It follows this workflow:
 # Deploy CloudBots to your AWS accounts
 
 To use the CloudBots, you have to set up your AWS account(s) and, if are
-using Dome9, your Dome9 account.
+using CloudGuard, your CloudGuard account.
 
 ## Setup your AWS account(s) for CloudBots
 
@@ -118,8 +118,8 @@ Follow these steps for each region in your account in which you want to
 deploy the bots.
 
 1.  Click
-    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml)
-    and select the region in which you wish to deploy the stack. This
+    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
+    and select the region in which to deploy the stack. This
     will run a script in the CFT console to deploy the cloudbot stack in
     the selected region.
 2.  In the **Select Template**, click **Next** (no need to make a
@@ -164,16 +164,16 @@ On the AWS CFT console, for your account, perform these steps:
 This script will create the IAM role and policy and the cross-account
 role for the additional account.
 
-## Setup your Dome9 account
+## Setup your CloudGuard account
 
-On Dome9 you define remediations, which will apply to selected rules in
+On CloudGuard you define remediations, which will apply to selected rules in
 rulesets, and, optionally, for selected cloud accounts.
 
 ### Configure remediations
 
-Follow these steps in your Dome9 account to create remediations.
+Follow these steps in your CloudGuard account to create remediations.
 
-1.  In Dome9, navigate to the **Remediations** page in the **Posture
+1.  In CloudGuard, navigate to the **Remediations** page in the **Posture
     Management** menu.
 
 2.  Click **CREATE NEW REMEDIATION** (on the right).
@@ -205,7 +205,7 @@ Follow these steps in your Dome9 account to create remediations.
 The remediation will be applied to all entities selected, if compliance
 rules applied to them fail.
 
-### Configure a Dome9 Continuous Compliance policy
+### Configure a CloudGuard Continuous Compliance policy
 
 Once the rules in the ruleset have been tagged for remediation, set up a
 Continuous Compliance policy to run the ruleset, and send findings to
@@ -224,7 +224,7 @@ the SNS.
     discovered*, and enter the ARN for the SNS (*InputTopicARN*, created
     above). Select option *JSON - Full entity*, and then click **SAVE**.
 
-**Note:** Dome9 will send event messages to the SNS for new findings. To
+**Note:** CloudGuard will send event messages to the SNS for new findings. To
 send events for previous findings, follow these steps:
 
 1.  Navigate to the **Compliance Policies** page.
@@ -232,12 +232,12 @@ send events for previous findings, follow these steps:
     of the row, then click on the *Send All Alerts* icon.
     ![](docs/pictures/send_all_events_button.png)
 3.  Select the *SNS* Notification Type option, and the Notification
-    Policy (the one created above), then click **SEND**. Dome9 will send
+    Policy (the one created above), then click **SEND**. CloudGuard will send
     event messages to the SNS for findings.
 
-## Use the CloudBots without a Dome9 account
+## Use the CloudBots without a CloudGuard account
 
-You can use the CloudBots without a Dome9 account. In this case you must
+You can use the CloudBots without a CloudGuard account. In this case you must
 send messages to the SNS for each event that requires remediation. The
 message should have the following format:
 
@@ -267,9 +267,18 @@ where:
 
 *entity: id* is the id for the entity that failed the rule
 
+# Update CloudBots
+
+The CloudBots set of bots is continually being  updated with new bots. To update your deployment, re-launch the CFT stack.
+
+1. Click
+    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
+    and select the region in which the stack is currently deployed.
+
+
 # Log Collection for Troubleshooting
 
-The CloudBots send log information to Dome9, that is used for
+The CloudBots send log information to CloudGuard, that is used for
 troubleshooting. By default, this is enabled for all bots. You can
 disable this in your AWS account. Select the Lambda function created by
 the CFT stack, and set the environment variable SEND\_LOGS to False.
