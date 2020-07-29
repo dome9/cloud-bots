@@ -58,6 +58,7 @@
                 "s3:PutBucketPolicy",
                 "s3:PutBucketVersioning",
                 "s3:PutEncryptionConfiguration",
+                "s3:PutBucketPublicAccessBlock",
                 "s3:PutObject",
                 "sns:Publish",
                 "sns:CreateTopic",
