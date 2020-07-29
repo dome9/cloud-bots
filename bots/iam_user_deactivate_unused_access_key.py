@@ -30,10 +30,12 @@ def run_action(boto_session, rule, entity, params):
             access_key_id = access_key['AccessKeyId']
             access_key_last_use = iam_client.get_access_key_last_used(AccessKeyId=access_key_id)['AccessKeyLastUsed']
             if 'LastUsedDate' in access_key_last_use:  # check if the access key is ever been used
+                # ignore time zone (doesnt effect in the matter of days )
                 passed_days_from_last_use = curr_time - access_key_last_use['LastUsedDate'].replace(tzinfo=None)
             else:
                 # check how much time since the key created and is not used
-                passed_days_from_last_use = curr_time - access_key['CreateDate']
+                # ignore time zone (doesnt effect in the matter of days )
+                passed_days_from_last_use = curr_time - access_key['CreateDate'].replace(tzinfo=None)
 
             if passed_days_from_last_use.days > max_days_unused_time:
                 # make key inactive
