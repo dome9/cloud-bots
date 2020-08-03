@@ -37,6 +37,7 @@
                 "kms:EnableKeyRotation",
                 "iam:AttachRolePolicy",
                 "iam:AttachUserPolicy",
+                "iam:DetachRolePolicy",
                 "iam:CreatePolicy",
                 "iam:CreateRole",
                 "iam:GetPolicy",
