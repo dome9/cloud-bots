@@ -15,7 +15,7 @@
 #Limitations: IPv6 is not supported yet
 
 """
-import re
+import bots_utils as utils
 
 PORT_TO = 'portTo'
 PORT_FROM = 'port'
@@ -23,19 +23,6 @@ PROTOCOL = 'protocol'
 SCOPE = 'scope'
 ALL_TRAFFIC_PORT = 0
 ALL_TRAFFIC_PROTOCOL = '-1'
-
-"""
-checks if a rule exists in a security group , returns false/true 
-"""
-
-"""
-returns a string of rule's id by scope,port,direction,etc.
-"""
-
-
-def stringify_rule(rule):
-    return 'rule: ' + rule[SCOPE] + ',' + str(rule[PORT_FROM]) + ',' + str(rule[PORT_TO]) + ',' + \
-       rule[PROTOCOL].lower() + ' '
 
 
 """
@@ -51,6 +38,9 @@ def find_rule_in_ip_permissions(perm,rule,direction,scope):
     return False
 
 
+"""
+checks if a rule exists in a security group , returns false/true 
+"""
 
 
 def is_rule_exists_in_sg(sg, rule, direction, scope):
@@ -67,24 +57,13 @@ def is_rule_exists_in_sg(sg, rule, direction, scope):
 
 
 """
-checks for ip validity , fix it to be right
-"""
-
-
-def verify_scope_is_cidr(rule):
-    ip = re.split('/|\.', str(rule[SCOPE]))  # break ip to blocks
-    rule[SCOPE] = ip[0] + '.' + ip[1] + '.' + ip[2] + '.' + ip[3] + '/' + ip[4]
-    pass
-
-
-"""
 creates & removes the specified rules from a security group 
 """
 
 
 def update_sg(sg, sg_id, rule, scope, direction, text_output):
     # make sure that scope is in CIDR notation for example, 203.0.113.0/24
-    verify_scope_is_cidr(rule)
+    utils.verify_scope_is_cidr(rule)
 
     if direction == 'inbound':
         try:
@@ -95,7 +74,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                 GroupId=sg_id,
                 IpProtocol=rule[PROTOCOL].lower()
             )
-            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
+            text_output = text_output + utils.stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -114,7 +93,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
                 GroupId=sg_id,
                 IpProtocol=rule[PROTOCOL].lower()
             )
-            text_output = text_output + stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
+            text_output = text_output + utils.stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
@@ -137,7 +116,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
             sg.revoke_egress(
                 IpPermissions=ip_perm  # only IpPermissions supported with this func !
             )
-            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
+            text_output = text_output + utils.stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -153,7 +132,7 @@ def update_sg(sg, sg_id, rule, scope, direction, text_output):
             sg.authorize_egress(
                 IpPermissions=ip_perm  # only IpPermissions supported with this func !
             )
-            text_output = text_output + stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
+            text_output = text_output + utils.stringify_rule(rule) + ' created successfully in sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to create security group. Error: {e}'
