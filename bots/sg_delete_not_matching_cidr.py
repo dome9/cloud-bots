@@ -1,6 +1,6 @@
 """
 ## sg_delete_not_matching_cidr
-What it does: Deletes all rules on a security group with a certian port when the cidr is not matching input
+What it does: Deletes all rules on a security group with a certain port when the cidr is not matching input
 Usage: sg_delete_not_matching_cidr <port> <scope> <direction>
 
 Parameters:

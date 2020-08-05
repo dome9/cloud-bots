@@ -31,6 +31,7 @@
   - [s3\_enable\_versioning](#s3_enable_versioning)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
+  - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
@@ -365,12 +366,16 @@ SG.
 
 What it does: modify Security Group's rules scope by a given port , new and old scope(optional).
 Direction can be : inbound or outbound
+
 Usage: sg_modify_scope_by_port <port> <change_scope_from|*> <change_scope_to> <direction>
-       - When '*' set for replacing any rule with the specific port
+ - When '*' set for replacing any rule with the specific port
+
 Examples:
+        
         sg_modify_scope_by_port 22 0.0.0.0/0 10.0.0.0/24 inbound
         sg_modify_scope_by_port 22 * 10.0.0.0/24 inbound
 Notes:
+
     -  if the port is in a rule's port range, the bot will change the rule's ip to desire ip , to avoid that
       specify existing rule's scope instead of using '*'
     - to split the rule around the port you can use the bot : #sg_single_rule_delete
@@ -382,6 +387,29 @@ Limitations: IPv6 is not supported yet
 What it does: Deletes all ingress and egress rules from a SG  
 Usage:  sg\_rules\_delete  
 Limitations: none
+
+
+## sg\_delete\_not\_matching\_cidr
+
+What it does: Deletes all rules on a security group with a certain port when the cidr is not matching input
+
+Usage: sg_delete_not_matching_cidr port scope direction
+
+Parameters:
+    port: integer
+    scope: a.b.c.d/e
+    direction: inbound/ outbound
+
+Example:
+    sg_rules_delete_by_scope 22 1.0.0.0/16 inbound
+    *all the sg's rules with port 22 that doesn't have 1.0.0.0/16 cidr will be deleted
+
+Notes :
+    -  before running this bot, ensure that your applications will work correctly without those rules
+    - if a port is in a port range and there is  a mismatch in cidr the rule will be deleted
+
+Limitations: IPv6 is not supported
+
 
 ## sg_rules_delete_by_scope
 
