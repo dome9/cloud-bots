@@ -235,7 +235,7 @@ PasswordReusePrevention:5 HardExpiry:True
 ## iam\_user\_deactivate\_unused\_access\_key
 What it does: deactivate unused access key that haven't been in use for some time
 Usage: iam_user_deactivate_unused_access_key <number of days>
-Examples: iam_user_inactivate_unused_access_key 90
+Example: iam_user_inactivate_unused_access_key 90
 Limitations: default time is 90 days, if there are more then 200 access keys for user should increase maxItems
 
 
