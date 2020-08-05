@@ -79,7 +79,7 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
                     },
                 ]
             )
-            text_output = text_output + stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
+            text_output = text_output + utils.stringify_rule(rule) + ' deleted successfully from sg : ' + str(sg_id) + '; '
 
         except Exception as e:
             text_output = text_output + f'Error while trying to delete security group. Error: {e}'
@@ -109,7 +109,7 @@ def run_action(boto_session, rule, entity, params):
                 if protocol.lower() == rule[PROTOCOL].lower() or protocol == '*':
                     if rule[PROTOCOL] == 'ALL':
                         rule[PROTOCOL] = ALL_TRAFFIC_PROTOCOL  # '-1'
-                    text_output = text_output + stringify_rule(rule) + 'rule was found in security group with port in range; '
+                    text_output = text_output + utils.stringify_rule(rule) + 'rule was found in security group with port in range; '
                     text_output = delete_sg(sg, sg_id, rule, direction, text_output)
 
         else:
