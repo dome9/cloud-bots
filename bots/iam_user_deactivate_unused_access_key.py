@@ -36,7 +36,7 @@ def get_passed_days_from_last_use(access_key, iam_client):
 
 
 def run_action(boto_session, rule, entity, params):
-    text_output = 'Start iam_user_inactivate_unused_access_key'
+    text_output = 'Start iam_user_deactivate_unused_access_key'
     username = entity['name']
     # default days is 90
     max_days_unused_time = params[0] if params else 90
