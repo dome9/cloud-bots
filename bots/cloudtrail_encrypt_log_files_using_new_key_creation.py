@@ -1,7 +1,7 @@
 """
-## cloudtrail_encrypt_log_files_with_generate_new_key
+## cloudtrail_encrypt_log_files_using_new_key_creation
 What it does: Create new customer key with the correct policy for encrypt log file in the cloudTrial.
-Usage: AUTO: lambda_detach_blanket_permissions
+Usage: AUTO: cloudtrail_encrypt_log_files_using_new_key_creation
 Note: - The bot create a new customer key
 Limitations:None
 """
