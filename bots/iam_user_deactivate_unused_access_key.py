@@ -28,11 +28,11 @@ def get_passed_days_from_last_use(access_key, iam_client):
     # check if the access key is ever been used , if it isn't , considers create date
     if 'LastUsedDate' in access_key_last_use:
         # ignore time zone (doesnt effect in the matter of days )
-        return curr_time - access_key_last_use['LastUsedDate'].replace(tzinfo=None)
+        return (curr_time - access_key_last_use['LastUsedDate'].replace(tzinfo=None)).days
     else:
         # check how much time since the key created and is not used
         # ignore time zone (doesnt effect in the matter of days )
-        return curr_time - access_key['CreateDate'].replace(tzinfo=None)
+        return (curr_time - access_key['CreateDate'].replace(tzinfo=None)).days
 
 
 def run_action(boto_session, rule, entity, params):
@@ -45,6 +45,7 @@ def run_action(boto_session, rule, entity, params):
 
     # -----------------------  Deactivate unused access keys ----------------------------------#
     try:
+        # get all access keys
         access_keys = iam_client.list_access_keys(UserName=username, MaxItems=MAX_ITEMS)['AccessKeyMetadata']
 
         for access_key in access_keys:
@@ -53,7 +54,7 @@ def run_action(boto_session, rule, entity, params):
             # calc how many days passed from access key's last use
             passed_days_from_last_use = get_passed_days_from_last_use(access_key, iam_client)
             # if the access key is not used for more than 90 days it will be turn inactive
-            if passed_days_from_last_use.days > max_days_unused_time:
+            if passed_days_from_last_use > max_days_unused_time:
                 # make key inactive
                 iam_client.update_access_key(
                     UserName=username,
@@ -61,7 +62,7 @@ def run_action(boto_session, rule, entity, params):
                     Status='Inactive'
                 )
                 text_output = text_output + f'Iam user: {username} access key with id : {access_key_id} was deactivated' \
-                                            f'due of being unused for {passed_days_from_last_use.days} days '
+                                            f'due of being unused for {passed_days_from_last_use} days '
 
     except ClientError as e:
         text_output = text_output + f'Unexpected error: {e}.'
