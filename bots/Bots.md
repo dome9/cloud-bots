@@ -230,6 +230,15 @@ RequireUppercaseCharacters:True RequireLowercaseCharacters:True
 AllowUsersToChangePassword:True MaxPasswordAge:5
 PasswordReusePrevention:5 HardExpiry:True
 
+## iam_user_disable_console_password
+
+What it does:  disable console password for IAM user.
+
+Usage: iam_user_disable_console_password
+
+Limitations: Deleting a user's password does not prevent a user from accessing AWS through the command line interface or
+the API. To prevent all user access, you must also either make any access keys inactive or delete them.
+
 ## iam\_user\_force\_password\_change
 
 What it does: Updates the setting for an IAM user so that they need to
