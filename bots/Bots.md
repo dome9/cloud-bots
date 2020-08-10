@@ -2,6 +2,7 @@
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
+  - [cloudtrail\_encrypt\_log\_files\_using\_existing\_key](#cloudtrail_encrypt_log_files_using_existing_key)
   - [cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation](#cloudtrail_encrypt_log_files_using_new_key_creation)
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
@@ -73,6 +74,21 @@ Limitations: none
 What it does: Enable log file validation in cloudTrail
 Usage:  cloudtrail_enable_log_file_validation
 Limitations: None
+
+## cloudtrail\_encrypt\_log\_files\_using\_existing\_key
+What it does: Encrypt log file in the cloudTrial with a customer key that user pass as parameter.
+Usage: AUTO: lambda_detach_blanket_permissions <key_id>
+Note: - The key must have the correct policy for enable CloudTrail to encrypt, users to decrypt log files and user
+            to describe key.
+            For more information https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-kms-key-policy-for-cloudtrail.html
+      - The key the user pass can be an alias name prefixed by "alias/", a fully specified ARN to an alias, a fully specified ARN to a key,
+        or a globally unique identifier
+            Examples:
+                * alias/MyAliasName
+                * arn:aws:kms:us-east-2:123456789012:alias/MyAliasName
+                * arn:aws:kms:us-east-2:123456789012:key/12345678-1234-1234-1234-123456789012
+                * 12345678-1234-1234-1234-123456789012
+Limitations:None
 
 ## cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation
 What it does: Create new customer key with the correct policy for encrypt log file in the cloudTrial.
