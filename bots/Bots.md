@@ -18,6 +18,7 @@
   - [iam\_quarantine\_role](#iam_quarantine_role)
   - [iam\_quarantine\_user](#iam_quarantine_user)
   - [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
+  - [iam\_user\_deactivate\_unused\_access\_key](#iam_user_deactivate_unused_access_key)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
   - [igw\_delete](#igw_delete)
   - [kms\_enable\_rotation](#kms_enable_rotation)
@@ -245,6 +246,17 @@ Usage: iam_user_disable_console_password
 
 Limitations: Deleting a user's password does not prevent a user from accessing AWS through the command line interface or
 the API. To prevent all user access, you must also either make any access keys inactive or delete them.
+
+
+## iam\_user\_deactivate\_unused\_access\_key
+What it does: deactivate unused access key that haven't been in use for some time
+
+Usage: iam_user_deactivate_unused_access_key <number of days>
+
+Example: iam_user_inactivate_unused_access_key 90
+
+Limitations: default time is 90 days, if there are more then 200 access keys for user should increase maxItems
+
 
 ## iam\_user\_force\_password\_change
 
