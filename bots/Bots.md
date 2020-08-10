@@ -2,6 +2,7 @@
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
+  - [cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation](#cloudtrail_encrypt_log_files_using_new_key_creation)
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
@@ -72,6 +73,12 @@ Limitations: none
 What it does: Enable log file validation in cloudTrail
 Usage:  cloudtrail_enable_log_file_validation
 Limitations: None
+
+## cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation
+What it does: Create new customer key with the correct policy for encrypt log file in the cloudTrial.
+Usage: AUTO: cloudtrail_encrypt_log_files_using_new_key_creation
+Note: - The bot create a new customer key
+Limitations:None
 
 
 ## cloudtrail\_send\_to\_cloudwatch
