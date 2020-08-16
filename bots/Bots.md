@@ -2,6 +2,7 @@
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
+  - [cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation](#cloudtrail_encrypt_log_files_using_new_key_creation)
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
@@ -17,6 +18,7 @@
   - [iam\_quarantine\_role](#iam_quarantine_role)
   - [iam\_quarantine\_user](#iam_quarantine_user)
   - [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
+  - [iam\_user\_deactivate\_unused\_access\_key](#iam_user_deactivate_unused_access_key)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
   - [igw\_delete](#igw_delete)
   - [kms\_enable\_rotation](#kms_enable_rotation)
@@ -73,6 +75,12 @@ Limitations: none
 What it does: Enable log file validation in cloudTrail
 Usage:  cloudtrail_enable_log_file_validation
 Limitations: None
+
+## cloudtrail\_encrypt\_log\_files\_using\_new\_key\_creation
+What it does: Create new customer key with the correct policy for encrypt log file in the cloudTrial.
+Usage: AUTO: cloudtrail_encrypt_log_files_using_new_key_creation
+Note: - The bot create a new customer key
+Limitations:None
 
 
 ## cloudtrail\_send\_to\_cloudwatch
@@ -230,6 +238,26 @@ MinimumPasswordLength:15 RequireSymbols:True RequireNumbers:True
 RequireUppercaseCharacters:True RequireLowercaseCharacters:True
 AllowUsersToChangePassword:True MaxPasswordAge:5
 PasswordReusePrevention:5 HardExpiry:True
+
+## iam_user_disable_console_password
+
+What it does:  disable console password for IAM user.
+
+Usage: iam_user_disable_console_password
+
+Limitations: Deleting a user's password does not prevent a user from accessing AWS through the command line interface or
+the API. To prevent all user access, you must also either make any access keys inactive or delete them.
+
+
+## iam\_user\_deactivate\_unused\_access\_key
+What it does: deactivate unused access key that haven't been in use for some time
+
+Usage: iam_user_deactivate_unused_access_key <number of days>
+
+Example: iam_user_inactivate_unused_access_key 90
+
+Limitations: default time is 90 days, if there are more then 200 access keys for user should increase maxItems
+
 
 ## iam\_user\_force\_password\_change
 
