@@ -20,7 +20,8 @@ text_output = ''
 
 def run_action(boto_session, rule, entity, params):
     # Create an S3 client
-    s3 = boto3.client('s3')
+    s3 = boto_session.client('s3')
+    # get bucket id from entity
     bucket_id = entity['id']
     global text_output
 
