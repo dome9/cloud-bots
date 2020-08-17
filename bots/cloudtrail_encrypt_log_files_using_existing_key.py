@@ -1,7 +1,7 @@
 """
 ## cloudtrail_encrypt_log_files_using_existing_key
 What it does: Encrypt log file in the cloudTrial with a customer key that user pass as parameter.
-Usage: AUTO: lambda_detach_blanket_permissions <key_id>
+Usage: AUTO: cloudtrail_encrypt_log_files_using_existing_key <key_id>
 Note: - The key must have the correct policy for enable CloudTrail to encrypt, users to decrypt log files and user
             to describe key.
             For more information https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-kms-key-policy-for-cloudtrail.html
