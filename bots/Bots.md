@@ -417,49 +417,61 @@ Usage:  sg\_rules\_delete
 Limitations: none
 
 
-## sg\_delete\_not\_matching\_cidr
+## sg_delete_not_matching_cidr
+What it does: Deletes all rules on a security group , that have the given port and have a scope outside the given cidr
+        * following GSL - SecurityGroup should not have inboundRules contain [ port<=x and portTo>=x and scope!= y  ]
 
-What it does: Deletes all rules on a security group with a certain port when the cidr is not matching input
-
-Usage: sg_delete_not_matching_cidr port scope direction
+Usage: sg_delete_not_matching_cidr <port> <cidr> <direction>
 
 Parameters:
-    port: integer
+    port: number
     scope: a.b.c.d/e
     direction: inbound/ outbound
 
+
 Example:
-    sg_rules_delete_by_scope 22 1.0.0.0/16 inbound
-    *all the sg's rules with port 22 that doesn't have 1.0.0.0/16 cidr will be deleted
+
+    sg_delete_not_matching_cidr 22 10.163.0.0/16 inbound
+
+    *all the sg's rules with port 22 that have scope with range outside of 10.163.0.0/16 scope ,  will be deleted
 
 Notes :
-    -  before running this bot, ensure that your applications will work correctly without those rules
-    - if a port is in a port range and there is  a mismatch in cidr the rule will be deleted
 
-Limitations: IPv6 is not supported
+    -  before running this bot, ensure that your applications will work correctly without those rules
+    - if a port is in a port range and there is a mismatch in cidr the rule will be deleted ( with all the other port in range )
+
+Limitations: IPv6 is not supported yet
+
 
 
 ## sg_rules_delete_by_scope
+What it does: Deletes all rules on a security group with a scope(cidr) containing or equal to a given scope,
+             port and protocol are optional
 
-What it does: Deletes all rules on a security group with a specific scope, port and protocol are optional
 Usage: sg_rules_delete_by_scope <scope> <direction> <port|*> <protocol|*>
 
-Example: sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
 Parameters:
+   
     scope: a.b.c.d/e
     direction: inbound/ outbound
     port: number/ *
     protocol: TCP/ UDP/ *
--When '*' is any value of the parameter
+    -When '*' is any value of the parameter
 
-Other Examples:
-all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
-sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
-
-all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
-    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
+Examples:
     
+    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 tcp
+
+    all rules with 1.0.0.0/16 scope will be deleted for any port and protocol:
+    sg_rules_delete_by_scope 1.0.0.0/16 inbound * *
+
+    all rules with 0.0.0.0/0 scope will be deleted for port 22 and any protocol:
+    sg_rules_delete_by_scope 0.0.0.0/0 inbound 22 *
+
 Notes :
+    
+    - the bot deletes the rule without splitting ports ( do not create new rules without the deleted port)
+      for deleting rule with split use - sg_single_rule_delete bot .
     -  before running this bot, ensure that your applications will work correctly without those rules
     - if a port is in a port range the rule wont be deleted ! use * on port parameter to delete the rule for any port
 Limitations: IPv6 is not supported
