@@ -67,10 +67,7 @@ def is_scope_contained_by_other_ipv4(scope, other):
     n2 = ipaddress.IPv4Network(other)
 
     inside = n2.supernet_of(n1)
-    if inside:
-        return True
-    else:
-        return False # cidr if out of scope bounds
+    return True if inside else False
 
 
 """
@@ -82,10 +79,8 @@ def is_scope_contained_by_other_ipv6(scope, other):
     n1 = ipaddress.IPv6Network(scope)
     n2 = ipaddress.IPv6Network(other)
     inside = n2.supernet_of(n1)
-    if inside:
-        return True
-    else:
-        return False  # cidr if out of scope bounds
+    return True if inside else False
+
 
 """
 removes the specified rule from a security group 

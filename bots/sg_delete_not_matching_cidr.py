@@ -36,7 +36,6 @@ ALL_TRAFFIC_PORT = 0
 ALL_TRAFFIC_PROTOCOL = '-1'
 
 
-
 def run_action(boto_session, rule, entity, params):
     text_output = 'Run Bot sg_delete_not_matching_cidr. '
     sg_id = entity['id']
@@ -58,8 +57,7 @@ def run_action(boto_session, rule, entity, params):
     for rule in entity[f'{direction}Rules']:
         if rule[PORT_FROM] <= int(port) <= rule[PORT_TO]:
             # port found , if the scope doesn't match , rule will be deleted
-            in_scope = utils.is_scope_contained_by_other_ipv4(rule[SCOPE], scope)
-            if not in_scope:
+            if not utils.is_scope_contained_by_other_ipv4(rule[SCOPE], scope):
                 # rule scope is outside of the scope given , hence need to be deleted
                 text_output = text_output + utils.stringify_rule(
                     rule) + 'rule was found in security group with port in range; '
