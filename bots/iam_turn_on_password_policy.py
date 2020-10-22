@@ -48,7 +48,7 @@ def run_action(boto_session, rule, entity, params):
                 value = policy_config.split(":")[1]
             else:
                 value = policy_config
-            password_config[property_to_update] = string_to_value(property_to_update, value)
+            password_config[property_to_update] = classify_property_value(property_to_update, value)
 
         iam_client.update_account_password_policy(
             MinimumPasswordLength=password_config["MinimumPasswordLength"],
@@ -70,13 +70,13 @@ def run_action(boto_session, rule, entity, params):
     return text_output
 
 
-def string_to_value(property_to_update, value):
+def classify_property_value(property_to_update, value):
     # classify the values into int or bool depending on what is needed.
     if property_to_update in ("MinimumPasswordLength", "MaxPasswordAge", "PasswordReusePrevention"):
         value = int(value)
     else:
         if value == 'True' or 'true':
             value = True
-        elif value == 'False' or 'true':
+        elif value == 'False' or 'false':
             value = False
     return value
