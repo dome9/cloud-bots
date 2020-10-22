@@ -65,9 +65,9 @@ Check if cider is completely inside scope(other cidr), if it does returns true
 def is_scope_contained_by_other_ipv4(scope, other):
     n1 = ipaddress.IPv4Network(scope)
     n2 = ipaddress.IPv4Network(other)
-
-    inside = n2.supernet_of(n1)
-    return True if inside else False
+    a_len = n1.prefixlen
+    b_len = n2.prefixlen
+    return a_len >= b_len and n1.supernet(a_len - b_len) == n2
 
 
 """
@@ -78,8 +78,9 @@ Check if cider is completely inside scope, if it does returns true
 def is_scope_contained_by_other_ipv6(scope, other):
     n1 = ipaddress.IPv6Network(scope)
     n2 = ipaddress.IPv6Network(other)
-    inside = n2.supernet_of(n1)
-    return True if inside else False
+    a_len = n1.prefixlen
+    b_len = n2.prefixlen
+    return a_len >= b_len and n1.supernet(a_len - b_len) == n2
 
 
 """
