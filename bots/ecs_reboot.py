@@ -66,12 +66,3 @@ def run_action(boto_session,rule,entity,params):
         text_output = 'Running tasks do not exist.\nExiting\n'
 
     return text_output
-    session = boto3.Session(
-        aws_access_key_id='AKIA6BANX7CAHHWPALPD',
-        aws_secret_access_key='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',
-        region_name='us-east-2'
-    )
-
-    text = run_action(session, '', {'role':'arn:aws:iam::964248991872:role/ecsTaskExecutionRole'},
-                      ['role_arn=arn:aws:iam::964248991872:instance-profile/admin-ec2'])
-    print(text)
