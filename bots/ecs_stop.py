@@ -72,6 +72,13 @@ def run_action(boto_session,rule,entity,params):
                 #check if task defenition of running tasks is secure and if not than task is stopped.
                 defenition = ecs_client.describe_task_definition(taskDefinition=task_defenition)['taskDefinition']
                 
+                #if task runs on an instance, instance needs to be stopped so more tasks like that wont be created.
+                if 'EC2' in defenition['compatibilities']:
+                    text_output = stop_instance(ecs_client, cluster, described['containerInstanceArn'])
+                        
+                    if text_output.find('error') != -1:
+                        return text_output
+                    print(text_output)
                 
                 if defenition['executionRoleArn'] == role_arn:
                     
@@ -80,14 +87,7 @@ def run_action(boto_session,rule,entity,params):
                         return text_output
     
                     print(text_output)
-                    #if task runs on an instance, instance needs to be stopped so more tasks like that wont be created.
-                    if 'EC2' in defenition['compatibilities']:
-                        text_output = stop_instance(ecs_client, cluster, described['containerInstanceArn'])
-                        #cant stop instance if more tasks run on it, first all running tasks supposed to be stopped
-                        #in case of any other error the programme will stop.
-                        if text_output.find('error') != -1 and text_output.find('Found running tasks on the instance') == -1:
-                            return text_output
-                    print(text_output)
+                    
 
     
     if text_output == '':
