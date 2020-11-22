@@ -1,6 +1,6 @@
 '''
 ## ec2_detach_instance_role
-What it does: Detach an instance role from an EC2 instance. This role needs be passed in through the params.
+What it does: Detach an instance role from an EC2 instance.
 Usage: AUTO: ec2_detach_instance_role
 
 Sample GSL: Instance should have roles
@@ -10,16 +10,16 @@ import boto3
 from botocore.exceptions import ClientError
 
 
-def run_action(boto_session,rule,entity,params):
+def run_action(boto_session, rule, entity, params):
     text_output = ''
 
-    role_name = entity['name']
+    role_name = entity.get('name')
 
     iam = boto_session.client('iam')
     try:
         response = iam.list_instance_profiles_for_role(RoleName=role_name)['InstanceProfiles']
         if len(response) == 0:
-            text_output = 'Role is not attached to instance.\nExiting\n'
+            text_output = 'The %s role is not attached to an instance .\nExiting\n' % str(role_name)
             return text_output
 
         result = iam.remove_role_from_instance_profile(
