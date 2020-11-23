@@ -19,7 +19,7 @@ def run_action(boto_session, rule, entity, params):
     try:
         response = iam.list_instance_profiles_for_role(RoleName=role_name)['InstanceProfiles']
         if len(response) == 0:
-            text_output = 'The %s role is not attached to an instance .\nExiting\n' % str(role_name)
+            text_output = f'The {role_name} role is not attached to an instance.\nExiting'
             return text_output
 
         result = iam.remove_role_from_instance_profile(
