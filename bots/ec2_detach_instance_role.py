@@ -22,17 +22,14 @@ def run_action(boto_session, rule, entity, params):
             text_output = f'The {role_name} role is not attached to an instance.\nExiting'
             return text_output
 
-        result = iam.remove_role_from_instance_profile(
+        iam.remove_role_from_instance_profile(
             InstanceProfileName=response[0]['InstanceProfileName'],
             RoleName=role_name
         )
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = text_output + 'Unexpected error: %s \n' % str(result)
-        else:
-            text_output = text_output + 'Role successfully detached from instance\n'
+        text_output = text_output + 'Role successfully detached from instance\n'
 
     except ClientError as e:
-        text_output = text_output + 'Unexpected error: %s \n' % e
-
+        text_output = 'Unexpected error: %s , error code: %s\n' % e % e.response['ResponseMetadata']['HTTPStatusCode']
+    except Exception as e:
+        text_output = 'Unexpected error: %s\n' % e
     return text_output
