@@ -14,15 +14,12 @@ def stop_instance(ecs_client, cluster, instance):
     #function will stop an instance by changing it's state to 'Draining'
     text_output = ''
     try:
-        result = ecs_client.update_container_instances_state(cluster=cluster, containerInstances=[instance,], status='DRAINING')
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = 'Unexpected error: %s \n' % str(result)
-        else:
-            text_output = 'Instance %s successfully stopped \n' % str(instance)
+        ecs_client.update_container_instances_state(cluster=cluster, containerInstances=[instance,], status='DRAINING')
+        
+        text_output = 'Instance {instance} successfully stopped \n'
 
     except ClientError as e:
-        text_output = 'Unexpected error: %s \n' % e
+        text_output = 'Unexpected error: %s , error code: %s\n' % e % e.response['ResponseMetadata']['HTTPStatusCode'] 
 
     return text_output
 
@@ -30,16 +27,12 @@ def stop_task(ecs_client, cluster, task):
     #function will stop task
     text_output = ''
     try:
-        result = ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
+        ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
         
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = 'Unexpected error: %s \n' % str(result)
-        else:
-            text_output = 'Task %s successfully stopped \n' % str(task)
+        text_output = 'Task %s successfully stopped \n' % str(task)
 
     except ClientError as e:
-        text_output = 'Unexpected error: %s \n' % e
+        text_output = 'Unexpected error: %s , error code: %s\n' % e % e.response['ResponseMetadata']['HTTPStatusCode']
 
     return text_output
 
