@@ -15,15 +15,12 @@ def stop_task(ecs_client, cluster, task):
 
     text_output = ''
     try:
-        result = ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = 'Unexpected error: %s \n' % str(result)
-        else:
-            text_output = 'Task %s successfully stopped \n' % str(task)
+        ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
+       
+        text_output = f'Task {task} successfully stopped \n' 
 
     except ClientError as e:
-        text_output = 'Unexpected error: %s \n' % e
+        text_output = 'Unexpected error: %s , error code: %s\n' % e % e.response['ResponseMetadata']['HTTPStatusCode']
 
     return text_output
 
