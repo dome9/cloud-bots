@@ -23,8 +23,7 @@ def stop_instance(ecs_client, cluster, instance):
     except ClientError as e:
 
         text_output = f'Unexpected error: {e}\n'
-        if 'ResponseMetadata' in e.response and 'HTTPStatusCode' in e.response['ResponseMetadata']:
-            text_output += f"error code: {e.response['ResponseMetadata']['HTTPStatusCode']}\n"
+        
 
     return text_output
 
@@ -41,8 +40,7 @@ def stop_task(ecs_client, cluster, task):
     except ClientError as e:
 
         text_output = f'Unexpected error: {e}\n'
-        if 'ResponseMetadata' in e.response and 'HTTPStatusCode' in e.response['ResponseMetadata']:
-            text_output += f"error code: {e.response['ResponseMetadata']['HTTPStatusCode']}\n"
+        
 
     return text_output
 
