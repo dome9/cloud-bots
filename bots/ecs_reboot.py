@@ -8,25 +8,29 @@ Sample GSL: ecs should have tasks running
 
 import boto3
 from botocore.exceptions import ClientError
-import boto3.session
 
 
 def stop_task(ecs_client, cluster, task):
 
+    # function will stop task
+
     text_output = ''
     try:
         ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
-       
-        text_output = f'Task {task} successfully stopped \n' 
+        text_output = f'Task {task} successfully stopped \n'
 
     except ClientError as e:
-        text_output = 'Unexpected error: %s , error code: %s\n' % e % e.response['ResponseMetadata']['HTTPStatusCode']
+
+        text_output = f'Unexpected error: {e}\n'
+        if 'ResponseMetadata' in e.response and 'HTTPStatusCode' in e.response['ResponseMetadata']:
+            text_output += f"error code: {e.response['ResponseMetadata']['HTTPStatusCode']}\n"
 
     return text_output
 
 
-def run_action(boto_session,rule,entity,params):
-    role_arn = entity['id']
+def run_action(boto_session, rule, entity, params):
+
+    role_arn = entity.get('id')
     ecs_client = boto_session.client('ecs')
 
     text_output = ''
@@ -46,17 +50,16 @@ def run_action(boto_session,rule,entity,params):
 
             for task in tasks:
                 described = ecs_client.describe_tasks(cluster=cluster, tasks=[task, ])['tasks'][0]
-                task_defenition = described['taskDefinitionArn']
+                task_definition = described.get('taskDefinitionArn')
 
-                # check if task defenition of running tasks is secure and if not than task is stopped.
-                defenition = ecs_client.describe_task_definition(taskDefinition=task_defenition)['taskDefinition']
+                # check if task definition of running tasks is secure and if not than task is stopped.
+                definition = ecs_client.describe_task_definition(taskDefinition=task_definition)['taskDefinition']
 
-                if defenition['executionRoleArn'] == role_arn:
+                if definition.get('executionRoleArn') == role_arn:
 
                     text_output = stop_task(ecs_client, cluster, task)
                     if text_output.find('error') != -1:
                         return text_output
-
                     print(text_output)
 
     if text_output == '':
