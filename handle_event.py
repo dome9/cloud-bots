@@ -3,6 +3,7 @@ import os
 import boto3
 import importlib
 from botocore.exceptions import ClientError
+import json
 
 MININAL_TAG_LENGTH = 2
 MININAL_ACTION_LENGTH = 1
@@ -160,6 +161,11 @@ def handle_event(message, output_message):
             boto_session = boto3.Session(region_name=message_data.get('region'))
 
         try:  ## Run the bot
+            try:
+            # add the report time to the entity
+                message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
+            except Execution as e:
+                print(f'{__file__} - Error - Eroor while adding event time to the entity. Error {e}')
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
         except Exception as e:
