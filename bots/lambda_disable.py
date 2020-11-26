@@ -5,7 +5,7 @@ What it does:
 Sample GSL:
     Lambda Function Code was Updated by an enitity which assumed a Role
 Usage:
-    AUTO: disable_lambda
+    AUTO: lambda_disable
 Limitations: none
 '''
 
@@ -24,12 +24,9 @@ def run_action(boto_session, rule, entity, params):
             ReservedConcurrentExecutions=0
         )
 
-        if response['ResponseMetadata']['HTTPStatusCode'] == 200: # concurrency changed was done successfully
-            text_output = "lambda function: %s disabled (function concurrency set to 0)\n" % lambda_function_name
-        else: # error with the server (concurrency change not done)
-            text_output = "can't disable the lambda function: %s, Unexpected error: %s \n" % (lambda_function_name, response)
+        text_output = "lambda function: %s disabled (function concurrency set to 0)\n" % lambda_function_name
 
     except ClientError as e: # error with put_function_concurrency request
-        text_output = "Unexpected error: %s \n" % e
+        text_output = "can't disable the lambda function: %s, Unexpected error: %s \n" % (lambda_function_name, e)
 
     return text_output
