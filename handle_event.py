@@ -162,10 +162,10 @@ def handle_event(message, output_message):
 
         try:  ## Run the bot
             try:
-            # add the report time to the entity
+            # add the event time to the entity
                 message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
             except Execution as e:
-                print(f'{__file__} - Error - Eroor while adding event time to the entity. Error {e}')
+                print(f'{__file__} - Error - Error while adding event time to the entity. Error {e}')
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
         except Exception as e:
