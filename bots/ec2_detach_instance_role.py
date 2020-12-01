@@ -4,7 +4,7 @@ What it does: Detach an instance role from an EC2 instance.
 Usage: AUTO: ec2_detach_instance_role
 
 Sample GSL: cloudtrail where event.name='AddRoleToInstanceProfile' and event.status='Success'
-Limitations: Instance should have roles
+Limitations: none
 '''
 
 import boto3
