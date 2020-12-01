@@ -4,6 +4,7 @@ What it does: stops an ecs task and the service (which started the task) will cr
 Usage: AUTO: ecs_reboot
 
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+Limitations: none
 '''
 
 import boto3
