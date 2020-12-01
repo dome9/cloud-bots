@@ -3,7 +3,7 @@
 What it does: stops an ecs task and the service (which started the task) will create it again and run it.
 Usage: AUTO: ecs_reboot
 
-Sample GSL: ecs should have tasks running
+Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
 '''
 
 import boto3
