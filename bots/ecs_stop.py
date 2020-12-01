@@ -4,6 +4,7 @@ What it does: stops an ecs tasks and ec2 instances which contain the tasks
 Usage: AUTO: ecs_stop
 
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+Limitations: none
 '''
 
 import boto3
