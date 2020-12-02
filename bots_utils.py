@@ -5,6 +5,8 @@ Bots Utilities File
 # imports
 import re
 import ipaddress
+from datetime import datetime, timedelta
+import json
 
 PORT_TO = 'portTo'
 PORT_FROM = 'port'
@@ -12,6 +14,7 @@ PROTOCOL = 'protocol'
 SCOPE = 'scope'
 ALL_TRAFFIC_PORT = 0
 ALL_TRAFFIC_PROTOCOL = '-1'
+DEFAULT_TIME_DIFF = 0.5
 
 """
 #################################
@@ -165,11 +168,11 @@ def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, return
         # Return all events found
         return events.get('Events')
 
-
-    """
-    The function filter cloudtrail events list by additional_details given and returns 
-    the event closest to the given alert_time
-    """
+    
+"""
+The function filter cloudtrail events list by additional_details given and returns 
+the event closest to the given alert_time
+"""
     
     
 def filter_events(cloudtrail_events, alert_time, additional_details=''):
