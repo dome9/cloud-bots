@@ -22,6 +22,8 @@
   - [iam\_user\_deactivate\_unused\_access\_key](#iam_user_deactivate_unused_access_key)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
   - [igw\_delete](#igw_delete)
+  - [kinesis\_encryption\_using\_existing\_key](#kinesis_encryption_using_existing_key)
+  - [kinesis\_encryption\_using\_new\_key\_creation](#kinesis_encryption_using_new_key_creation)
   - [kms\_enable\_rotation](#kms_enable_rotation)
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
@@ -289,6 +291,24 @@ from a VPC, and then deletes it.
 Limitations: VPCs have lots of interconnected services. This is
 currently just focused on EC2 but future enhancements will need to be
 made to turn off RDS, Redshift, etc.
+
+## kinesis\_encryption\_using\_existing\_key
+What it does: Enable Server Side Encryption (SSE) of your AWS Kinesis Server data at rest.
+Usage: AUTO: kinesis_encryption_using_existing_key <key_id>
+Note:  - The key the user pass can be an alias name prefixed by "alias/", a fully specified ARN to an alias, a fully
+         specified ARN to a key,or a globally unique identifier
+        Examples:
+                * alias/MyAliasName
+                * arn:aws:kms:us-east-2:123456789012:alias/MyAliasName
+                * arn:aws:kms:us-east-2:123456789012:key/12345678-1234-1234-1234-123456789012
+                * 12345678-1234-1234-1234-123456789012
+Limitations:None
+
+## kinesis\_encryption\_using\_new\_key\_creation
+What it does: Enable Server Side Encryption (SSE) of your AWS Kinesis Server data at rest.
+Usage: AUTO: kinesis_encryption_using_new_key_creation
+Note: - The bot create a new customer key
+Limitations:None
 
 ## kms\_enable\_rotation
 
