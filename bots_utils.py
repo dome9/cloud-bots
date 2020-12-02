@@ -131,3 +131,62 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
         text_output = text_output + f'Error unknown direction ; \n'
 
     return text_output
+
+
+"""
+The function looks up for events in cloud trail based on alert time and alert name.
+"""
+
+
+def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, return_one_event=True, time_diff=DEFAULT_TIME_DIFF, additional_details=''):
+    # Create Cloudtrail client
+    cloudtrail_client = boto_session.client('cloudtrail')
+
+    #  Parse given event time
+    alert_time = datetime.strptime(alert_time, '%Y-%m-%dT%H:%M:%SZ')
+
+    # Adjust start and end time the event search
+    start_time = alert_time - timedelta(minutes=time_diff)
+    end_time = alert_time + timedelta(minutes=time_diff)
+
+    # Look up events in cloudtrail
+    try:
+        events = cloudtrail_client.lookup_events(LookupAttributes=[
+            {'AttributeKey': 'EventName', 'AttributeValue': event_name}],
+            StartTime=start_time, EndTime=end_time)
+
+    except Exception as e:
+        return 'Unexpected error: %s \n' % e
+    
+    if return_one_event:
+        # Return only one event - which is the closest to alert time
+        return filter_events(events.get('Events'), alert_time, additional_details)
+    else:
+        # Return all events found
+        return events.get('Events')
+
+
+    """
+    The function filter cloudtrail events list by additional_details given and returns 
+    the event closest to the given alert_time
+    """
+    
+    
+def filter_events(cloudtrail_events, alert_time, additional_details=''):
+    # Make list of events related to the relevant resource, if additional details are given
+    if additional_details != '':
+        events = [event for event in cloudtrail_events if additional_details in event['Resources'][0]['ResourceName']]
+    else:
+        events = cloudtrail_events
+
+    # If list contains only 1 event - return it
+    if len(events) == 1:
+        return events[0]
+    
+    # If there are more than 1 event - find the event that occurred in the nearest time to the alert time
+    try:
+        return min(events, key=lambda event: abs(
+            alert_time - datetime.strptime(json.loads(event['CloudTrailEvent'])['eventTime'], '%Y-%m-%dT%H:%M:%SZ')))
+    # No events found
+    except ValueError:
+        return None
