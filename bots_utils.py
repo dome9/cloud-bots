@@ -144,11 +144,13 @@ The function looks up for events in cloud trail based on alert time and alert na
   is_return_single_event (bool): flag. True - returns only one event. Returns the event that occurred at the time closest to alert_time
                                        False - return all the events found in the time period
   time_diff (int/float): the amount of time (in minutes) to add before and after the alert time in the lookup proccess. 
-  additional_details (string): string with additional information that helps to filter the events found.
+  resource_name_to_filter (string): string with resource name that helps to filter the events found.
+                                    For example: If multiple 'UpdateFunctionConfiguration' events found, you can pass your lambda function name in
+                                                 resource_name_to_filter field. That way, the events that are related to other lambdas will be filltered out.
 """
 
 
-def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, additional_details=''):
+def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
 
@@ -170,7 +172,7 @@ def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_ret
     
     if is_return_single_event:
         # Return only one event - which is the closest to alert time
-        return filter_events(events.get('Events'), alert_time, additional_details)
+        return filter_events(events.get('Events'), alert_time, resource_name_to_filter)
     else:
         # Return all events found
         return events.get('Events')
@@ -179,13 +181,17 @@ def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_ret
 """
 The function filter cloudtrail events list by additional_details given and returns 
 the event closest to the given alert_time
+  cluodtrail_events (list): list of events found in cloudtrail
+  alert_time (datetime object): the time at which the event occurred. 
+  resource_name_to_filter (String): string with resource name that helps to filter the events found.
+
 """
     
     
-def filter_events(cloudtrail_events, alert_time, additional_details=''):
-    # Make list of events related to the relevant resource, if additional details are given
-    if additional_details != '':
-        events = [event for event in cloudtrail_events if additional_details in event['Resources'][0]['ResourceName']]
+def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
+    # Make list of events related to the relevant resource, if additional resource_name_to_filter is given
+    if resource_name_to_filter != '':
+        events = [event for event in cloudtrail_events if resource_name_to_filter in json.dumps(event['Resources'])]
     else:
         events = cloudtrail_events
 
@@ -195,4 +201,5 @@ def filter_events(cloudtrail_events, alert_time, additional_details=''):
             alert_time - datetime.strptime(json.loads(event['CloudTrailEvent'])['eventTime'], '%Y-%m-%dT%H:%M:%SZ')))
     # No events found
     except ValueError:
+        print('Warning - No matching events were found in cloudtrail lookup')
         return None
