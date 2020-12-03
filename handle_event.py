@@ -162,11 +162,11 @@ def handle_event(message, output_message):
 
         try:  ## Run the bot
             # Look for Log.ic event time in message 
-            for element in message['additionalFields']:
+            for i, element in enumerate(message['additionalFields']):
                 if element.get('name') == 'logic_data' and 'alertWindowStartTime' in element.get('value'):
                     try:
                         # add Log.ic event time to the entity
-                        message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
+                        message['entity']['eventTime'] = json.loads(message['additionalFields'][i]['value'])['alertWindowStartTime']
                     except Exception as e:
                         print(f'{__file__} - Warning - Error while adding Log.ic event time to the entity. Error {e}')
            
