@@ -161,11 +161,14 @@ def handle_event(message, output_message):
             boto_session = boto3.Session(region_name=message_data.get('region'))
 
         try:  ## Run the bot
-            try:
-                # add Log.ic event time to the entity
-                message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
-            except Exception as e:
-                print(f'{__file__} - Warning - Error while adding Log.ic event time to the entity. Error {e}')
+            # Look for Log.ic event time in message 
+            for element in message['additionalFields']:
+                if element.get('name') == 'logic_data' and 'alertWindowStartTime' in element.get('value'):
+                    try:
+                        # add Log.ic event time to the entity
+                        message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
+                    except Exception as e:
+                        print(f'{__file__} - Warning - Error while adding Log.ic event time to the entity. Error {e}')
            
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
