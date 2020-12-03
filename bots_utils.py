@@ -137,10 +137,11 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
 
 
 """
-The function looks up for events in cloud trail based on alert time and alert name.
+The function looks up for events in cloud trail based on alert time and event name / resource name.
   boto_session (boto_session object)
-  alert_time (string): the time at which the event occurred. 
-  event_name (string): name of the event as it appears in cloudtrail
+  alert_time (string): the time at which the event occurred.
+  attribute_key (string): name of attribute key. Default lookup - by event name.
+  attribute_value (string): name of the event / resource (according to attribute_key), as it appears in cloudtrail. 
   is_return_single_event (bool): flag. True - returns only one event. Returns the event that occurred at the time closest to alert_time
                                        False - return all the events found in the time period
   time_diff (int/float): the amount of time (in minutes) to add before and after the alert time in the lookup proccess. 
@@ -150,7 +151,7 @@ The function looks up for events in cloud trail based on alert time and alert na
 """
 
 
-def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
+def cloudtrail_event_lookup_by_name(boto_session, alert_time, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
 
@@ -164,7 +165,7 @@ def cloudtrail_event_lookup_by_name(boto_session, alert_time, event_name, is_ret
     # Look up events in cloudtrail
     try:
         events = cloudtrail_client.lookup_events(LookupAttributes=[
-            {'AttributeKey': 'EventName', 'AttributeValue': event_name}],
+            {'AttributeKey': attribute_key, 'AttributeValue': attribute_value}],
             StartTime=start_time, EndTime=end_time)
 
     except Exception as e:
