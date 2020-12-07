@@ -151,7 +151,7 @@ The function looks up for events in cloud trail based on alert time and event na
 """
 
 
-def cloudtrail_event_lookup_by_name(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
+def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
 
