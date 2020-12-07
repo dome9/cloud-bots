@@ -140,7 +140,7 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
 The function looks up for events in cloud trail based on alert time and event name / resource name.
   boto_session (boto_session object)
   entity (entity dictionary)
-  attribute_key (string): name of attribute key. Default lookup - by event name.
+  attribute_key (string): name of attribute key (as it appears in boto documentation). Default lookup - by event name.
   attribute_value (string): name of the event / resource (according to attribute_key), as it appears in cloudtrail. 
   is_return_single_event (bool): flag. True - returns only one event. Returns the event that occurred at the time closest to alert_time
                                        False - return all the events found in the time period
@@ -209,7 +209,7 @@ def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
     try:
         return min(events, key=lambda event: abs(
             alert_time - datetime.strptime(json.loads(event['CloudTrailEvent'])['eventTime'], '%Y-%m-%dT%H:%M:%SZ')))
-    # No events found
-    except ValueError:
+    # No events found or json loads failed
+    except:
         print('Warning - No matching events were found in cloudtrail lookup')
         return None
