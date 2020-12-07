@@ -139,7 +139,7 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
 """
 The function looks up for events in cloud trail based on alert time and event name / resource name.
   boto_session (boto_session object)
-  alert_time (string): the time at which the event occurred.
+  entity (entity dictionary)
   attribute_key (string): name of attribute key. Default lookup - by event name.
   attribute_value (string): name of the event / resource (according to attribute_key), as it appears in cloudtrail. 
   is_return_single_event (bool): flag. True - returns only one event. Returns the event that occurred at the time closest to alert_time
@@ -151,12 +151,16 @@ The function looks up for events in cloud trail based on alert time and event na
 """
 
 
-def cloudtrail_event_lookup_by_name(boto_session, alert_time, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
+def cloudtrail_event_lookup_by_name(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
 
     #  Parse given event time
-    alert_time = datetime.strptime(alert_time, '%Y-%m-%dT%H:%M:%SZ')
+    try:
+        alert_time = datetime.strptime(entity.get('eventTime'), '%Y-%m-%dT%H:%M:%SZ')
+    except Exception as e:
+        print(f'Warning - Error while parsing Log.ic event time: {e} ')
+        return None
 
     # Adjust start and end time the event search
     start_time = alert_time - timedelta(minutes=time_diff)
@@ -169,7 +173,12 @@ def cloudtrail_event_lookup_by_name(boto_session, alert_time, attribute_value, a
             StartTime=start_time, EndTime=end_time)
 
     except Exception as e:
-        return 'Unexpected error: %s \n' % e
+        print('Unexpected error while querying cloudtrail: %s \n' % e) 
+        return None
+    
+    if not events.get('Events'):
+        print('Warning - No matching events were found in cloudtrail lookup')
+        return None
     
     if is_return_single_event:
         # Return only one event - which is the closest to alert time
