@@ -168,7 +168,7 @@ def handle_event(message, output_message):
                                                       for element in message['additionalFields'] 
                                                       if element.get('name') == 'logic_data' and 
                                                       'alertWindowStartTime' in element.get('value'))
-            except Exception as e:
+            except:
                 print(f'{__file__} - Warning - Error while adding Log.ic event time to the entity.')
                 
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
