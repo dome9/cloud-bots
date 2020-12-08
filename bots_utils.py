@@ -5,6 +5,8 @@ Bots Utilities File
 # imports
 import re
 import ipaddress
+from datetime import datetime, timedelta
+import json
 
 PORT_TO = 'portTo'
 PORT_FROM = 'port'
@@ -12,6 +14,7 @@ PROTOCOL = 'protocol'
 SCOPE = 'scope'
 ALL_TRAFFIC_PORT = 0
 ALL_TRAFFIC_PROTOCOL = '-1'
+DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF = 0.5
 
 """
 #################################
@@ -131,3 +134,82 @@ def delete_sg(sg, sg_id, rule, direction, text_output):
         text_output = text_output + f'Error unknown direction ; \n'
 
     return text_output
+
+
+"""
+The function looks up for events in cloud trail based on alert time and event name / resource name.
+  boto_session (boto_session object)
+  entity (entity dictionary)
+  attribute_key (string): name of attribute key (as it appears in boto documentation). Default lookup - by event name.
+  attribute_value (string): name of the event / resource (according to attribute_key), as it appears in cloudtrail. 
+  is_return_single_event (bool): flag. True - returns only one event. Returns the event that occurred at the time closest to alert_time
+                                       False - return all the events found in the time period
+  time_diff (int/float): the amount of time (in minutes) to add before and after the alert time in the lookup proccess. 
+  resource_name_to_filter (string): string with resource name that helps to filter the events found.
+                                    For example: If multiple 'UpdateFunctionConfiguration' events found, you can pass your lambda function name in
+                                                 resource_name_to_filter field. That way, the events that are related to other lambdas will be filltered out.
+"""
+
+
+def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
+    # Create Cloudtrail client
+    cloudtrail_client = boto_session.client('cloudtrail')
+
+    #  Parse given event time
+    try:
+        alert_time = datetime.strptime(entity.get('eventTime'), '%Y-%m-%dT%H:%M:%SZ')
+    except Exception as e:
+        print(f'Warning - Error while parsing Log.ic event time: {e} ')
+        return None
+
+    # Adjust start and end time the event search
+    start_time = alert_time - timedelta(minutes=time_diff)
+    end_time = alert_time + timedelta(minutes=time_diff)
+
+    # Look up events in cloudtrail
+    try:
+        events = cloudtrail_client.lookup_events(LookupAttributes=[
+            {'AttributeKey': attribute_key, 'AttributeValue': attribute_value}],
+            StartTime=start_time, EndTime=end_time)
+
+    except Exception as e:
+        print('Unexpected error while querying cloudtrail: %s \n' % e) 
+        return None
+    
+    if not events.get('Events'):
+        print('Warning - No matching events were found in cloudtrail lookup')
+        return None
+    
+    if is_return_single_event:
+        # Return only one event - which is the closest to alert time
+        return filter_events(events.get('Events'), alert_time, resource_name_to_filter)
+    else:
+        # Return all events found
+        return events.get('Events')
+
+    
+"""
+The function filter cloudtrail events list by additional_details given and returns 
+the event closest to the given alert_time
+  cluodtrail_events (list): list of events found in cloudtrail
+  alert_time (datetime object): the time at which the event occurred. 
+  resource_name_to_filter (String): string with resource name that helps to filter the events found.
+
+"""
+    
+    
+def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
+    # Make list of events related to the relevant resource, if additional resource_name_to_filter is given
+    if resource_name_to_filter != '':
+        events = [event for event in cloudtrail_events if resource_name_to_filter in json.dumps(event['Resources'])]
+    else:
+        events = cloudtrail_events
+
+    # Find the event that occurred in the nearest time to the alert time
+    try:
+        return min(events, key=lambda event: abs(
+            alert_time - datetime.strptime(json.loads(event['CloudTrailEvent'])['eventTime'], '%Y-%m-%dT%H:%M:%SZ')))
+    # No events found or json loads failed
+    except:
+        print('Warning - No matching events were found in cloudtrail lookup')
+        return None
