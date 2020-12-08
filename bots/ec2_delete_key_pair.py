@@ -16,16 +16,9 @@ def run_action(boto_session, rule, entity, params):
         #Delete the keypair
         ec2_client = boto_session.client('ec2')
         result = ec2_client.delete_key_pair(KeyName=keypair)
+        text_output = f"Keypair {keypair} was deleted successfully.\n"
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
-        return text_output
-
-    #Check if the keypair was deleted
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
-    else:
-        text_output = "Keypair %s was deleted successfully\n" % keypair
+        text_output = f"Client error: {e}.\n"
 
     return text_output

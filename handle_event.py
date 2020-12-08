@@ -2,6 +2,7 @@ import re
 import os
 import boto3
 import importlib
+import json
 from botocore.exceptions import ClientError
 
 MININAL_TAG_LENGTH = 2
@@ -160,6 +161,16 @@ def handle_event(message, output_message):
             boto_session = boto3.Session(region_name=message_data.get('region'))
 
         try:  ## Run the bot
+        
+            # Find and add Log.ic event time to the entity
+            try:
+                message['entity']['eventTime'] = next(json.loads(element['value'])['alertWindowStartTime'] 
+                                                      for element in message['additionalFields'] 
+                                                      if element.get('name') == 'logic_data' and 
+                                                      'alertWindowStartTime' in element.get('value'))
+            except:
+                print(f'{__file__} - Warning - Adding Log.ic event time to entity failed')
+                
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
         except Exception as e:
