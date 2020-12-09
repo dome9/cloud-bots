@@ -1,10 +1,10 @@
 '''
-## delete_key_pair
+## ec2_delete_key_pair
 What it does: Deletes a key pair
-Usage: AUTO: delete_key_pair
-Limitations: none
+Usage: AUTO: ec2_delete_key_pair
+Sample GSL: cloudtrail where event.name='CreateKeyPair'
+Limitations: None
 '''
-import boto3
 from botocore.exceptions import ClientError
 
 ### Delete EC2 Key Pair ###
