@@ -9,13 +9,16 @@ import json
 from botocore.exceptions import ClientError
 import bots_utils
 
-TIME_DIFF = 3
 EVENT_NAME = 'ModifyInstanceMetadataOptions'
 
 ### Enable EC2 metadata V2 ###
 def run_action(boto_session, rule, entity, params):
     #Get the instance id
     events = bots_utils.cloudtrail_event_lookup(boto_session, entity, EVENT_NAME)
+
+    #If it doesn't find any cloudtrail events
+    if(not events):
+        return f"Can't find cloudtrail event: {EVENT_NAME}"
     instance_id = get_details_from_event(events)
 
     try:
