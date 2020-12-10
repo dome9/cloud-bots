@@ -101,6 +101,7 @@ Resources:
                 - ec2:CreateTags # For ec2_tag_instance
                 - ec2:DeleteSecurityGroup # For sg_delete
                 - ec2:DeleteInternetGateway # For igw_delete
+                - ec2:DeleteKeyPair # For ec2_delete_key_pair
                 - ec2:DetachInternetGateway # For igw_delete
                 - ec2:DescribeAddresses # For ec2_release_eips
                 - ec2:DescribeSecurityGroups # For instance_quarantine
@@ -108,6 +109,7 @@ Resources:
                 - ec2:DisassociateAddress # For ec2_release_eips
                 - ec2:ModifyImageAttribute # For ami_set_to_private
                 - ec2:ModifyInstanceAttribute # For instance_quarantine
+                - ec2:ModifyInstanceMetadata # For ec2_enable_metadata_v2
                 - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
                 - ec2:ReleaseAddress # For ec2_release_eips
                 - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
