@@ -5,7 +5,13 @@ What it does:
 Usage:
     AUTO: iam_delete_default_policy_version
 Limitations:
-    None
+    Most be at least more than one version to the policy.
+Code flow:
+1. get the version id of the default version (that we need to delete)
+2. get list of all the version of the policy (https://docs.aws.amazon.com/cli/latest/reference/iam/list-policy-versions.html)
+3. find the latest version before the default version which will replace the default
+4. replace the default version to another version (the latest version before it that we just found)
+5. delete the previous default version from the policy (now we can because it's no longer the default version)
 '''
 
 import boto3
@@ -19,14 +25,14 @@ def get_default_version_id(iam_client, policy_arn, text_output):
     return version_id, text_output
 
 # find the newest version before the default version which will replace the default.
-def get_new_default_version(versions):
+def get_last_default_version(versions):
     if (versions[0]['IsDefaultVersion'] == False): # if the newest version isn't the default version, send it.
         return versions[0]['VersionId']
     else: # the newest version is the default version (probably), send the newest before it.
         return versions[1]['VersionId']
 
-# swap the default version to another version
-def swap_default_version(iam_client, policy_arn, new_default_version_id):
+# replace the default version to another version
+def replace_default_version(iam_client, policy_arn, new_default_version_id):
     response = iam_client.set_default_policy_version(
         PolicyArn=policy_arn,
         VersionId=new_default_version_id
@@ -50,24 +56,15 @@ def run_action(boto_session, rule, entity, params):
     iam_client = boto_session.client('iam')
 
     try:
-        # get the version id of the default version (that we need to delete)
         default_version_id, text_output = get_default_version_id(iam_client, policy_arn, text_output)
 
-        # get list of all the version of the policy
-        # https://docs.aws.amazon.com/cli/latest/reference/iam/list-policy-versions.html
         versions = iam_client.list_policy_versions(PolicyArn=policy_arn) ["Versions"]
 
         # if the default version isn't the only version
         if len(versions) > 1:
-            # find the newest version before the default version which will replace the default
-            new_default_version_id = get_new_default_version(versions)
-
-            # swap the default version to another version (the newest version before it that we just found)
-            text_output += swap_default_version(iam_client, policy_arn, new_default_version_id)
-
-            # delete the previous default version from the policy (now we can because it's no longer the default version)
+            new_default_version_id = get_last_default_version(versions)
+            text_output += replace_default_version(iam_client, policy_arn, new_default_version_id)
             text_output += remove_policy_version(iam_client, policy_arn, default_version_id)
-
         else:
             text_output += f'version: {default_version_id} is the only version of the policy {policy_arn}. Therefore we can\'t remove it.'
 
