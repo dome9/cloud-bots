@@ -85,6 +85,7 @@ Resources:
           Statement:
             - Effect: Allow
               Action:
+                - cloudtrail:LookupEvents - #For look_up function in bot_utils
                 - cloudtrail:CreateTrail # For create_cloudtrail
                 - cloudtrail:StartLogging # For create_cloudtrail
                 - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
@@ -109,17 +110,33 @@ Resources:
                 - ec2:ModifyImageAttribute # For ami_set_to_private
                 - ec2:ModifyInstanceAttribute # For instance_quarantine
                 - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
+                - ec2:ReplaceNetworkAclEntry # For acl revert modification bot
+                - ec2:CreateNetworkAclEntry # For acl revert modification bot
+                - ec2:DeleteNetworkAclEntry # For acl revert modification bot
+                - ec2:ReplaceNetworkAclAssociation # For bot isolate vpc
+                - ec2:DescribeVpcs # For bot isolate vpc
+                - ec2:CreateNetworkAcl # For bot isolate vpc 
+                - ec2:ModifyVpcAttribute # For bot isolate vpc 
+                - ec2:DescribeNetworkAcls # For bot isolate vpc        
+                - ec2:DeleteNetworkAcl #For acl delete bot
                 - ec2:ReleaseAddress # For ec2_release_eips
                 - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
                 - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
                 - ec2:StopInstances # For ec2_stop_instance
                 - ec2:TerminateInstances # For ec2_terminate_instance
+                - ecs:UpdateContainerInstancesState #For Ecs stop bot and reboot bot
+                - ecs:DescribeTaskDefinition #For Ecs stop bot and reboot bot
+                - ecs:ListTasks #For Ecs stop bot and reboot bot
+                - ecs:StopTask #For Ecs stop bot and reboot bot
+                - ecs:DescribeTasks #For Ecs stop bot and reboot bot
+                - ecs:ListClusters #For Ecs stop bot and reboot bot
                 - kms:EnableKeyRotation # For kms_enable_rotation
                 - iam:AttachRolePolicy # For ec2_update_instance_role and others
                 - iam:AttachUserPolicy # For iam_quarantine_user
-                - iam:CreatePolicy
+                - iam:CreatePolicy 
                 - iam:CreateRole # For vpc_turn_on_flow_logs
                 - iam:GetPolicy
+                - iam:ListUsers # For bot isolate vpc 
                 - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                 - iam:UpdateLoginProfile # For iam_user_force_password_change
@@ -145,6 +162,7 @@ Resources:
                 - sns:ListSubscriptionsByTopic # For cloudwatch_create_metric_filter
                 - sts:GetCallerIdentity # For checking what account this is running in
                 - sts:AssumeRole # For multi_account
+
               Resource: '*'
       Environment:
         Variables:
