@@ -2,6 +2,7 @@ import re
 import os
 import boto3
 import importlib
+import json
 from botocore.exceptions import ClientError
 
 MININAL_TAG_LENGTH = 2
@@ -62,9 +63,11 @@ def get_bots_from_finding(compliance_tags, remediation_actions):
 
 
 def handle_event(message, output_message):
+    print("### message")
+    print(message)
+    print("###")
     post_to_sns = True
     message_data = get_data_from_message(message)
-
     # evaluate the event and tags and decide is there's something to do with them.
     if message_data.get('status') == 'Passed':
         print(f'''{__file__} - Rule: {message_data.get('rule_name')} passed''')
@@ -162,7 +165,10 @@ def handle_event(message, output_message):
         try:  ## Run the bot
             try:
             # add the event time to the entity
-                message['entity']['eventTime'] = message['additionalFields'][0]['value']['alertWindowStartTime']
+                if 'additionalFields' in message.keys():
+                    message['entity']['eventTime'] = json.loads(message['additionalFields'][0]['value'])['alertWindowStartTime']
+                else:
+                    message['entity']['eventTime'] = message['reportTime']
             except Exception as e:
                 print(f'{__file__} - Error - Error while adding event time to the entity. Error {e}')
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
