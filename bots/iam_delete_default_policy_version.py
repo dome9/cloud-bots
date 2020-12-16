@@ -1,7 +1,7 @@
 '''
 ## iam_delete_default_policy_version
 What it does:
-    Delete the default policy version and put the newest before it.
+    Delete the default policy version and put the latest before it.
 Usage:
     AUTO: iam_delete_default_policy_version
 Limitations:
@@ -24,11 +24,11 @@ def get_default_version_id(iam_client, policy_arn, text_output):
     text_output += f'default policy version to remove is version: {version_id} from policy: {policy_arn} \n'
     return version_id, text_output
 
-# find the newest version before the default version which will replace the default.
+# find the latest version before the default version which will replace the default.
 def get_last_default_version(versions):
-    if (versions[0]['IsDefaultVersion'] == False): # if the newest version isn't the default version, send it.
+    if (versions[0]['IsDefaultVersion'] == False): # if the latest version isn't the default version, send it.
         return versions[0]['VersionId']
-    else: # the newest version is the default version (probably), send the newest before it.
+    else: # the latest version is the default version (probably), send the latest before it.
         return versions[1]['VersionId']
 
 # replace the default version to another version
