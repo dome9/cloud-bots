@@ -110,6 +110,7 @@ Resources:
                 - ec2:ModifyInstanceAttribute # For instance_quarantine
                 - ec2:MonitorInstances # For ec2_enable_detailed_monitoring
                 - ec2:ReleaseAddress # For ec2_release_eips
+                - ec2:DeleteKeyPair # For ec2_delete_key_pair
                 - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
                 - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
                 - ec2:StopInstances # For ec2_stop_instance
@@ -120,6 +121,8 @@ Resources:
                 - iam:CreatePolicy
                 - iam:CreateRole # For vpc_turn_on_flow_logs
                 - iam:GetPolicy
+                - iam:ListInstanceProfilesForRole # For ec2_detach_instance_role
+                - iam:RemoveRoleFromInstanceProfile # For ec2_detach_instance_role
                 - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                 - iam:UpdateLoginProfile # For iam_user_force_password_change
