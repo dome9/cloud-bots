@@ -4,6 +4,10 @@ What it does: stops an ecs tasks and ec2 instances which contain the tasks
 Usage: AUTO: ecs_stop
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
 Limitations: none
+
+Bot doesn't change services fields, number of required tasks field as well.
+Since some tasks can be activated without a service.
+Draining the instances related to the tasks prevents the service from creating tasks even if field of required tasks not set to 0.
 '''
 
 import boto3
