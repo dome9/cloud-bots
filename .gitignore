@@ -18,11 +18,3 @@ cs2_cftemplate.yaml
 gp.sh
 cloudbots_sam.yaml
 cloudbots_cftemplate.yaml
-/venv/
-/.idea/inspectionProfiles/
-/.idea/.gitignore
-/.idea/aws.xml
-/.idea/cloud-bots.iml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/vcs.xml
