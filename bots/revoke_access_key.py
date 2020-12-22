@@ -1,6 +1,6 @@
 """
 ## revoke_access_key
-What is does: deactivate an IAM user access key
+What it does: deactivate an IAM user access key
 Usage : AUTO: revoke_access_key
 Limitations: none
 """
