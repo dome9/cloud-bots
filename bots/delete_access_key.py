@@ -1,6 +1,6 @@
 """
 ## delete_access_key
-What is does: Delete an IAM user access key
+What it does: Delete an IAM user access key
 Usage : AUTO: delete_access_key
 Limitations: none
 """
