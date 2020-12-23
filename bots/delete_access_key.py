@@ -17,9 +17,6 @@ def run_action(boto_session, rule, entity, params):
     # create iam resource
     iam_resource = boto3.resource('iam')
 
-    # get the event time from the entity
-    event_time = entity['eventTime']
-
     # look for event in cloudtrail
     event = bots_utils.cloudtrail_event_lookup(boto_session, entity, EVENT_NAME)
 
@@ -36,11 +33,8 @@ def run_action(boto_session, rule, entity, params):
         # delete the access key
         access_key.delete()
         # create the text output
-        text_output = f'user: {username} access key with id : {access_key_id} was deleted'
+        return f'user: {username} access key with id : {access_key_id} was deleted'
 
     except ClientError as e:
         # in case of an unexpected error
-        return "Unexpected error: %s \n" % e
-
-    return text_output
-
+        return f"Unexpected error: {e} \n"
