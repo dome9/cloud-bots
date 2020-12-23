@@ -4,7 +4,7 @@ What it does: deletes created network acl.
 Usage: AUTO: acl_delete
 
 Sample GSL: cloudtrail where event.name='CreateNetworkAcl'
-Limitation: None
+Limitation: Function will not delete default vpc's network acl
 '''
 
 import boto3
@@ -41,7 +41,7 @@ def run_action(boto_session, rule, entity, params):
         acl_id = acl_description.get('networkAclId')
 
         network_acl = ec2_resource.NetworkAcl(acl_id)
-        # checking if acl was not creates as default vpc's network acl
+        # checking if acl was not created as default vpc's network acl
         if not network_acl.is_default:
             network_acl.delete()
             text_output = 'Network acl deleted successfully\n'
