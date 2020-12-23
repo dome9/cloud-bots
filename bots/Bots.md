@@ -1,4 +1,6 @@
 # Bots
+  - [acl\_delete](#acl_delete)
+  - [acl\_revert\_modification](#acl_revert_modification)
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
@@ -9,11 +11,14 @@
   - [config\_enable](#config_enable)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
+  - [ec2\_detach\_instance\_role](#ec2_detach_instance_role)
   - [ec2\_release\_eips](#ec2_release_eips)
   - [ec2\_quarantine\_instance](#ec2_quarantine_instance)
   - [ec2\_stop\_instance](#ec2_stop_instance)
   - [ec2\_terminate\_instance](#ec2_terminate_instance)
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
+  - [ecs\_reboot](#ecs_reboot)
+  - [ecs\_stop](#ecs_stop)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
   - [iam\_quarantine\_role](#iam_quarantine_role)
@@ -39,6 +44,7 @@
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
+  - [vpc\_isolate](#vpc_isolate)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   - [sg\_rules\_delete\_by\_scope](#sg_rules_delete_by_scope)
   
@@ -47,6 +53,22 @@
 - [ec2\_tag\_instance\_from\_vpc](#ec2_tag_instance_from_vpc)
 - [s3\_delete\_bucket](#s3_delete_bucket)
 
+## acl\_delete
+
+What it does: deletes created network acl.
+Usage: AUTO: acl_delete
+
+Sample GSL: cloudtrail where event.name='CreateNetworkAcl'
+Limitation: None
+
+## acl\_revert\_modification
+
+What it does: returns an acl to it's previous form.
+Usage: AUTO: acl_revert_modification
+
+Sample GSL: cloudtrail where event.name in ('ReplaceNetworkAclEntry', 'DeleteNetworkAclEntry', 'CreateNetworkAclEntry')
+Limitation: None
+Note: Logic only bot
 
 ## ami\_set\_to\_private
 
@@ -163,6 +185,13 @@ snapshot will be tagged with a key of "source\_instance\_id" and a value
 with the instance id from the source instance.  
 Limitations: This will not work on Instance Store volumes. Only EBS
 
+## ec2\_detach\_instance\_role
+
+What it does: Detach an instance role from an EC2 instance.
+Usage: AUTO: ec2_detach_instance_role
+Sample GSL: cloudtrail where event.name='AddRoleToInstanceProfile' and event.status='Success'
+Limitations: none
+
 ## ec2\_release\_eips
 
 What it does: Disassociates and releases all EIPs on an instance  
@@ -197,6 +226,20 @@ Example:  ec2\_update\_instance\_role
 policy\_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
 Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
+
+## ecs\_reboot
+
+What it does: stops an ecs task and the service (which started the task) will create it again and run it.
+Usage: AUTO: ecs_reboot
+Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+Limitations: none
+
+## ecs\_stop
+
+What it does: stops an ecs tasks and ec2 instances which contain the tasks
+Usage: AUTO: ecs_stop
+Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+Limitations: none
 
 ## iam\_role\_attach\_policy
 
@@ -550,6 +593,15 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
   - Volume
   - Vpc
   - VpcPeeringConnection
+
+## vpc\_isolate
+
+What it does: turn off dns resource
+              change network acl to new empty one with deny all
+              add iam policy, to all users in the account, which limits vpc use: ec2 and sg use in the vpc
+
+Usage: AUTO: vpc_isolate
+Limitation: None
 
 ## vpc\_turn\_on\_flow\_logs
 
