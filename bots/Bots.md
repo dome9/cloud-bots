@@ -55,19 +55,20 @@
 
 ## acl\_delete
 
-What it does: deletes created network acl.
+What it does: deletes created network acl.  
 Usage: AUTO: acl_delete
 
-Sample GSL: cloudtrail where event.name='CreateNetworkAcl'
-Limitation: None
+Sample GSL: cloudtrail where event.name='CreateNetworkAcl'  
+Limitation: None  
+Note: Logic only bot
 
 ## acl\_revert\_modification
 
-What it does: returns an acl to it's previous form.
-Usage: AUTO: acl_revert_modification
+What it does: returns an acl to it's previous form.  
+Usage: AUTO: acl_revert_modification   
 
-Sample GSL: cloudtrail where event.name in ('ReplaceNetworkAclEntry', 'DeleteNetworkAclEntry', 'CreateNetworkAclEntry')
-Limitation: None
+Sample GSL: cloudtrail where event.name in ('ReplaceNetworkAclEntry', 'DeleteNetworkAclEntry', 'CreateNetworkAclEntry')  
+Limitation: None  
 Note: Logic only bot
 
 ## ami\_set\_to\_private
@@ -187,9 +188,9 @@ Limitations: This will not work on Instance Store volumes. Only EBS
 
 ## ec2\_detach\_instance\_role
 
-What it does: Detach an instance role from an EC2 instance.
-Usage: AUTO: ec2_detach_instance_role
-Sample GSL: cloudtrail where event.name='AddRoleToInstanceProfile' and event.status='Success'
+What it does: Detach an instance role from an EC2 instance.  
+Usage: AUTO: ec2_detach_instance_role  
+Sample GSL: cloudtrail where event.name='AddRoleToInstanceProfile' and event.status='Success'  
 Limitations: none
 
 ## ec2\_release\_eips
@@ -229,16 +230,16 @@ managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
 
 ## ecs\_reboot
 
-What it does: stops an ecs task and the service (which started the task) will create it again and run it.
-Usage: AUTO: ecs_reboot
-Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+What it does: stops an ecs task and the service (which started the task) will create it again and run it.  
+Usage: AUTO: ecs_reboot  
+Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none
 
 ## ecs\_stop
 
-What it does: stops an ecs tasks and ec2 instances which contain the tasks
-Usage: AUTO: ecs_stop
-Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
+What it does: stops an ecs tasks and ec2 instances which contain the tasks  
+Usage: AUTO: ecs_stop  
+Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none
 
 ## iam\_role\_attach\_policy
@@ -596,11 +597,11 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
 
 ## vpc\_isolate
 
-What it does: turn off dns resource
-              change network acl to new empty one with deny all
-              add iam policy, to all users in the account, which limits vpc use: ec2 and sg use in the vpc
+What it does: turn off dns resource,    
+              change network acl to new empty one with deny all,  
+              add iam policy, to all users in the account, which limits vpc use: ec2 and sg use in the vpc  
 
-Usage: AUTO: vpc_isolate
+Usage: AUTO: vpc_isolate  
 Limitation: None
 
 ## vpc\_turn\_on\_flow\_logs
