@@ -26,7 +26,7 @@ def run_action(boto_session, rule, entity, params):
                                                resource_name_to_filter=user_to_remove)
     if not event:
         # If valid event was not found - bot will not run
-        text_output = f'Error: No matching \'{EVENT_NAME}\' events were found in cloud trail. Bot wasn\'t executed.'
+        text_output = f'Error: No matching {EVENT_NAME} events were found in cloud trail. Bot wasn\'t executed.'
 
     else:
         # If there is a valid event - get relevant details and remove user from group
@@ -42,7 +42,7 @@ def remove_user_from_group(boto_session, user_to_remove, group_name):
         # Remove the IAM user from the IAM group
         iam_client.remove_user_from_group(GroupName=group_name, UserName=user_to_remove)
     except botocore.exceptions.ClientError as e:
-        return 'Client error: %s \n' % e
+        return f'Client error: {e} \n'
     else:
         return f'Success: The user: {user_to_remove} was successfully detached from the group: {group_name}'
 
