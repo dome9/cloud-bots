@@ -13,6 +13,8 @@ from botocore.exceptions import ClientError
 import json
 from bots_utils import cloudtrail_event_lookup
 
+EVENT_NAME = 'CreateNetworkAclEntry'
+
 def replace_entry(boto_session, params):
     '''
     function will be called if event is: ReplaceNetworkAclEntry.
@@ -25,24 +27,23 @@ def replace_entry(boto_session, params):
     text_output = ''
     acl_id = params.get('networkAclId')
     # Trying to get entry creation event
-    print('here')
     event_name, event_params = find_event(boto_session, acl_id)
 
     # Exiting if creation event can not be found
-    if event_name != 'CreateNetworkAclEntry':
+    if event_name != EVENT_NAME:
         text_output = f"Can not recreate replaced rule {params.get('ruleNumber')}.\nExiting"
         return text_output
 
-    ec2_resource = boto_session.resource('ec2')
-    network_acl = ec2_resource.NetworkAcl(acl_id)
+    ec2_client = boto_session.client('ec2')
 
     # change dict keys to upper case if they have value
     try:
-        network_acl.replace_entry(
+        ec2_client.replace_network_acl_entry(
             CidrBlock=event_params.get('cidrBlock'),
             DryRun=False,
             Egress=event_params.get('egress'),
             IcmpTypeCode=event_params.get('icmpTypeCode'),
+            NetworkAclId=acl_id,
             PortRange=event_params.get('portRange'),
             Protocol=event_params.get('aclProtocol'),
             RuleAction=event_params.get('ruleAction'),
@@ -72,19 +73,19 @@ def create_entry(boto_session, params):
     event_name, event_params = find_event(boto_session, acl_id)
 
     # Exiting if creation event can not be found
-    if event_name != 'CreateNetworkAclEntry':
+    if event_name != EVENT_NAME:
         text_output = f'Can not recreate deleted rule {params.get("ruleNumber")}.\nExiting'
         return text_output
 
-    ec2_resource = boto_session.resource('ec2')
-    network_acl = ec2_resource.NetworkAcl(acl_id)
+    ec2_client = boto_session.client('ec2')
 
     try:
-        network_acl.create_entry(
+        ec2_client.create_network_acl_entry(
             CidrBlock=event_params.get('cidrBlock'),
             DryRun=False,
             Egress=event_params.get('egress'),
             IcmpTypeCode=event_params.get('icmpTypeCode'),
+            NetworkAclId=acl_id,
             PortRange=event_params.get('portRange'),
             Protocol=event_params.get('aclProtocol'),
             RuleAction=event_params.get('ruleAction'),
@@ -107,13 +108,14 @@ def delete_entry(boto_session, params):
     '''
 
     text_output = ''
-    ec2_resource = boto_session.resource('ec2')
-    network_acl = ec2_resource.NetworkAcl(params.get('networkAclId'))
+  
+    ec2_client = boto_session.client('ec2')
 
     try:
-        network_acl.delete_entry(
+        ec2_client.delete_network_acl_entry(
             DryRun=False,
             Egress=params.get('egress'),
+            NetworkAclId=params.get('networkAclId'),
             RuleNumber=params.get('ruleNumber'))
         text_output = f"Rule number {params.get('ruleNumber')} successfully deleted \n"
 
@@ -142,11 +144,9 @@ def find_event(boto_session, attribute_value, entity={}):
     else:
         # in case time is not set, function will look for all events related to attribute_value
         tmp_response = client.lookup_events(LookupAttributes=[{'AttributeKey': 'ResourceName', 'AttributeValue': attribute_value}])
-        print(tmp_response)
         for event in tmp_response['Events']:
-            if event['EventName'] == 'CreateNetworkAclEntry':
+            if event['EventName'] == EVENT_NAME:
                 # get index of create entry event
-                print(event)
                 response = event
                 break
 
@@ -154,7 +154,7 @@ def find_event(boto_session, attribute_value, entity={}):
         return 'No event found!', None
         
     # gets dictionary from cloudtrail string
-    print(response)
+ 
     cloud_trail = json.loads(response.get('CloudTrailEvent'))
     event_params = cloud_trail.get('requestParameters')
     
@@ -176,14 +176,14 @@ def run_action(boto_session, rule, entity, params):
     acl_id = entity.get('id')
 
     # There are 3 possible events. Each has it's own solution. This is a dict to help assign a function to each case.
-    functions = {'ReplaceNetworkAclEntry': replace_entry, 'DeleteNetworkAclEntry': create_entry, 'CreateNetworkAclEntry': delete_entry}
+    event_name_to_function_mapping = {'ReplaceNetworkAclEntry': replace_entry, 'DeleteNetworkAclEntry': create_entry, 'CreateNetworkAclEntry': delete_entry}
 
     # getting alert time from additional params in message. and turning value string into dictionary
     
     event_name, event_params = find_event(boto_session, acl_id, entity)
 
-    # use functions dictionary to get function for event.
-    if event_name in functions.keys():
-        text_output = functions.get(event_name)(boto_session, event_params)
+    # use functions mapping dictionary to get function for event.
+    if event_name in event_name_to_function_mapping.keys():
+        text_output = event_name_to_function_mapping.get(event_name)(boto_session, event_params)
 
     return text_output
