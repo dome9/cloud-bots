@@ -227,11 +227,11 @@ policy\_arn=arn:aws:iam::$ACCOUNT\_ID:policy/sumo\_collection
 
 ## iam\_user\_detach
 
-Log.ic bot only
-What it does: Detaches an IAM user from an IAM group. 
-Usage: AUTO: iam\_user\_detach
-Limitations: The bot will stop running if the proper 'AddUserToGroup' event is not found
-             The bot will not notify if the IAM user is already detached or was not attached to the group in the
+Log.ic bot only  
+What it does: Detaches an IAM user from an IAM group.  
+Usage: AUTO: iam\_user\_detach  
+Limitations: The bot will stop running if the proper 'AddUserToGroup' event is not found  
+             The bot will not notify if the IAM user is already detached or was not attached to the group in the  
                  first place.
                  
 ## iam\_quarantine\_role
