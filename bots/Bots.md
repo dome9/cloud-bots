@@ -16,7 +16,7 @@
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
-  - [iam\ user\ detach](#iam_user_detach)
+  - [iam\_user\_detach](#iam_user_detach)
   - [iam\_quarantine\_role](#iam_quarantine_role)
   - [iam\_quarantine\_user](#iam_quarantine_user)
   - [iam\_turn\_on\_password\_policy](#iam_turn_on_password_policy)
@@ -228,8 +228,8 @@ policy\_arn=arn:aws:iam::$ACCOUNT\_ID:policy/sumo\_collection
 ## iam\_user\_detach
 
 Log.ic bot only
-What it does: Detaches an IAM user from an IAM group.
-Usage: AUTO: iam_user_detach
+What it does: Detaches an IAM user from an IAM group. 
+Usage: AUTO: iam\_user\_detach
 Limitations: The bot will stop running if the proper 'AddUserToGroup' event is not found
              The bot will not notify if the IAM user is already detached or was not attached to the group in the
                  first place.
