@@ -201,18 +201,9 @@ Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
 
 ## iam\_delete\_default\_policy\_version 
-What it does:  
-    Delete the default policy version and set the latest instead.  
-Usage:  
-    AUTO: iam_delete_default_policy_version  
-Limitations:  
-    Most be at least more than one version to the policy.  
-Code flow:  
-1. get the version id of the default version (that we need to delete)  
-2. get list of all the version of the policy (https://docs.aws.amazon.com/cli/latest/reference/iam/list-policy-versions.html)  
-3. find the latest version before the default version which will replace the default  
-4. replace the default version to another version (the latest version before it that we just found)  
-5. delete the previous default version from the policy (now we can because it's no longer the default version)  
+What it does: Delete the default policy version and set the latest instead.  
+Usage: iam_delete_default_policy_version  
+Limitations: Most be at least more than one version to the policy.  
 
 ## iam\_role\_attach\_policy
 
@@ -323,12 +314,9 @@ Note: The bot will detach the policies that have admin privileges from the lambd
 Limitations:None
 
 ## lambda\_disable  
-What it does:  
-    Disable lambda function (by put function concurrency = 0).  
-Sample GSL:  
-    cloudtrail where event.name like 'UpdateFunctionCode%' and issuer.type='Role'  
-Usage:  
-    AUTO: lambda_disable  
+What it does:  Disable lambda function (by put function concurrency = 0).  
+Sample GSL:  cloudtrail where event.name like 'UpdateFunctionCode%' and issuer.type='Role'  
+Usage:  AUTO: lambda_disable  
 Limitations: none  
 
 ## mark\_for\_stop\_ec2\_resource
