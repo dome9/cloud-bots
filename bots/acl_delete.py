@@ -13,7 +13,7 @@ import json
 from bots_utils import cloudtrail_event_lookup
 
 
-def find_event(boto_session, entity):
+def find_event_and_get_acl(boto_session, entity):
     '''
     function will get event related to given attribute_value
     In this case attribute_value is the network acl which was created.
@@ -36,7 +36,7 @@ def run_action(boto_session, rule, entity, params):
     ec2_resource = boto_session.resource('ec2')
     try:
         # getting the network acl from cloud trail event
-        acl_description = find_event(boto_session, entity)
+        acl_description = find_event_and_get_acl(boto_session, entity)
 
         acl_id = acl_description.get('networkAclId')
 
