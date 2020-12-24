@@ -4,7 +4,7 @@ What it does: deletes created network acl.
 Usage: AUTO: acl_delete
 
 Sample GSL: cloudtrail where event.name='CreateNetworkAcl'
-Limitation: Function will not delete default vpc's network acl
+Limitation: Bot will not delete default vpc's network acl
 '''
 
 import boto3
