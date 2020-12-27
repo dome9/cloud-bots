@@ -19,9 +19,6 @@ def run_action(boto_session, rule, entity, params):
     # get the event time from the entity
     event_time = entity['eventTime']
 
-    # format the time from string to datetime object
-    event_time = format_time(event_time)
-
     # look for the event in cloudtrail
     event = cloudtrail_event_lookup(boto_session, entity, EVENT_NAME)
 
@@ -39,10 +36,8 @@ def run_action(boto_session, rule, entity, params):
         access_key.deactivate()
 
         # create the text output
-        text_output = f'user: {username} access key with id : {access_key_id} was revoked'
+        return f'user: {username} access key with id : {access_key_id} was revoked'
 
     except ClientError as e:
         # in case of an unexpected error
-        return "Unexpected error: %s \n" % e
-
-    return text_output
+        return f"Unexpected error: {e} \n"
