@@ -233,14 +233,16 @@ managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
 What it does: stops an ecs task and the service (which started the task) will create it again and run it.  
 Usage: AUTO: ecs_reboot  
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
-Limitations: none
+Limitations: none  
+Note: Logic only bot
 
 ## ecs\_stop
 
 What it does: stops an ecs tasks and ec2 instances which contain the tasks  
 Usage: AUTO: ecs_stop  
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
-Limitations: none
+Limitations: none  
+Note: Logic only bot
 
 ## iam\_role\_attach\_policy
 
