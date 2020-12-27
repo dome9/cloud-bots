@@ -21,7 +21,7 @@ def run_action(boto_session, rule, entity, params, report_time):
     event = bots_utils.cloudtrail_event_lookup(boto_session, entity, EVENT_NAME)
 
     if event is None:
-        return "Error, returned 0 events"
+        return "Error when looking for the DescribeImageScanFindings event, 0 events returned"
 
     # taking all the image details that we need to delete the malicious image
     registry_id = event['responseElements']['registryId']
