@@ -37,14 +37,15 @@ def run_action(boto_session, rule, entity, params):
     ec2_resource = boto_session.resource('ec2')
     try:
         # getting the network acl from cloud trail event
-        acl_description = find_event_and_get_acl(boto_session, entity)
+        acl_description = find_event(boto_session, entity)
 
         acl_id = acl_description.get('networkAclId')
 
-        network_acl = ec2_resource.NetworkAcl(acl_id)
-        # checking if acl was not created as default vpc's network acl
-        if not network_acl.is_default:
-            network_acl.delete()
+        
+        # checking if acl was not creates as default vpc's network acl
+        if not acl_description.get('isDefault'):
+            
+            ec2_client.delete_network_acl(NetworkAclId=acl_id,)
             text_output = 'Network acl deleted successfully\n'
 
     except ClientError as e:
