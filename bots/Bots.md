@@ -7,6 +7,7 @@
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
+  - [delete\_access\_key](#delete_access_key)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
   - [ec2\_release\_eips](#ec2_release_eips)
@@ -138,6 +139,17 @@ variable include\_global\_resource\_types\_region=\<desired\_region\>)
 
 Defaults (not changable currently via variable): file
 deliveryFrequency(to S3) is set to One\_Hour config\_name = default
+
+## delete\_access\_key
+
+What it does: Deleting an IAM user AccessKey
+Usage:  delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will delete the AccessKey
+
+Example:  delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
 
 ## ec2\_attach\_instance\_role
 
