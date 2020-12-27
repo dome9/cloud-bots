@@ -429,10 +429,11 @@ Limitations: IPv6 is not supported yet
 
 ## sg\_revert\_modification
 
-What it does:  revert modification action on security group.  
+What it does:  Revert modification action on security group.  
 Sample GSL: cloudtrail where event.name in ('AuthorizeSecurityGroupEgress', 'AuthorizeSecurityGroupIngress', 'RevokeSecurityGroupEgress', 'RevokeSecurityGroupIngress') and event.status='Success'  
 Usage: sg_revert_modification  
 Limitations: none  
+Note: This bot is for Log.ic only  
 
 ## sg\_rules\_delete
 
