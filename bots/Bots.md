@@ -8,6 +8,7 @@
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
   - [delete\_access\_key](#delete_access_key)
+  - [delete\_image\_from\_ecs\_repo](#delete_image_from_ecs_repo)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
   - [ec2\_release\_eips](#ec2_release_eips)
@@ -151,6 +152,16 @@ this function will delete the AccessKey
 
 Example:  delete\_access\_key
 Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
+## delete_image_from_ecs_repo
+
+What it does: Delete an image from  ECS repository
+Usage:  delete_image_from_ecs_repo
+
+if an malicious image was Pushed to a ECS Repository
+this function will delete the image from the repository.
+
+Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
 
 ## ec2\_attach\_instance\_role
 
