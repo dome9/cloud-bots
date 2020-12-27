@@ -5,6 +5,7 @@ Usage: AUTO: acl_delete
 
 Sample GSL: cloudtrail where event.name='CreateNetworkAcl'
 Limitation: Bot will not delete default vpc's network acl
+            Bot only for logic
 '''
 
 import boto3
