@@ -156,7 +156,7 @@ Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Roo
 ## delete_image_from_ecs_repo
 
 What it does: Delete an image from  ECS repository
-Usage:  delete_image_from_ecs_repo
+Usage:  delete\_image\_from\_ecs\_repo
 
 if an malicious image was Pushed to a ECS Repository
 this function will delete the image from the repository.
