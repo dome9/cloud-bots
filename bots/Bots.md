@@ -27,6 +27,7 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [revoke\_access\_key](#revoke_access_key)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
@@ -368,6 +369,18 @@ Limitations: none
 
 Notes:
     -  before running this bot, ensure that your applications will work correctly without public access
+
+## revoke\_access\_key
+
+What it does: Revoking an IAM user AccessKey
+Usage:  delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will revoke the AccessKey
+
+Example:  delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
 
 ## s3\_delete\_acls
 
