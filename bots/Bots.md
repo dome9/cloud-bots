@@ -35,6 +35,7 @@
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
+  - [sg\_isolation](#sg_isolation)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
@@ -458,6 +459,13 @@ Notes :
 
 Limitations: IPv6 is not supported yet
 
+
+## sg\_isolation
+
+What it does: isolate the inbound/outbound traffic rules  
+Usage: sg_isolation  
+Limitation: most get entity which contain security group id.  
+Note: can trigger the sg_revert_modification bot. 
 
 
 ## sg_rules_delete_by_scope
