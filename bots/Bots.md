@@ -7,6 +7,8 @@
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
+  - [delete\_access\_key](#delete_access_key)
+  - [delete\_image\_from\_ecs\_repo](#delete_image_from_ecs_repo)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
   - [ec2\_release\_eips](#ec2_release_eips)
@@ -26,6 +28,7 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [revoke\_access\_key](#revoke_access_key)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
@@ -138,6 +141,27 @@ variable include\_global\_resource\_types\_region=\<desired\_region\>)
 
 Defaults (not changable currently via variable): file
 deliveryFrequency(to S3) is set to One\_Hour config\_name = default
+
+## delete\_access\_key
+
+What it does: Deleting an IAM user AccessKey
+Usage:  delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will delete the AccessKey
+
+Example:  delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
+## delete_image_from_ecs_repo
+
+What it does: Delete an image from  ECS repository
+Usage:  delete\_image\_from\_ecs\_repo
+
+if an malicious image was Pushed to a ECS Repository
+this function will delete the image from the repository.
+
+Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
 
 ## ec2\_attach\_instance\_role
 
@@ -356,6 +380,18 @@ Limitations: none
 
 Notes:
     -  before running this bot, ensure that your applications will work correctly without public access
+
+## revoke\_access\_key
+
+What it does: Revoking an IAM user AccessKey
+Usage:  delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will revoke the AccessKey
+
+Example:  delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
 
 ## s3\_delete\_acls
 
