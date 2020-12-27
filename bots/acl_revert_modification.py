@@ -27,7 +27,7 @@ def replace_entry(boto_session, params):
     text_output = ''
     acl_id = params.get('networkAclId')
     # Trying to get entry creation event
-    event_name, event_params = find_event(boto_session, acl_id)
+    event_name, event_params = get_event(boto_session, acl_id)
 
     # Exiting if creation event can not be found
     if event_name != EVENT_NAME:
@@ -70,7 +70,7 @@ def create_entry(boto_session, params):
     text_output = ''
     acl_id = params.get('networkAclId')
     # Trying to get entry creation event
-    event_name, event_params = find_event(boto_session, acl_id)
+    event_name, event_params = get_event(boto_session, acl_id)
 
     # Exiting if creation event can not be found
     if event_name != EVENT_NAME:
@@ -127,7 +127,7 @@ def delete_entry(boto_session, params):
     return text_output
 
 
-def find_event(boto_session, attribute_value, entity={}):
+def get_event(boto_session, attribute_value, entity={}):
     '''
     function will get event related to given attribute_value
     In this case attribute_value is the acl which was modified.
@@ -143,8 +143,8 @@ def find_event(boto_session, attribute_value, entity={}):
 
     else:
         # in case time is not set, function will look for all events related to attribute_value
-        tmp_response = client.lookup_events(LookupAttributes=[{'AttributeKey': 'ResourceName', 'AttributeValue': attribute_value}])
-        for event in tmp_response['Events']:
+        tmp_response =  cloudtrail_event_lookup(boto_session, {}, attribute_value, 'ResourceName', False)
+        for event in tmp_response
             if event['EventName'] == EVENT_NAME:
                 # get index of create entry event
                 response = event
@@ -180,7 +180,7 @@ def run_action(boto_session, rule, entity, params):
 
     # getting alert time from additional params in message. and turning value string into dictionary
     
-    event_name, event_params = find_event(boto_session, acl_id, entity)
+    event_name, event_params = get_event(boto_session, acl_id, entity)
 
     # use functions mapping dictionary to get function for event.
     if event_name in event_name_to_function_mapping.keys():
