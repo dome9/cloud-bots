@@ -427,7 +427,7 @@ Notes:
 
 Limitations: IPv6 is not supported yet
 
-## sg_revert_modification
+## sg\_revert\_modification
 
 What it does:  revert modification action on security group.  
 Sample GSL: cloudtrail where event.name in ('AuthorizeSecurityGroupEgress', 'AuthorizeSecurityGroupIngress', 'RevokeSecurityGroupEgress', 'RevokeSecurityGroupIngress') and event.status='Success'  
