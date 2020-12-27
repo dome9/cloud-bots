@@ -12,19 +12,17 @@ from botocore.exceptions import ClientError
 import bots_utils
 
 EVENT_NAME = 'CreateAccessKey'
-DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF=5
-
 
 def run_action(boto_session, rule, entity, params):
-    # create iam resource
-    iam_resource = boto3.resource('iam')
+    # create iam client
+    iam_client = boto3.client('iam')
 
     # look for event in cloudtrail
     event = bots_utils.cloudtrail_event_lookup(boto_session, entity, EVENT_NAME)
 
     # in case that the cloudtrail_event_lookup failed to find events
     if event is None:
-        return "Error, returned 0 events"
+        return "Error when looking for the CreateAccessKey event, 0 events returned"
 
     # take the access key details from the event
     access_key_id = [i for i in event['Resources'] if i['ResourceType'] == 'AWS::IAM::AccessKey'][0]['ResourceName']
@@ -32,12 +30,12 @@ def run_action(boto_session, rule, entity, params):
     # take the user name
     username = event['Username']
 
-    # create access key resource
-    access_key = iam_resource.AccessKey(username, access_key_id)
-
     try:
         # delete the access key
-        access_key.delete()
+        iam_client.delete_access_key(
+            UserName=username,
+            AccessKeyId=access_key_id
+        )
         # create the text output
         return f'user: {username} access key with id : {access_key_id} was deleted'
 
