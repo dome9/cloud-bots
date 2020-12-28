@@ -1,7 +1,7 @@
 """
-## delete_access_key
+## iam_delete_access_key
 What it does: Delete an IAM user access key
-Usage : AUTO: delete_access_key
+Usage : AUTO: iam_delete_access_key
 Limitations: none
 
 This bot is relevant to logic only and it's Running Following the CreateAccessKey event
