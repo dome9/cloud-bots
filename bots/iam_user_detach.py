@@ -27,11 +27,16 @@ def run_action(boto_session, rule, entity, params):
     if not event:
         # If valid event was not found - bot will not run
         text_output = f'Error: No matching {EVENT_NAME} events were found in cloud trail. Bot wasn\'t executed.'
-
+    
     else:
-        # If there is a valid event - get relevant details and remove user from group
-        group_name = get_details_from_event(event)
-        text_output = remove_user_from_group(boto_session, user_to_remove, group_name)
+        # If there is a valid event - get relevant details from it
+        try: 
+            group_name = get_details_from_event(event)
+        except:
+            text_output = f'Error while parsing {EVENT_NAME} event. Bot wasn\'t executed.'
+        else:
+            # If event parsing was successful - remove user from grou
+            text_output = remove_user_from_group(boto_session, user_to_remove, group_name)
 
     return text_output
 
