@@ -209,7 +209,6 @@ the event closest to the given alert_time
   resource_name_to_filter (String): string with resource name that helps to filter the events found.
 """
 
-
 def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
     # Make list of events related to the relevant resource, if additional resource_name_to_filter is given
     if resource_name_to_filter != '':
