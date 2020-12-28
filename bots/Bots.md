@@ -7,8 +7,7 @@
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
-  - [delete\_access\_key](#delete_access_key)
-  - [delete\_image\_from\_ecs\_repo](#delete_image_from_ecs_repo)
+  - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
   - [ec2\_release\_eips](#ec2_release_eips)
@@ -16,7 +15,9 @@
   - [ec2\_stop\_instance](#ec2_stop_instance)
   - [ec2\_terminate\_instance](#ec2_terminate_instance)
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
+  - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
+  - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
   - [iam\_quarantine\_role](#iam_quarantine_role)
   - [iam\_quarantine\_user](#iam_quarantine_user)
@@ -28,7 +29,6 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
-  - [revoke\_access\_key](#revoke_access_key)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
@@ -142,26 +142,6 @@ variable include\_global\_resource\_types\_region=\<desired\_region\>)
 Defaults (not changable currently via variable): file
 deliveryFrequency(to S3) is set to One\_Hour config\_name = default
 
-## delete\_access\_key
-
-What it does: Deleting an IAM user AccessKey
-Usage:  delete\_access\_key
-
-if the root user create an access key or a user that dont need one 
-this function will delete the AccessKey
-
-Example:  delete\_access\_key
-Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
-
-## delete_image_from_ecs_repo
-
-What it does: Delete an image from  ECS repository
-Usage:  delete\_image\_from\_ecs\_repo
-
-if an malicious image was Pushed to a ECS Repository
-this function will delete the image from the repository.
-
-Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
 
 ## ec2\_attach\_instance\_role
 
@@ -221,6 +201,29 @@ Example:  ec2\_update\_instance\_role
 policy\_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
 Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
+
+
+##  ecs\_delete\_repository\_image
+
+What it does: Delete an image from  ECS repository
+Usage:   ecs\_delete\_repository\_image
+
+if an malicious image was Pushed to a ECS Repository
+this function will delete the image from the repository.
+
+Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
+
+
+## iam\_delete\_access\_key
+
+What it does: Deleting an IAM user AccessKey
+Usage:  iam\_delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will delete the AccessKey
+
+Example:  iam\_delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
 
 ## iam\_role\_attach\_policy
 
@@ -381,15 +384,15 @@ Limitations: none
 Notes:
     -  before running this bot, ensure that your applications will work correctly without public access
 
-## revoke\_access\_key
+## iam\_revoke\_access\_key
 
 What it does: Revoking an IAM user AccessKey
-Usage:  delete\_access\_key
+Usage:  iam\_revoke\_access\_key
 
 if the root user create an access key or a user that dont need one 
 this function will revoke the AccessKey
 
-Example:  delete\_access\_key
+Example:  iam\_revoke\_access\_key
 Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
 
 
