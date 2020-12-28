@@ -43,7 +43,7 @@ def detach_layer_from_lambda(boto_session, lambda_function_name, layer_name_to_d
     except KeyError:
         return f'Error: the lambda function ({lambda_function_name}) has no layers attached to it'
     except botocore.exceptions.ClientError as e:
-        return 'Client error: %s \n' % e
+        return f'Client error: {e}'
 
     # Remove the layer specified in the event from the layers list
     try:
@@ -61,7 +61,7 @@ def detach_layer_from_lambda(boto_session, lambda_function_name, layer_name_to_d
         lambda_client.update_function_configuration(FunctionName=lambda_function_name,
                                                     Layers=updated_layers)
     except botocore.exceptions.ClientError as e:
-        return 'Client error: %s \n' % e
+        return f'Client error: {e}'
 
     return f'Success: Layer ({layer_name_to_delete}) was successfully' \
            f' detached from lambda function ({lambda_function_name})'
