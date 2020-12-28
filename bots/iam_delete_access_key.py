@@ -41,4 +41,4 @@ def run_action(boto_session, rule, entity, params):
 
     except ClientError as e:
         # in case of an unexpected error
-        return f"Unexpected error: {e} \n"
+        return f'Unexpected error: {e}'
