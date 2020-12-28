@@ -22,7 +22,7 @@ def stop_instance(ecs_client, cluster, instance):
     try:
         ecs_client.update_container_instances_state(cluster=cluster, containerInstances=[instance,], status='DRAINING')
         
-        text_output = f'Instance {instance} successfully stopped \n'
+        text_output = f'Instance {instance} successfully stopped'
 
     except ClientError as e:
 
@@ -39,7 +39,7 @@ def stop_task(ecs_client, cluster, task):
     text_output = ''
     try:
         ecs_client.stop_task(cluster=cluster, task=task, reason='Privileged task is dangerous and unnecessary')
-        text_output = f'Task {task} successfully stopped \n'
+        text_output = f'Task {task} successfully stopped'
 
     except ClientError as e:
 
@@ -57,15 +57,24 @@ def run_action(boto_session, rule, entity, params):
     
     text_output = ''
     
-    # check if client has active clusters.
-    clusters = ecs_client.list_clusters()['clusterArns']
+    try:
+        # check if client has active clusters.
+        clusters = ecs_client.list_clusters()['clusterArns']
+        
+    except ClientError as e:
+        return f'Unexpected error: {e}'
+    
     if len(clusters) == 0:
         text_output = '0 clusters exist for user. No tasks running!\n'
         return text_output
 
     for cluster in clusters:
         
-        tasks = ecs_client.list_tasks(cluster=cluster, desiredStatus='RUNNING')['taskArns']
+        try:
+            tasks = ecs_client.list_tasks(cluster=cluster, desiredStatus='RUNNING')['taskArns']
+
+        except ClientError as e:
+            return f'Unexpected error: {e}'
        
         # check if client has running tasks.
         if len(tasks) != 0:
@@ -77,23 +86,23 @@ def run_action(boto_session, rule, entity, params):
                 
                 # check if task definition of running tasks is secure and if not than task is stopped.
                 definition = ecs_client.describe_task_definition(taskDefinition=task_definition)['taskDefinition']
-
+                
+                #task defenition considered unsecure if it has privileged permissions role
                 if definition.get('executionRoleArn') == role_arn:
                     
                     # if task runs on an instance, instance needs to be stopped so more tasks like that wont be created.
                     if 'EC2' in described.get('launchType'):
                         text_output = stop_instance(ecs_client, cluster, described.get('containerInstanceArn'))
 
-                        if text_output.find('error') != -1:
+                        if 'error' in text_output:
                             return text_output
                         
                     text_output += stop_task(ecs_client, cluster, task)
-                    if text_output.find('error') != -1:
+                    if 'error' in text_output:
                         return text_output
-
-                    print(text_output)
+ 
 
     if text_output == '':
-        text_output = 'Running tasks do not exist.\nExiting\n' 
+        text_output = 'Running tasks do not exist. Exiting' 
             
     return text_output
