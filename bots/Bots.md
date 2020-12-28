@@ -19,6 +19,7 @@
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
   - [ecs\_reboot](#ecs_reboot)
   - [ecs\_stop](#ecs_stop)
+  - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
   - [iam\_quarantine\_role](#iam_quarantine_role)
@@ -29,6 +30,7 @@
   - [igw\_delete](#igw_delete)
   - [kms\_enable\_rotation](#kms_enable_rotation)
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
+  - [lambda\_disable](#lambda_disable)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
@@ -228,13 +230,14 @@ policy\_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup
 Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
 
+
 ## ecs\_reboot
 
 What it does: stops an ecs task and the service (which started the task) will create it again and run it.  
 Usage: AUTO: ecs_reboot  
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none  
-Note: Logic only bot
+
 
 ## ecs\_stop
 
@@ -242,7 +245,12 @@ What it does: stops an ecs tasks and ec2 instances which contain the tasks
 Usage: AUTO: ecs_stop  
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none  
-Note: Logic only bot
+
+## iam\_delete\_default\_policy\_version 
+What it does: Delete the default policy version and set the latest instead.  
+Usage: iam_delete_default_policy_version  
+Limitations: Most be at least more than one version to the policy.  
+
 
 ## iam\_role\_attach\_policy
 
@@ -351,6 +359,12 @@ Usage:  lambda_detach_blanket_permissions
 Note: The bot will detach the policies that have admin privileges from the lambda role so you will need to configure the specific
       policies to grant positive permissions to specific AWS services or actions
 Limitations:None
+
+## lambda\_disable  
+What it does:  Disable lambda function (by put function concurrency = 0).  
+Sample GSL:  cloudtrail where event.name like 'UpdateFunctionCode%' and issuer.type='Role'  
+Usage:  AUTO: lambda_disable  
+Limitations: none  
 
 ## mark\_for\_stop\_ec2\_resource
 
