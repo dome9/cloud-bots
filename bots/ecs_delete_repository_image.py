@@ -1,7 +1,7 @@
 """
-## delete_image_from_ecs_repo
+## ecs_delete_repository_image
 What it does: delete an image from  ECS repository
-Usage: AUTH: delete_image_from_ecs_repo
+Usage: AUTH: ecs_delete_repository_image
 Limitations: none
 
 This bot is relevant to logic only and it's Running Following the DescribeImageScanFindings event
