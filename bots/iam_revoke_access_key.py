@@ -1,7 +1,7 @@
 """
-## revoke_access_key
+## iam_revoke_access_key
 What it does: deactivate an IAM user access key
-Usage : AUTO: revoke_access_key
+Usage : AUTO: iam_revoke_access_key
 Limitations: none
 
 This bot is relevant to logic only and it's Running Following the CreateAccessKey event
