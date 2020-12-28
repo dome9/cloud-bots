@@ -2,7 +2,6 @@
 ## ecs_reboot
 What it does: stops an ecs task and the service (which started the task) will create it again and run it.
 Usage: AUTO: ecs_reboot
-
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'
 Limitations: none
 '''
@@ -34,16 +33,24 @@ def run_action(boto_session, rule, entity, params):
     ecs_client = boto_session.client('ecs')
 
     text_output = ''
-
-    # check if client has active clusters.
-    clusters = ecs_client.list_clusters()['clusterArns']
+    try:
+        # check if client has active clusters.
+        clusters = ecs_client.list_clusters()['clusterArns']
+        
+    except ClientError as e:
+        return f'Unexpected error: {e}'
+        
     if len(clusters) == 0:
-        text_output = '0 clusters exist for user. No tasks running!\n'
+        text_output = '0 clusters exist for user. No tasks running!'
         return text_output
 
     for cluster in clusters:
+        
+        try:
+            tasks = ecs_client.list_tasks(cluster=cluster, desiredStatus='RUNNING')['taskArns']
 
-        tasks = ecs_client.list_tasks(cluster=cluster, desiredStatus='RUNNING')['taskArns']
+        except ClientError as e:
+            return f'Unexpected error: {e}'
 
         # check if client has running tasks.
         if len(tasks) != 0:
@@ -54,15 +61,16 @@ def run_action(boto_session, rule, entity, params):
 
                 # check if task definition of running tasks is secure and if not than task is stopped.
                 definition = ecs_client.describe_task_definition(taskDefinition=task_definition)['taskDefinition']
-
+                
+                #task defenition considered unsecure if it has privileged permissions role
                 if definition.get('executionRoleArn') == role_arn:
 
                     text_output = stop_task(ecs_client, cluster, task)
-                    if text_output.find('error') != -1:
+                    if 'error' in text_output:
                         return text_output
-                    print(text_output)
+                   
 
     if text_output == '':
-        text_output = 'Running tasks do not exist.\nExiting\n'
+        text_output = 'Running tasks do not exist. Exiting'
 
     return text_output
