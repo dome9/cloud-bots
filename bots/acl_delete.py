@@ -21,7 +21,7 @@ def find_event_and_get_acl(boto_session, entity):
     '''
     try:
         response = cloudtrail_event_lookup(boto_session, entity, 'CreateNetworkAcl')
-        print(response)
+    
         # gets dictionary from cloudtrail string
         cloud_trail = json.loads(response['CloudTrailEvent'])
 
@@ -34,10 +34,10 @@ def find_event_and_get_acl(boto_session, entity):
 def run_action(boto_session, rule, entity, params):
 
     text_output = ''
-    ec2_resource = boto_session.resource('ec2')
+    ec2_client = boto_session.client('ec2')
     try:
         # getting the network acl from cloud trail event
-        acl_description = find_event(boto_session, entity)
+        acl_description = find_event_and_get_acl(boto_session, entity)
 
         acl_id = acl_description.get('networkAclId')
 
