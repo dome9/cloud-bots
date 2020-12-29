@@ -144,7 +144,7 @@ def get_event(boto_session, attribute_value, entity={}):
     else:
         # in case time is not set, function will look for all events related to attribute_value
         tmp_response =  cloudtrail_event_lookup(boto_session, {}, attribute_value, 'ResourceName', False)
-        for event in tmp_response
+        for event in tmp_response:
             if event['EventName'] == EVENT_NAME:
                 # get index of create entry event
                 response = event
