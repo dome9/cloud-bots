@@ -154,28 +154,41 @@ The function looks up for events in cloud trail based on alert time and event na
 def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
-
-    #  Parse given event time
-    try:
-        alert_time = datetime.strptime(entity.get('eventTime'), '%Y-%m-%dT%H:%M:%SZ')
-    except Exception as e:
-        print(f'Warning - Error while parsing Log.ic event time: {e} ')
-        return None
-
-    # Adjust start and end time the event search
-    start_time = alert_time - timedelta(minutes=time_diff)
-    end_time = alert_time + timedelta(minutes=time_diff)
-
-    # Look up events in cloudtrail
-    try:
-        events = cloudtrail_client.lookup_events(LookupAttributes=[
-            {'AttributeKey': attribute_key, 'AttributeValue': attribute_value}],
-            StartTime=start_time, EndTime=end_time)
-
-    except Exception as e:
-        print('Unexpected error while querying cloudtrail: %s \n' % e) 
-        return None
+    alert_time = datetime
     
+    # check if event time was given
+    if entity.get('eventTime'):
+        #  Parse given event time
+        try:
+            alert_time = datetime.strptime(entity.get('eventTime'), '%Y-%m-%dT%H:%M:%SZ')
+        except Exception as e:
+            print(f'Warning - Error while parsing Log.ic event time: {e} ')
+            return None
+
+        # Adjust start and end time the event search
+        start_time = alert_time - timedelta(minutes=time_diff)
+        end_time = alert_time + timedelta(minutes=time_diff)
+
+        # Look up events in cloudtrail
+        try:
+            events = cloudtrail_client.lookup_events(LookupAttributes=[
+                {'AttributeKey': attribute_key, 'AttributeValue': attribute_value}],
+                StartTime=start_time, EndTime=end_time)
+
+        except Exception as e:
+            print('Unexpected error while querying cloudtrail: %s \n' % e)
+            return None
+
+    else:
+        # Look up events in cloudtrail without time
+        try:
+            events = cloudtrail_client.lookup_events(LookupAttributes=[
+                {'AttributeKey': attribute_key, 'AttributeValue': attribute_value}])
+
+        except Exception as e:
+            print('Unexpected error while querying cloudtrail: %s \n' % e)
+            return None
+
     if not events.get('Events'):
         print('Warning - No matching events were found in cloudtrail lookup')
         return None
@@ -187,17 +200,15 @@ def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key
         # Return all events found
         return events.get('Events')
 
-    
+
 """
 The function filter cloudtrail events list by additional_details given and returns 
 the event closest to the given alert_time
   cluodtrail_events (list): list of events found in cloudtrail
   alert_time (datetime object): the time at which the event occurred. 
   resource_name_to_filter (String): string with resource name that helps to filter the events found.
-
 """
-    
-    
+
 def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
     # Make list of events related to the relevant resource, if additional resource_name_to_filter is given
     if resource_name_to_filter != '':
