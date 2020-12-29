@@ -87,12 +87,14 @@ Resources:
               Action:
                 - cloudtrail:LookupEvents - #For look_up function in bot_utils
                 - cloudtrail:CreateTrail # For create_cloudtrail
+                - cloudtrail:LookupEvents # for bots_utils.py
                 - cloudtrail:StartLogging # For create_cloudtrail
                 - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
                 - cloudwatch:PutMetricAlarm # For cloudtrail_send_to_cloudwatch
                 - config:PutConfigurationRecorder # For config_enable
                 - config:PutDeliveryChannel # For config_enable
                 - config:StartConfigurationRecorder # For config_enable
+                - ecr-public:BatchDeleteImage # for delete_image_from_ecs_repo
                 - ec2:AssociateIamInstanceProfile # For ec2_attach_instance_role
                 - ec2:AuthorizeSecurityGroupEgress # For sg_single_rule_delete
                 - ec2:AuthorizeSecurityGroupIngress # For sg_single_rule_delete
@@ -136,8 +138,10 @@ Resources:
                 - iam:AttachUserPolicy # For iam_quarantine_user
                 - iam:CreatePolicy 
                 - iam:CreateRole # For vpc_turn_on_flow_logs
+                - iam:DeleteAccessKey # for the delete_access_key
                 - iam:GetPolicy
                 - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
+                - iam:UpdateAccessKey # for the revoke_access_key
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                 - iam:UpdateLoginProfile # For iam_user_force_password_change
                 - iam:ListPolicyVersions # For iam_delete_default_policy_version

@@ -19,8 +19,11 @@
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
   - [ecs\_reboot](#ecs_reboot)
   - [ecs\_stop](#ecs_stop)
+  - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
+  - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
+  - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
   - [iam\_quarantine\_role](#iam_quarantine_role)
   - [iam\_quarantine\_user](#iam_quarantine_user)
@@ -164,6 +167,7 @@ variable include\_global\_resource\_types\_region=\<desired\_region\>)
 Defaults (not changable currently via variable): file
 deliveryFrequency(to S3) is set to One\_Hour config\_name = default
 
+
 ## ec2\_attach\_instance\_role
 
 What it does: Attaches an instance role to an EC2 instance. This role
@@ -230,7 +234,6 @@ policy\_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup
 Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
 
-
 ## ecs\_reboot
 
 What it does: stops an ecs task and the service (which started the task) will create it again and run it.  
@@ -245,6 +248,29 @@ What it does: stops an ecs tasks and ec2 instances which contain the tasks
 Usage: AUTO: ecs_stop  
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none  
+
+##  ecs\_delete\_repository\_image
+
+What it does: Delete an image from  ECS repository
+Usage:   ecs\_delete\_repository\_image
+
+if an malicious image was Pushed to a ECS Repository
+this function will delete the image from the repository.
+
+Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
+
+
+## iam\_delete\_access\_key
+
+What it does: Deleting an IAM user AccessKey
+Usage:  iam\_delete\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will delete the AccessKey
+
+Example:  iam\_delete\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
 
 ## iam\_delete\_default\_policy\_version 
 What it does: Delete the default policy version and set the latest instead.  
@@ -416,6 +442,18 @@ Limitations: none
 
 Notes:
     -  before running this bot, ensure that your applications will work correctly without public access
+
+## iam\_revoke\_access\_key
+
+What it does: Revoking an IAM user AccessKey
+Usage:  iam\_revoke\_access\_key
+
+if the root user create an access key or a user that dont need one 
+this function will revoke the AccessKey
+
+Example:  iam\_revoke\_access\_key
+Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Root'
+
 
 ## s3\_delete\_acls
 
