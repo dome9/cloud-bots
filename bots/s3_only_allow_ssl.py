@@ -49,7 +49,7 @@ def run_action(boto_session, rule, entity, params):
     policy_bucket = entity['policy']
 
     try:
-        if policy_bucket == "null":  # s3 does not have a bucket policy
+        if policy_bucket == "null" or policy_bucket is None:  # s3 does not have a bucket policy
 
             GETPUT_STAT["Resource"] = GETPUT_STAT.get("Resource").replace("bucketName", bucket_name)
             GETPUT_STAT["Principal"]["AWS"] = account_number
