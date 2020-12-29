@@ -21,7 +21,7 @@ def find_event_and_get_acl(boto_session, entity):
     '''
     try:
         response = cloudtrail_event_lookup(boto_session, entity, 'CreateNetworkAcl')
-        print(response)
+    
         # gets dictionary from cloudtrail string
         cloud_trail = json.loads(response['CloudTrailEvent'])
 
