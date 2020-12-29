@@ -86,6 +86,7 @@ Resources:
             - Effect: Allow
               Action:
                 - cloudtrail:CreateTrail # For create_cloudtrail
+                - cloudtrail:LookupEvents # for bots_utils.py
                 - cloudtrail:StartLogging # For create_cloudtrail
                 - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
                 - cloudwatch:PutMetricAlarm # For cloudtrail_send_to_cloudwatch
