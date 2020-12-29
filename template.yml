@@ -140,6 +140,9 @@ Resources:
                 - iam:CreateRole # For vpc_turn_on_flow_logs
                 - iam:DeleteAccessKey # for the delete_access_key
                 - iam:GetPolicy
+                - iam:ListUsers # For bot isolate vpc 
+                - iam:ListInstanceProfilesForRole # For ec2_detach_instance_role
+                - iam:RemoveRoleFromInstanceProfile # For ec2_detach_instance_role
                 - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                 - iam:UpdateAccessKey # for the revoke_access_key
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
