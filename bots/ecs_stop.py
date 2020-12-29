@@ -51,13 +51,13 @@ def stop_task(ecs_client, cluster, task):
 
 def run_action(boto_session, rule, entity, params):
 
-    role_arn = entity.get('id')
-    
     ecs_client = boto_session.client('ecs')
     
     text_output = ''
     
     try:
+        role_arn = entity.get('id').split(",")[0]
+        
         # check if client has active clusters.
         clusters = ecs_client.list_clusters()['clusterArns']
         
