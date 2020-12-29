@@ -28,9 +28,14 @@ def run_action(boto_session, rule, entity, params):
         text_output = f'Error: No matching \'{EVENT_NAME}\' events were found in cloud trail. Bot wasn\'t executed'
 
     else:
-        # Event found - get layer name and detach it from lambda
-        layer_name = get_details_from_event(event)
-        text_output = detach_layer_from_lambda(boto_session, lambda_function_name, layer_name)
+        try:
+            # Event found - get layer name
+            layer_name = get_details_from_event(event)
+        except:
+            text_output = f'Error while parsing {EVENT_NAME} event. bot wasn\'t executed.'
+        else:
+            # If event was parsed successfully - detach the layer from the lambda function
+            text_output = detach_layer_from_lambda(boto_session, lambda_function_name, layer_name)
 
     return text_output
 
