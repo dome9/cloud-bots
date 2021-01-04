@@ -148,6 +148,7 @@ Resources:
                 - iam:UpdateAccessKey # for the revoke_access_key
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                 - iam:UpdateLoginProfile # For iam_user_force_password_change
+                - iam:RemoveUserFromGroup # For iam_user_detach
                 - lambda:UpdateFunctionConfiguration # For lambda_detach_external_layer
                 - lambda:GetFunction # For lambda_detach_external_layer
                 - lambda:GetLayerVersion # For lambda_detach_external_layer
