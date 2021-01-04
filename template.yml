@@ -90,6 +90,7 @@ Resources:
                 - cloudtrail:LookupEvents # for bots_utils.py
                 - cloudtrail:StartLogging # For create_cloudtrail
                 - cloudtrail:UpdateTrail # For cloudtrail_send_to_cloudwatch
+                - cloudtrail:LookupEvents # For bots that need the event for additional information
                 - cloudwatch:PutMetricAlarm # For cloudtrail_send_to_cloudwatch
                 - config:PutConfigurationRecorder # For config_enable
                 - config:PutDeliveryChannel # For config_enable
@@ -147,6 +148,9 @@ Resources:
                 - iam:UpdateAccessKey # for the revoke_access_key
                 - iam:UpdateAccountPasswordPolicy # For IAM_turn_on_password_policy
                 - iam:UpdateLoginProfile # For iam_user_force_password_change
+                - lambda:UpdateFunctionConfiguration # For lambda_detach_external_layer
+                - lambda:GetFunction # For lambda_detach_external_layer
+                - lambda:GetLayerVersion # For lambda_detach_external_layer
                 - iam:ListPolicyVersions # For iam_delete_default_policy_version
                 - iam:SetDefaultPolicyVersion # For iam_delete_default_policy_version
                 - iam:DeletePolicyVersion # For iam_delete_default_policy_version
