@@ -139,6 +139,7 @@ Resources:
                 - s3:PutBucketVersioning # For s3_enable_versioning
                 - s3:PutEncryptionConfiguration # For s3_enable_encryption
                 - s3:PutObject # For create_cloudtrail
+                - s3:PutPublicAccessBlock # Required for bot s3_block_all_public_access.py
                 - sns:Publish # For exporting the logs from CS2
                 - sns:CreateTopic # For cloudwatch_create_metric_filter
                 - sns:Subscribe # For cloudwatch_create_metric_filter
