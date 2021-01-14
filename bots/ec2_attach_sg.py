@@ -2,9 +2,9 @@
 ## ec2_attach_sg
 What it does: Replaces any existing security groups with
  the specified security group to an EC2 instance.
-Usage: 'AUTO: ec2_atach_sg name_of_sg_to_attach
+Usage: 'AUTO: ec2_attach_sg name_of_sg_to_attach
 Limitations: None
-stuartg@checkpoint.com 23/9/20
+23/9/20
 '''
 
 import boto3
