@@ -185,61 +185,61 @@ def create_bucket(s3_client, s3_resource, region, target_bucket_name, accountNum
             else:
                 text_output = 'Unexpected error: %s \n' % e
 
-        ### ATTACH BUCKET POLICY
-        print(f'{__file__} - Attaching bucket policy')
-        try:
-            bucket_arn = 'arn:aws:s3:::' + target_bucket_name
+    ### ATTACH BUCKET POLICY
+    print(f'{__file__} - Attaching bucket policy')
+    try:
+        bucket_arn = 'arn:aws:s3:::' + target_bucket_name
 
-            resource_id = bucket_arn + '/AWSLogs/' + accountNumber + '/Config/*'
+        resource_id = bucket_arn + '/AWSLogs/' + accountNumber + '/Config/*'
 
-            bucket_policy = {
-                'Version': '2012-10-17',
-                'Statement': [
-                    {
-                        'Sid': 'AWSConfigBucketPermissionsCheck',
-                        'Effect': 'Allow',
-                        'Principal': {
-                            'Service': [
-                                'config.amazonaws.com'
-                            ]
-                        },
-                        'Action': 's3:GetBucketAcl',
-                        'Resource': bucket_arn
+        bucket_policy = {
+            'Version': '2012-10-17',
+            'Statement': [
+                {
+                    'Sid': 'AWSConfigBucketPermissionsCheck',
+                    'Effect': 'Allow',
+                    'Principal': {
+                        'Service': [
+                            'config.amazonaws.com'
+                        ]
                     },
-                    {
-                        'Sid': 'AWSConfigBucketDelivery',
-                        'Effect': 'Allow',
-                        'Principal': {
-                            'Service': [
-                                'config.amazonaws.com'
-                            ]
-                        },
-                        'Action': 's3:PutObject',
-                        'Resource': resource_id,
-                        'Condition': {
-                            'StringEquals': {
-                                's3:x-amz-acl': 'bucket-owner-full-control'
-                            }
+                    'Action': 's3:GetBucketAcl',
+                    'Resource': bucket_arn
+                },
+                {
+                    'Sid': 'AWSConfigBucketDelivery',
+                    'Effect': 'Allow',
+                    'Principal': {
+                        'Service': [
+                            'config.amazonaws.com'
+                        ]
+                    },
+                    'Action': 's3:PutObject',
+                    'Resource': resource_id,
+                    'Condition': {
+                        'StringEquals': {
+                            's3:x-amz-acl': 'bucket-owner-full-control'
                         }
                     }
-                ]
-            }
+                }
+            ]
+        }
 
-            bucket_policy_string = json.dumps(bucket_policy)
+        bucket_policy_string = json.dumps(bucket_policy)
 
-            result = s3_client.put_bucket_policy(
-                Bucket=target_bucket_name,
-                Policy=bucket_policy_string
-            )
+        result = s3_client.put_bucket_policy(
+            Bucket=target_bucket_name,
+            Policy=bucket_policy_string
+        )
 
-            responseCode = result['ResponseMetadata']['HTTPStatusCode']
-            if responseCode >= 400:
-                text_output = text_output + 'Unexpected error: %s \n' % str(result)
-            else:
-                text_output = text_output + 'Bucket policy attached to bucket for Config file delivery\n'
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = text_output + 'Unexpected error: %s \n' % str(result)
+        else:
+            text_output = text_output + 'Bucket policy attached to bucket for Config file delivery\n'
 
-        except ClientError as e:
-            text_output = text_output + 'Unexpected error: %s \n' % e
+    except ClientError as e:
+        text_output = text_output + 'Unexpected error: %s \n' % e
 
     return text_output
 
