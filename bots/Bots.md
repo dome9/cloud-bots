@@ -22,6 +22,7 @@
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
+  - [iam\_delete\_login\_profile](#iam_delete_login_profile)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
@@ -276,7 +277,14 @@ Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Roo
 ## iam\_delete\_default\_policy\_version 
 What it does: Delete the default policy version and set the latest instead.  
 Usage: iam_delete_default_policy_version  
-Limitations: Most be at least more than one version to the policy.  
+Limitations: Must be at least more than one version to the policy.  
+
+
+## iam\_delete\_login\_profile
+What it does: Delete an IAM user login profile (disable Console Login).  
+Usage: iam_delete_login_profile 
+Limitation: None  
+Note: Logic only bot
 
 
 ## iam\_role\_attach\_policy
