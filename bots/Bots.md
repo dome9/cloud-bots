@@ -20,6 +20,7 @@
   - [ecs\_reboot](#ecs_reboot)
   - [ecs\_stop](#ecs_stop)
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
+  - [ecs\_deregister\_task\_definition](#ecs_deregister_task_definition)
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
@@ -234,6 +235,13 @@ Example:  ec2\_update\_instance\_role
 policy\_arn=arn:aws:iam::aws:policy/AlexaForBusinessDeviceSetup  
 Sample GSL: Instance where roles should have roles with \[
 managedPolicies contain \[ name='AmazonEC2RoleforSSM' \] \]
+
+## ecs\_deregister\_task\_definition
+What it does: Deregister an ecs task definition revision
+Usage: AUTO: ecs\_deregister\_task\_definition
+Used when overly permissive container definitions created
+Sample GSL: cloudtrail where event.name='registerTaskDefinition' and event.status='Success'
+Limitations: none
 
 ## ecs\_reboot
 

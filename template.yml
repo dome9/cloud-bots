@@ -134,6 +134,7 @@ Resources:
                 - ecs:StopTask #For Ecs stop bot and reboot bot
                 - ecs:DescribeTasks #For Ecs stop bot and reboot bot
                 - ecs:ListClusters #For Ecs stop bot and reboot bot
+                - ecs: DeregisterTaskDefinition #For Ecs deregister task definition bot
                 - kms:EnableKeyRotation # For kms_enable_rotation
                 - iam:AttachRolePolicy # For ec2_update_instance_role and others
                 - iam:AttachUserPolicy # For iam_quarantine_user
