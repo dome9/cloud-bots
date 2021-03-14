@@ -47,6 +47,7 @@
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
+  - [sg\_revert\_modification](#sg_revert_modification)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [tag\_ec2\_resource](#tag_ec2_resource)
@@ -514,7 +515,7 @@ Usage:  sg\_delete
 Limitations: This will fail if there is something still attached to the
 SG.
 
-##sg\_modify\_scope\_by\_port
+## sg\_modify\_scope\_by\_port
 
 What it does: modify Security Group's rules scope by a given port , new and old scope(optional).
 Direction can be : inbound or outbound
@@ -533,6 +534,14 @@ Notes:
     - to split the rule around the port you can use the bot : #sg_single_rule_delete
 
 Limitations: IPv6 is not supported yet
+
+## sg\_revert\_modification
+
+What it does:  Revert modification action on security group.  
+Sample GSL: cloudtrail where event.name in ('AuthorizeSecurityGroupEgress', 'AuthorizeSecurityGroupIngress', 'RevokeSecurityGroupEgress', 'RevokeSecurityGroupIngress') and event.status='Success'  
+Usage: sg_revert_modification  
+Limitations: none  
+Note: This bot is for Log.ic only  
 
 ## sg\_rules\_delete
 
