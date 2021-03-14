@@ -95,6 +95,8 @@ Resources:
                 - ec2:AssociateIamInstanceProfile # For ec2_attach_instance_role
                 - ec2:AuthorizeSecurityGroupEgress # For sg_single_rule_delete
                 - ec2:AuthorizeSecurityGroupIngress # For sg_single_rule_delete
+                - ec2:RevokeSecurityGroupEgress # For sg_revert_modification
+                - ec2:RevokeSecurityGroupIngress # For sg_revert_modification
                 - ec2:CreateFlowLogs # For vpc_turn_on_flow_logs
                 - ec2:CreateSecurityGroup # For instance_quarantine
                 - ec2:CreateSnapshot # For ec2_create_snapshot
