@@ -56,7 +56,6 @@
                 "s3:GetBucketAcl",
                 "s3:GetBucketPolicy",
                 "s3:GetObject",
-                "s3:HeadBucket",
                 "s3:PutBucketAcl",
                 "s3:PutBucketLogging",
                 "s3:PutBucketPolicy",
