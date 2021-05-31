@@ -311,7 +311,7 @@ def touch_sg(sg, direction, touch_type, lower_port, uper_port, sg_id, scope, pro
         if touch_type == 'authorize':
 
             if direction == 'inbound':
-                    result = sg.authorize_ingress(
+                result = sg.authorize_ingress(
                     CidrIp=scope,
                     FromPort=lower_port,
                     ToPort=uper_port,
