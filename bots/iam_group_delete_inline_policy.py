@@ -1,3 +1,10 @@
+"""
+## iam_group_delete_inline_group
+What it does: Deletes a inline policy attached to iam group
+Usage: AUTO: iam_group_delete_inline_group
+Limitations: none
+"""
+
 import boto3
 from botocore.exceptions import ClientError
 
