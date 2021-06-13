@@ -12,7 +12,7 @@ def run_action(session, rule, entity, params):
     iam_resource = session.resource('iam')
     iam_group = iam_resource.Group(entity['name'])
 
-    # take te names of the policies that we need to delete
+    # take the names of the policies that we need to delete
     inline_policies = [policy['name'] for policy in entity['inlinePolicies']]
 
     try:
