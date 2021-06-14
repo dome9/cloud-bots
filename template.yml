@@ -161,6 +161,7 @@ Resources:
                 - s3:CreateBucket # For create_cloudtrail
                 - s3:DeleteBucket # For s3_delete_bucket
                 - s3:DeleteBucketPolicy # For s3_delete_permissions
+                - s3:DeleteBucketWebsite # for s3_disable_static_website_hosting
                 - s3:GetBucketAcl # For s3_delete_permissions
                 - s3:GetBucketPolicy # For s3_delete_permissions
                 - s3:GetObject
