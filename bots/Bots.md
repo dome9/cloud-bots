@@ -22,6 +22,7 @@
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
+  - [iam\_group\_delete\_inline\_policy](#iam_group_delete_inline_policy)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
@@ -279,6 +280,10 @@ What it does: Delete the default policy version and set the latest instead.
 Usage: iam_delete_default_policy_version  
 Limitations: Most be at least more than one version to the policy.  
 
+## iam\_group\_delete\_inline\_policy
+What it does: Deletes a inline policy attached to iam group
+Usage: AUTO: iam_group_delete_inline_group
+Limitations: none
 
 ## iam\_role\_attach\_policy
 
