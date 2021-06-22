@@ -40,6 +40,7 @@
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
+  - [s3\_disable\_static\_website\_hosting](#s3_disable_static_website_hosting)
   - [s3\_enable\_encryption](#s3_enable_encryption)
   - [s3\_enable\_logging](#s3_enable_logging)
   - [s3\_enable\_versioning](#s3_enable_versioning)
@@ -478,6 +479,11 @@ What it does: Deletes all ACLs and bucket policies from a bucket
 Usage:  s3\_delete\_permissions  
 Limitations: none
 
+## s3\_disable\_static\_website\_hosting
+What it does: deletes ant s3 static website hosting
+Usage: s3_disable_website_static_hosting
+Limitations: None
+ 
 ## s3\_enable\_encryption
 
 What it does: Turns on AES-256 encryption on the target bucket  
