@@ -1,6 +1,7 @@
 # Bots
   - [acl\_delete](#acl_delete)
   - [acl\_revert\_modification](#acl_revert_modification)
+  - [acm\_delete\_certificate](#acm_delete_certificate)
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
@@ -77,6 +78,11 @@ Usage: AUTO: acl_revert_modification
 Sample GSL: cloudtrail where event.name in ('ReplaceNetworkAclEntry', 'DeleteNetworkAclEntry', 'CreateNetworkAclEntry')  
 Limitation: None  
 Note: Logic only bot
+
+##acm\_delete\_certificate
+What it does: Deletes ACM certificate
+Usage: AUTO: acm_delete_certificate
+Limitations: none
 
 ## ami\_set\_to\_private
 

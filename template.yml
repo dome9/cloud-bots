@@ -85,6 +85,7 @@ Resources:
           Statement:
             - Effect: Allow
               Action:
+                - acm:DeleteCertificate # For acm_delete_certificate
                 - cloudtrail:LookupEvents - #For look_up function in bot_utils
                 - cloudtrail:CreateTrail # For create_cloudtrail
                 - cloudtrail:LookupEvents # for bots_utils.py
