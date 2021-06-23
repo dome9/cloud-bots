@@ -7,7 +7,7 @@ Limitations: none
 from botocore.exceptions import ClientError
 
 def run_action(session, rule, entity, params):
-    acm_client = session.client("acn")
+    acm_client = session.client("acm")
     certificate_arn = entity['certificateArn']
 
     text_output = ''
