@@ -37,6 +37,7 @@
   - [lambda\_disable](#lambda_disable)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
@@ -441,6 +442,11 @@ Usage:  rds\_quarantine\_instance
 Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
+
+##s3\_allow\_ssl\_only
+What it does: force s3 bucket to accept only ssl requests
+Usage: AUTO: s3_enforce_ssl_data_encryption
+Limitations: none
 
 ## s3\_block\_all\_public\_access
 What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
