@@ -20,6 +20,7 @@
   - [ecs\_reboot](#ecs_reboot)
   - [ecs\_stop](#ecs_stop)
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
+  - [iam\_detach\_policy](#iam_detach_policy)
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
@@ -260,6 +261,10 @@ this function will delete the image from the repository.
 
 Sample GSL: cloudtrail where event.name='DescribeImageScanFindings' and event.status = 'Success'
 
+##iam\_detach\_policy
+What it does: detach all entities that attached to policy
+Usage: iam_detach_policy
+Limitations: none
 
 ## iam\_delete\_access\_key
 
