@@ -1,5 +1,5 @@
 """
-## lambda_enable_actie_tracing
+## lambda_enable_active_tracing
 What it does: Enable lambda active tracing
 Usage: lambda_enable_active_tracing
 Limitations: none
