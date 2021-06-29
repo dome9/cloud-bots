@@ -1,6 +1,7 @@
 # Bots
   - [acl\_delete](#acl_delete)
   - [acl\_revert\_modification](#acl_revert_modification)
+  - [acm\_delete\_certificate](#acm_delete_certificate)
   - [ami\_set\_to\_private](#ami_set_to_private)
   - [cloudtrail\_enable](#cloudtrail_enable)
   - [cloudtrail\_enable\_log\_file\_validation](#cloudtrail_enable_log_file_validation)
@@ -23,6 +24,7 @@
   - [iam\_detach\_policy](#iam_detach_policy)
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
+  - [iam\_group\_delete\_inline\_policy](#iam_group_delete_inline_policy)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
   - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
@@ -36,11 +38,14 @@
   - [kms\_enable\_rotation](#kms_enable_rotation)
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [lambda\_disable](#lambda_disable)
+  - [lambda\_enable\_active\_tracing](#lambda_enable_active_tracing)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
   - [s3\_delete\_permissions](#s3_delete_permissions)
+  - [s3\_disable\_static\_website\_hosting](#s3_disable_static_website_hosting)
   - [s3\_enable\_encryption](#s3_enable_encryption)
   - [s3\_enable\_logging](#s3_enable_logging)
   - [s3\_enable\_versioning](#s3_enable_versioning)
@@ -77,6 +82,11 @@ Usage: AUTO: acl_revert_modification
 Sample GSL: cloudtrail where event.name in ('ReplaceNetworkAclEntry', 'DeleteNetworkAclEntry', 'CreateNetworkAclEntry')  
 Limitation: None  
 Note: Logic only bot
+
+##acm\_delete\_certificate
+What it does: Deletes ACM certificate
+Usage: AUTO: acm_delete_certificate
+Limitations: none
 
 ## ami\_set\_to\_private
 
@@ -283,6 +293,10 @@ What it does: Delete the default policy version and set the latest instead.
 Usage: iam_delete_default_policy_version  
 Limitations: Most be at least more than one version to the policy.  
 
+## iam\_group\_delete\_inline\_policy
+What it does: Deletes a inline policy attached to iam group
+Usage: AUTO: iam_group_delete_inline_group
+Limitations: none
 
 ## iam\_role\_attach\_policy
 
@@ -407,6 +421,11 @@ Sample GSL:  cloudtrail where event.name like 'UpdateFunctionCode%' and issuer.t
 Usage:  AUTO: lambda_disable  
 Limitations: none  
 
+## lambda\_enable\_active\_tracing
+What it does: Enable lambda active tracing
+Usage: lambda_enable_active_tracing
+Limitations: none
+
 ## mark\_for\_stop\_ec2\_resource
 
 What it does: Tags an ec2 resource with "marked\_for\_stop" and
@@ -447,6 +466,11 @@ Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
 
+##s3\_allow\_ssl\_only
+What it does: force s3 bucket to accept only ssl requests
+Usage: AUTO: s3_enforce_ssl_data_encryption
+Limitations: none
+
 ## s3\_block\_all\_public\_access
 What it does: turn on S3 Bucket Block public access : Block public access to buckets and objects granted
 through Future New AND Existing public ACLs and Bucket Policies.
@@ -483,6 +507,11 @@ What it does: Deletes all ACLs and bucket policies from a bucket
 Usage:  s3\_delete\_permissions  
 Limitations: none
 
+## s3\_disable\_static\_website\_hosting
+What it does: deletes ant s3 static website hosting
+Usage: s3_disable_website_static_hosting
+Limitations: None
+ 
 ## s3\_enable\_encryption
 
 What it does: Turns on AES-256 encryption on the target bucket  

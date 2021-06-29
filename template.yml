@@ -85,6 +85,7 @@ Resources:
           Statement:
             - Effect: Allow
               Action:
+                - acm:DeleteCertificate # For acm_delete_certificate
                 - cloudtrail:LookupEvents - #For look_up function in bot_utils
                 - cloudtrail:CreateTrail # For create_cloudtrail
                 - cloudtrail:LookupEvents # for bots_utils.py
@@ -145,8 +146,10 @@ Resources:
                 - iam:DeleteAccessKey # for the delete_access_key
                 - iam:GetPolicy # for iam_detach_policy
                 - iam:ListEntitiesForPolicy # for iam_detach_policy
+                - iam:DeleteGroupPolicy # for iam_group_delete_inline_policy
                 - iam:ListUsers # For bot isolate vpc 
                 - iam:ListInstanceProfilesForRole # For ec2_detach_instance_role
+                - iam:ListGroupPolicies # for iam_group_delete_inline_policy
                 - iam:RemoveRoleFromInstanceProfile # For ec2_detach_instance_role
                 - iam:PassRole # Effective 28 April, 2018, AWS users who call CreateFlowLogs will be required to have the IAM PassRole permission[1].
                 - iam:UpdateAccessKey # for the revoke_access_key
@@ -165,6 +168,7 @@ Resources:
                 - s3:CreateBucket # For create_cloudtrail
                 - s3:DeleteBucket # For s3_delete_bucket
                 - s3:DeleteBucketPolicy # For s3_delete_permissions
+                - s3:DeleteBucketWebsite # for s3_disable_static_website_hosting
                 - s3:GetBucketAcl # For s3_delete_permissions
                 - s3:GetBucketPolicy # For s3_delete_permissions
                 - s3:GetObject
