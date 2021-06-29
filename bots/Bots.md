@@ -37,6 +37,7 @@
   - [kms\_enable\_rotation](#kms_enable_rotation)
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [lambda\_disable](#lambda_disable)
+  - [lambda\_enable\_active\_tracing](#lambda_enable_active_tracing)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
@@ -414,6 +415,11 @@ What it does:  Disable lambda function (by put function concurrency = 0).
 Sample GSL:  cloudtrail where event.name like 'UpdateFunctionCode%' and issuer.type='Role'  
 Usage:  AUTO: lambda_disable  
 Limitations: none  
+
+## lambda\_enable\_active\_tracing
+What it does: Enable lambda active tracing
+Usage: lambda_enable_active_tracing
+Limitations: none
 
 ## mark\_for\_stop\_ec2\_resource
 
