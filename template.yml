@@ -140,9 +140,13 @@ Resources:
                 - iam:AttachUserPolicy # For iam_quarantine_user
                 - iam:CreatePolicy 
                 - iam:CreateRole # For vpc_turn_on_flow_logs
+                - iam:DetachGroupPolicy # for iam_detach_policy
+                - iam:DetachRolePolicy # for iam_detach_policy
+                - iam:DetachUserPolicy # for iam_detach_policy
                 - iam:DeleteAccessKey # for the delete_access_key
+                - iam:GetPolicy # for iam_detach_policy
+                - iam:ListEntitiesForPolicy # for iam_detach_policy
                 - iam:DeleteGroupPolicy # for iam_group_delete_inline_policy
-                - iam:GetPolicy
                 - iam:ListUsers # For bot isolate vpc 
                 - iam:ListInstanceProfilesForRole # For ec2_detach_instance_role
                 - iam:ListGroupPolicies # for iam_group_delete_inline_policy
