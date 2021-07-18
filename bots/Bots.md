@@ -10,6 +10,7 @@
   - [cloudtrail\_send\_to\_cloudwatch](#cloudtrail_send_to_cloudwatch)
   - [cloudwatch\_create\_metric\_filter](#cloudwatch_create_metric_filter)
   - [config\_enable](#config_enable)
+  - [dynamodb\_enable\_sse](#dynamodb_enable_sse)
   - [ec2\_attach\_instance\_role](#ec2_attach_instance_role)
   - [ec2\_create\_snapshot](#ec2_create_snapshot)
   - [ec2\_detach\_instance\_role](#ec2_detach_instance_role)
@@ -179,6 +180,11 @@ variable include\_global\_resource\_types\_region=\<desired\_region\>)
 Defaults (not changable currently via variable): file
 deliveryFrequency(to S3) is set to One\_Hour config\_name = default
 
+## dynamodb\_enable\_sse
+What it does: enables dynamodb sse (Server Side Encryption)
+Usage: dynamodb_enable_sse KMSMasterKeyId=<kms_key_id>
+Example: dynamodb_enable_sse KMSMasterKeyId=11223344-4444-5555-6666-777788889999
+Limitations: none
 
 ## ec2\_attach\_instance\_role
 

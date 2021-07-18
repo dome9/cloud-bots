@@ -96,6 +96,7 @@ Resources:
                 - config:PutConfigurationRecorder # For config_enable
                 - config:PutDeliveryChannel # For config_enable
                 - config:StartConfigurationRecorder # For config_enable
+                - dynamodb:UpdateTable # For dynamo_enable_sse
                 - ecr-public:BatchDeleteImage # for delete_image_from_ecs_repo
                 - ec2:AssociateIamInstanceProfile # For ec2_attach_instance_role
                 - ec2:AuthorizeSecurityGroupEgress # For sg_single_rule_delete
