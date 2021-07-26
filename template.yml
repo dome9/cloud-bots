@@ -165,6 +165,7 @@ Resources:
                 - logs:PutMetricFilter # For cloudwatch_create_metric_filter
                 - logs:CreateLogGroup # For cloudtrail_send_to_cloudwatch
                 - rds:ModifyDBInstance # For rds_quarantine_instance
+                - ssm:ModifyDocumentPermission # For ssm_document_set_private
                 - s3:CreateBucket # For create_cloudtrail
                 - s3:DeleteBucket # For s3_delete_bucket
                 - s3:DeleteBucketPolicy # For s3_delete_permissions
