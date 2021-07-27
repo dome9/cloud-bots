@@ -55,6 +55,7 @@
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
+  - [sns\_enforce\_sse](#sns_enforce_sse)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_isolate](#vpc_isolate)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
@@ -668,6 +669,11 @@ Set Split to True
  sg_single_rule_delete split=true protocol=TCP scope=8.8.8.8/32 direction=inbound port=0   
 
 Limitations: IPv6 is not supported
+
+## sns_enforce_sse
+What it does: make sns topic use server side encryption (sse)
+Usage:  sns_enforce_sse kmsKeyArn=arn:aws:kms:us-east-1:000000000000:key/aaaaaaaa-bbbb-cccc-dddd-000000000000
+Limitations: none
 
 ## tag\_ec2\_resource
 

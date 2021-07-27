@@ -183,6 +183,7 @@ Resources:
                 - sns:Publish # For exporting the logs from CS2
                 - sns:CreateTopic # For cloudwatch_create_metric_filter
                 - sns:Subscribe # For cloudwatch_create_metric_filter
+                - sns:SetTopicAttributes # For sns_enforce_sse
                 - sns:ListSubscriptionsByTopic # For cloudwatch_create_metric_filter
                 - sts:GetCallerIdentity # For checking what account this is running in
                 - sts:AssumeRole # For multi_account
