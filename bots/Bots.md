@@ -41,7 +41,8 @@
   - [lambda\_enable\_active\_tracing](#lambda_enable_active_tracing)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
-    [ssm\_document\_set\_private](#ssm_document_set_private)
+  - [sns\_set\_topic\_private](sns_set_topic_private)
+  - [ssm\_document\_set\_private](#ssm_document_set_private)
   - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
   - [s3\_delete\_acls](#s3_delete_acls)
@@ -467,6 +468,11 @@ Usage:  rds\_quarantine\_instance
 Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
+
+## sns\_set\_topic\_private
+# What it does: set sns topic to private
+# Usage:sns_set_topic_private policy<class str>policy
+# Examples:
 
 ## ssm\_document\_set\_private
 What it does: removes all aws account that can access the file except of the one that pass as a param.
