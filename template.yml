@@ -123,6 +123,7 @@ Resources:
                 - ec2:ModifyVpcAttribute # For bot isolate vpc 
                 - ec2:DescribeNetworkAcls # For bot isolate vpc        
                 - ec2:DeleteNetworkAcl #For acl delete bot
+                - ec2:DeleteVpc # For vpc_delete
                 - ec2:ReleaseAddress # For ec2_release_eips
                 - ec2:DeleteKeyPair # For ec2_delete_key_pair
                 - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
