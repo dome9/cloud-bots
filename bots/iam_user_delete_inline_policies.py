@@ -1,6 +1,6 @@
 """
 ## iam_user_delete_inline_policies
-What it does: deleted all iam user inline policy and attach new maneged policies if pass as an argument
+What it does: deleted all iam user inline policies and attach new maneged policies if pass as an argument
 Usage: AUTH: iam_user_delete_inline_policies (option)maneged_policies=policy1_arn,policy2_arn
 """
 
