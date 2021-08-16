@@ -143,6 +143,7 @@ Resources:
                 - iam:DetachGroupPolicy # for iam_detach_policy
                 - iam:DetachRolePolicy # for iam_detach_policy
                 - iam:DetachUserPolicy # for iam_detach_policy
+                - iam:DeletePolicy # for iam_user_delete_inline_policies
                 - iam:DeleteAccessKey # for the delete_access_key
                 - iam:GetPolicy # for iam_detach_policy
                 - iam:ListEntitiesForPolicy # for iam_detach_policy
