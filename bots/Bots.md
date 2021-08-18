@@ -43,6 +43,7 @@
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [sns\_set\_topic\_private](sns_set_topic_private)
+  - [sns\_set\_topic\_private](sns_set_topic_private)
   - [ssm\_document\_set\_private](#ssm_document_set_private)
   - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
@@ -692,7 +693,7 @@ Limitations: IPv6 is not supported
 
 ## sns_enforce_sse
 What it does: make sns topic use server side encryption (sse)
-Usage:  sns_enforce_sse kmsKeyArn=arn:aws:kms:us-east-1:000000000000:key/aaaaaaaa-bbbb-cccc-dddd-000000000000
+Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee
 Limitations: none
 
 ## tag\_ec2\_resource
