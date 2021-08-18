@@ -1,18 +1,25 @@
 """
 ## sns_enforce_sse
 What it does: make sns topic use server side encryption (sse)
-Usage:  sns_enforce_sse kmsKeyArn=arn:aws:kms:us-east-1:000000000000:key/aaaaaaaa-bbbb-cccc-dddd-000000000000
+Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee
 Limitations: none
 """
 
 import boto3
 from botocore.exceptions import ClientError
 
+
+def get_kms_key(session, key_id):
+    client = session.client("kms")
+    kms_key = client.describe_key(KeyId=key_id,)
+    return kms_key['KeyMetadata']['Arn']
+
+
 def run_action(session, rule, entity, params):
     sns_client = session.client('sns')
 
     topic_arn = entity['topicArn']
-    kms_key_arn = params.get('kmsKeyArn')
+    kms_key_arn = get_kms_key(session, params.get('kmsKeyId'))
 
     text_output = ''
     try:
