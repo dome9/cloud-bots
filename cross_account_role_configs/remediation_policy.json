@@ -68,7 +68,8 @@
                 "sns:CreateTopic",
                 "sns:Subscribe",
                 "sts:GetCallerIdentity",
-                "sts:AssumeRole"
+                "sts:AssumeRole",
+                "lambda:TagResource"
             ],
             "Resource": "*"
         }
