@@ -3,7 +3,7 @@
 What it does: Tags a lambda function
 Usage: AUTO: lambda_tag <key> <value>
 Notes:
-# <value> is an optional parameter. you can pass only key, without value. Usage: lambda_tag <key>
+# <value> is an optional parameter. you can pass only key, without value. Usage: lambda_tag key=<key>
 Limitations:
 # Currently can't support tags/values with space. after enabling it, Tags/values with spaces can be added
 if they are surrounded by quotes, e.g: lambda_tag "this is my key", "this is a value". (after that, there will be no limitations)
@@ -11,9 +11,10 @@ if they are surrounded by quotes, e.g: lambda_tag "this is my key", "this is a v
 '''
 
 import boto3
-
+from botocore.exceptions import ClientError
 
 def run_action(boto_session, rule, entity, params):
+
     function_id = entity['id']
 
     if len(params) == 2:  # provided key and value
@@ -30,19 +31,23 @@ def run_action(boto_session, rule, entity, params):
         return text_output
 
     client = boto_session.client('lambda')
+    try:
+        result = client.tag_resource(
+            Resource=function_id,
+            Tags={
+                key: value,
+            },
+        )
 
-    result = client.tag_resource(
-        Resource=function_id,
-        Tags={
-            key: value,
-        },
-    )
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = "Lambda function: %s successfully tagged with key: %s and value: %s \n" % (function_id, key, value)
 
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
-    else:
-        text_output = "Lambda function: %s successfully tagged with key: %s and value: %s \n" % (
-        function_id, key, value)
+        return text_output
+
+    except ClientError as e:
+        text_output = text_output + "Unexpected error: %s \n" % e
 
     return text_output
