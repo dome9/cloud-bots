@@ -69,7 +69,6 @@
                 "sns:Subscribe",
                 "sts:GetCallerIdentity",
                 "sts:AssumeRole",
-                "lambda:TagResource"
             ],
             "Resource": "*"
         }
