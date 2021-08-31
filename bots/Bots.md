@@ -60,6 +60,7 @@
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
+  - [sns\_topic\_delete](#sns_topic_delete)
   - [sns\_enforce\_sse](#sns_enforce_sse)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_isolate](#vpc_isolate)
