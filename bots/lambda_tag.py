@@ -7,7 +7,6 @@ Notes:
 Limitations:
 # Currently can't support tags/values with space. after enabling it, Tags/values with spaces can be added
 if they are surrounded by quotes, e.g: lambda_tag "this is my key", "this is a value". (after that, there will be no limitations)
-# need to add to the remediation role the Action - "lambda:TagResource". we may consider to keep this as a note, in case customers didn't relaunch the stack after the change.
 '''
 
 import boto3
