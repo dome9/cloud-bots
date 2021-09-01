@@ -1,7 +1,7 @@
 '''
-## sns_delete_topic
+## sns_topic_delete
 What it does: Deletes sns topic and all its subscriptions.
-Usage: AUTO: sns_delete_topic
+Usage: AUTO: sns_topic_delete
 Limitations: None
 '''
 
