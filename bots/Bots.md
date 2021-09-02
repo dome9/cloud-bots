@@ -40,6 +40,7 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [lambda\_disable](#lambda_disable)
   - [lambda\_enable\_active\_tracing](#lambda_enable_active_tracing)
+  - [lambda\_tag](#lambda_tag)  
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [sns\_set\_topic\_private](sns_set_topic_private)

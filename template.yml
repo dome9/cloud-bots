@@ -192,6 +192,7 @@ Resources:
                 - sts:GetCallerIdentity # For checking what account this is running in
                 - sts:AssumeRole # For multi_account
                 - lambda:PutFunctionConcurrency # For lambda disable
+                - lambda:TagResource # For lambda_tag
 
               Resource: '*'
       Environment:

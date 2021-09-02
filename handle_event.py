@@ -3,6 +3,8 @@ import os
 import boto3
 import importlib
 import json
+import sys
+import traceback
 from botocore.exceptions import ClientError
 
 MININAL_TAG_LENGTH = 2
@@ -80,6 +82,7 @@ def handle_event(message, output_message):
         return False
 
     for bot_to_run in bots:
+        bot_msg = ''
         bot_data = {}
         bot_data['Rule'] = message_data.get('rule_name')
         bot_data['ID'] = message_data.get('entity_id')
@@ -89,12 +92,16 @@ def handle_event(message, output_message):
         print(f'''{__file__} - Bot name to execute: {bot}''')
         try:
             bot_module = importlib.import_module(''.join(['bots.', bot]), package=None)
-        except:
-            print(f'{__file__} - Error - could not find bot: {bot}')
-            bot_data['Bot'] = f'{bot} is not a known bot. skipping'
+        except Exception as e:
+            exception_type, exception_object, exception_traceback = sys.exc_info()
+            bot_msg = f'{__file__} - Error in function {bot}. function didnt execute. Error: {e}. For more details please see the CloudWatch logs. \n'
+            bot_data['Execution status'] = 'failed'
+            print(
+                f'{__file__} Details: {" ".join(traceback.format_exception(exception_type, exception_object, exception_traceback))} \n')
+            bot_data['Bot message'] = bot_msg
+            output_message['Rules violations found'].append(bot_data.copy())
             continue
 
-        bot_msg = ''
         # Get the session info here. No point in waisting cycles running it up top if we aren't going to run an bot anyways:
         try:  # get the accountID
             sts = boto3.client('sts')
@@ -111,8 +118,10 @@ def handle_event(message, output_message):
                 # If it's not the same account, try to assume role to the new one
                 role_arn = ''.join(['arn:aws:iam::', event_account_id, ':role/'])
                 # This allows users to set their own role name if they have a different naming convention they have to follow
-                role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join([role_arn, 'Dome9CloudBots'])
-                bot_data[ 'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
+                role_arn = ''.join([role_arn, cross_account_role_name]) if cross_account_role_name else ''.join(
+                    [role_arn, 'Dome9CloudBots'])
+                bot_data[
+                    'Compliance failure was found for an account outside of the one the function is running in. Trying to assume_role to target account'] = event_account_id
 
                 try:
                     credentials_for_event = globals()['all_session_credentials'][event_account_id]
@@ -139,7 +148,8 @@ def handle_event(message, output_message):
                         bot_data['Execution status'] = 'failed'
                         print(f'{__file__} - Error - {e}')
                         if error == 'AccessDenied':
-                            bot_data['Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
+                            bot_data[
+                                'Access Denied'] = 'Tried and failed to assume a role in the target account. Please verify that the cross account role is createad.'
                         else:
                             bot_data['Unexpected error'] = e
                         continue
@@ -153,7 +163,8 @@ def handle_event(message, output_message):
 
             else:
                 # In single account mode, we don't want to try to run bots outside of this account therefore error , the lambda will exit with error
-                bot_data['Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
+                bot_data[
+                    'Error'] = f'This finding was found in account id {event_account_id}. The Lambda function is running in account id: {lambda_account_id}. Remediations need to be ran from the account there is the issue in.'
                 output_message['Rules violations found'].append(bot_data.copy())
                 continue
 
@@ -161,22 +172,25 @@ def handle_event(message, output_message):
             boto_session = boto3.Session(region_name=message_data.get('region'))
 
         try:  ## Run the bot
-        
+
             # Find and add Log.ic event time to the entity
             try:
-                message['entity']['eventTime'] = next(json.loads(element['value'])['alertWindowStartTime'] 
-                                                      for element in message['additionalFields'] 
-                                                      if element.get('name') == 'logic_data' and 
+                message['entity']['eventTime'] = next(json.loads(element['value'])['alertWindowStartTime']
+                                                      for element in message['additionalFields']
+                                                      if element.get('name') == 'logic_data' and
                                                       'alertWindowStartTime' in element.get('value'))
             except:
                 print(f'{__file__} - Warning - Adding Log.ic event time to entity failed')
-                
+
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
+
         except Exception as e:
-            bot_msg = f'Error while executing function {bot}. Error: {e}'
+            exception_type, exception_object, exception_traceback = sys.exc_info()
+            bot_msg = f'Error while executing function {bot}. Error: {e}. For more details please see the CloudWatch logs. \n'
             bot_data['Execution status'] = 'failed'
-            print(f'{__file__} - Error - {bot_msg}')
+            print(
+                f'{__file__} Details: {" ".join(traceback.format_exception(exception_type, exception_object, exception_traceback))} \n')
 
         bot_data['Bot message'] = bot_msg
         output_message['Rules violations found'].append(bot_data.copy())
