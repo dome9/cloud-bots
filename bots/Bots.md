@@ -54,6 +54,7 @@
   - [s3\_enable\_encryption](#s3_enable_encryption)
   - [s3\_enable\_logging](#s3_enable_logging)
   - [s3\_enable\_versioning](#s3_enable_versioning)
+  - [s3\_limit\_access](#s3_limit_access)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
@@ -555,6 +556,14 @@ What it does: Turns on versioning for an S3 bucket
 Usage:  s3\_enable\_versioning  
 Limitations: none
 
+## s3\_limit\_access
+
+What it does: Removes policies for the following actions for principals '*':
+s3:Delete*, s3:Get*, s3:List*, s3:Put*, s3:RestoreObject and s3:*. </br>
+Usage:  s3\_limit\_access </br>
+Notes: The bot Removes these actions from the policy. if this is the only action, the whole policy will be removed.
+If necessary, modify the policy after the deletation, to limit the access to specific principals. </br>
+Limitations: The bot removes the policies for *all* the mentioned actions, if exist.
 
 ## s3\_only\_allow\_ssl
 What it does: Ensure that S3 Buckets enforce encryption of data transfers using Secure Sockets Layer (SSL)

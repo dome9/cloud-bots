@@ -8,11 +8,11 @@ If necessary, modify the policy after the deletation, to limit the access to spe
 Limitations: The bot removes the policies for *all* the mentioned actions, if exist.
 '''
 
-import boto3
 from botocore.exceptions import ClientError
 import re
 import json
-
+permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
+relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
 
 def check_match(action):
     return re.match('^s3:Delete', action) or re.match('^s3:Get', action) or re.match('^s3:List', action) or re.match('^s3:Put', action) or re.match('s3:RestoreObject', action) or re.match('s3:*', action) or action == '*'
@@ -101,9 +101,11 @@ def run_action(boto_session, rule, entity, params):
         else:
             text_output = text_output + "Bucket policy updated for: %s \nYou may want to update the policy manually for specific principals." % bucket
 
-    except ClientError as e:
 
-        text_output = text_output + "Unexpected error: %s \n" % e
+    except ClientError as e:
+        text_output = f"Unexpected client error: {e} \n"
+        if 'AccessDenied' in e.response['Error']['Code']:
+            text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
 
     return text_output
 
