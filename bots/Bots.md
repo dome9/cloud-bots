@@ -698,6 +698,11 @@ What it does: make sns topic use server side encryption (sse)
 Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee
 Limitations: none
 
+## sns_topic_delete
+What it does: Deletes sns topic and all its subscriptions.
+Usage: AUTO: sns_topic_delete
+Limitations: None
+
 ## tag\_ec2\_resource
 
 What it does: Tags an ec2 instance  
