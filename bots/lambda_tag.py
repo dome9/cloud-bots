@@ -3,14 +3,13 @@
 What it does: Tags a lambda function
 Usage: AUTO: lambda_tag <key> <value>
 Notes:
-# <value> is an optional parameter. you can pass only key, without value. Usage: lambda_tag key=<key>
-Limitations:
-# Currently can't support tags/values with space. after enabling it, Tags/values with spaces can be added
-if they are surrounded by quotes, e.g: lambda_tag "this is my key", "this is a value". (after that, there will be no limitations)
+# <value> is an optional parameter. you can pass only key, without value. Usage: lambda_tag <key>
+Limitations: Tags/values with spaces are currently not supported. it will be added in the future.
 '''
 
-import boto3
 from botocore.exceptions import ClientError
+permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
+relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
 
 def run_action(boto_session, rule, entity, params):
 
@@ -47,6 +46,8 @@ def run_action(boto_session, rule, entity, params):
         return text_output
 
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s \n" % e
+        text_output = f"Unexpected client error: {e} \n"
+        if 'AccessDenied' in e.response['Error']['Code']:
+            text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
 
     return text_output
