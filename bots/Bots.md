@@ -61,6 +61,7 @@
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
+  - [sns\_topic\_delete](#sns_topic_delete)
   - [sns\_enforce\_sse](#sns_enforce_sse)
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_delete](#vpc_delete)
@@ -706,6 +707,11 @@ Limitations: IPv6 is not supported
 What it does: make sns topic use server side encryption (sse)
 Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee
 Limitations: none
+
+## sns_topic_delete
+What it does: Deletes sns topic and all its subscriptions.
+Usage: AUTO: sns_topic_delete
+Limitations: None
 
 ## tag\_ec2\_resource
 
