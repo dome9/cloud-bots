@@ -54,14 +54,17 @@
   - [s3\_enable\_encryption](#s3_enable_encryption)
   - [s3\_enable\_logging](#s3_enable_logging)
   - [s3\_enable\_versioning](#s3_enable_versioning)
+  - [s3\_limit\_access](#s3_limit_access)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
+  - [sns\_topic\_delete](#sns_topic_delete)
   - [sns\_enforce\_sse](#sns_enforce_sse)
   - [tag\_ec2\_resource](#tag_ec2_resource)
+  - [vpc\_delete](#vpc_delete)
   - [vpc\_isolate](#vpc_isolate)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   - [sg\_rules\_delete\_by\_scope](#sg_rules_delete_by_scope)
@@ -555,6 +558,14 @@ What it does: Turns on versioning for an S3 bucket
 Usage:  s3\_enable\_versioning  
 Limitations: none
 
+## s3\_limit\_access
+
+What it does: Removes policies for the following actions for principals '*':
+s3:Delete*, s3:Get*, s3:List*, s3:Put*, s3:RestoreObject and s3:*. </br>
+Usage:  s3\_limit\_access </br>
+Notes: The bot Removes these actions from the policy. if this is the only action, the whole policy will be removed.
+If necessary, modify the policy after the deletation, to limit the access to specific principals. </br>
+Limitations: The bot removes the policies for *all* the mentioned actions, if exist.
 
 ## s3\_only\_allow\_ssl
 What it does: Ensure that S3 Buckets enforce encryption of data transfers using Secure Sockets Layer (SSL)
@@ -697,6 +708,7 @@ What it does: makes sns topic use server side encryption (sse) </br>
 Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee </br>
 Limitations: none
 
+
 ## sqs_enforce_sse
 What it does: Configures server-side encryption (SSE) for a queue </br>
 Usage:  sqs_enforce_sse <kmsKeyId> <kmsRegion> (<kmsRegion> is not required - provide it if the kms key is in a different region than the SQS). </br>
@@ -706,6 +718,12 @@ sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee us-east-2 </br>
 sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key) </br>
 sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if it's in a different region) </br>
 Limitations: The KMS key MUST be in the same AWS account as the SQS.
+
+## sns_topic_delete
+What it does: Deletes sns topic and all its subscriptions.
+Usage: AUTO: sns_topic_delete
+Limitations: None
+
 
 ## tag\_ec2\_resource
 
@@ -730,6 +748,11 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
   - Volume
   - Vpc
   - VpcPeeringConnection
+
+## vpc_delete
+What it does: deletes vpc 
+
+Usage: AUTO: vpc_delete
 
 ## vpc\_isolate
 
