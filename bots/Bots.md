@@ -61,6 +61,7 @@
   - [sg\_rules\_delete](#sg_rules_delete)
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [sns\_enforce\_sse](#sns_enforce_sse)
+  - [sqs\_enforce\_sse](#sqs_enforce_sse)  
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_isolate](#vpc_isolate)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
