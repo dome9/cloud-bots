@@ -123,6 +123,7 @@ Resources:
                 - ec2:ModifyVpcAttribute # For bot isolate vpc 
                 - ec2:DescribeNetworkAcls # For bot isolate vpc        
                 - ec2:DeleteNetworkAcl #For acl delete bot
+                - ec2:DeleteVpc # For vpc_delete
                 - ec2:ReleaseAddress # For ec2_release_eips
                 - ec2:DeleteKeyPair # For ec2_delete_key_pair
                 - ec2:RevokeSecurityGroupEgress # For sg_rules_delete
@@ -186,6 +187,7 @@ Resources:
                 - sns:Publish # For exporting the logs from CS2
                 - sns:CreateTopic # For cloudwatch_create_metric_filter
                 - sns:Subscribe # For cloudwatch_create_metric_filter
+                - sns:DeleteTopic # For sns_topic_delete
                 - sns:SetTopicAttributes # For sns_enforce_sse
                 - sns:ListSubscriptionsByTopic # For cloudwatch_create_metric_filter
                 - sqs:SetQueueAttributes # For sqs_enforce_sse
