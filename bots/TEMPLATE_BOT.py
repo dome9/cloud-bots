@@ -13,7 +13,7 @@ relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
 def run_action(boto_session, rule, entity, params):
 
     '''
-    PARAMETERS VALIDATION (COUNT, TYPE, ETC.)
+    # PARAMETERS VALIDATION (COUNT, TYPE, ETC.)
     EXAMPLE:
     if len(params) != 1:
         return f"Error: Wrong use of the BOT NAME bot. Usage: ... \n"
