@@ -135,7 +135,7 @@ Resources:
                 - ecs:StopTask #For Ecs stop bot and reboot bot
                 - ecs:DescribeTasks #For Ecs stop bot and reboot bot
                 - ecs:ListClusters #For Ecs stop bot and reboot bot
-                - kms:DescribeKey # for sns_enforce_sse
+                - kms:DescribeKey # for sns_enforce_sse & sqs_enforce_sse
                 - kms:EnableKeyRotation # For kms_enable_rotation
                 - iam:AttachRolePolicy # For ec2_update_instance_role and others
                 - iam:AttachUserPolicy # For iam_quarantine_user
@@ -188,6 +188,7 @@ Resources:
                 - sns:Subscribe # For cloudwatch_create_metric_filter
                 - sns:SetTopicAttributes # For sns_enforce_sse
                 - sns:ListSubscriptionsByTopic # For cloudwatch_create_metric_filter
+                - sqs:SetQueueAttributes # For sqs_enforce_sse
                 - sts:GetCallerIdentity # For checking what account this is running in
                 - sts:AssumeRole # For multi_account
                 - lambda:PutFunctionConcurrency # For lambda disable

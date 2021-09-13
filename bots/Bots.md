@@ -693,9 +693,19 @@ Set Split to True
 Limitations: IPv6 is not supported
 
 ## sns_enforce_sse
-What it does: make sns topic use server side encryption (sse)
-Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee
+What it does: makes sns topic use server side encryption (sse) </br>
+Usage:  sns_enforce_sse kmsKeyId=aaaaaaaa-bbbb-cccc-dddd-eeeeeeee </br>
 Limitations: none
+
+## sqs_enforce_sse
+What it does: Configures server-side encryption (SSE) for a queue </br>
+Usage:  sqs_enforce_sse <kmsKeyId> <kmsRegion> (<kmsRegion> is not required - provide it if the kms key is in a different region than the SQS). </br>
+Examples:
+sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee </br>
+sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee us-east-2 </br>
+sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key) </br>
+sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if it's in a different region) </br>
+Limitations: The KMS key MUST be in the same AWS account as the SQS.
 
 ## tag\_ec2\_resource
 
