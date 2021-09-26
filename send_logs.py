@@ -15,7 +15,7 @@ def send_logs(message, start_time, vendor):
     output_type = os.getenv('OUTPUT_TYPE', '')
     execution_time = time.time() - start_time
     session = requests.Session()
-    for bot in message.get('Rules violations found'):
+    for bot in message.get('Rules violations found',[]):
         del bot['ID']
         del bot['Name']
     headers = {"Content-Type": "application/json", "Accept": "application/json", "X-Sumo-Name": message.get('Account id'), "X-Sumo-Category": vendor}
