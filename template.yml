@@ -141,7 +141,7 @@ Resources:
                 - iam:AttachRolePolicy # For ec2_update_instance_role and others
                 - iam:AttachUserPolicy # For iam_quarantine_user
                 - iam:CreatePolicy 
-                - iam:CreateRole # For vpc_turn_on_flow_logs
+                - iam:CreateRole # For vpc_turn_on_flow_logs and iam_role_clone_with_non_enumerable_name
                 - iam:DetachGroupPolicy # for iam_detach_policy
                 - iam:DetachRolePolicy # for iam_detach_policy
                 - iam:DetachUserPolicy # for iam_detach_policy
@@ -165,6 +165,11 @@ Resources:
                 - iam:ListPolicyVersions # For iam_delete_default_policy_version
                 - iam:SetDefaultPolicyVersion # For iam_delete_default_policy_version
                 - iam:DeletePolicyVersion # For iam_delete_default_policy_version
+                - iam:GetRole # For iam_role_clone_with_non_enumerable_name
+                - iam:ListRolePolicies # For iam_role_clone_with_non_enumerable_name
+                - iam:ListAttachedRolePolicies # For iam_role_clone_with_non_enumerable_name
+                - iam:TagRole # For iam_role_clone_with_non_enumerable_name
+                - iam:PutRolePolicy # For iam_role_clone_with_non_enumerable_name
                 - logs:PutMetricFilter # For cloudwatch_create_metric_filter
                 - logs:CreateLogGroup # For cloudtrail_send_to_cloudwatch
                 - rds:ModifyDBInstance # For rds_quarantine_instance

@@ -26,6 +26,7 @@
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_group\_delete\_inline\_policy](#iam_group_delete_inline_policy)
   - [iam\_role\_attach\_policy](#iam_role_attach_policy)
+  - [iam\_role\_clone\_with\_non\_enumerable\_name](#iam_role_clone_with_non_enumerable_name)
   - [iam\_revoke\_access\_key](#iam_revoke_access_key)
   - [iam\_user\_attach\_policy](#iam_user_attach_policy)
   - [iam\_user\_detach](#iam_user_detach)
@@ -44,7 +45,7 @@
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [sns\_set\_topic\_private](sns_set_topic_private)
-  - [sns\_set\_topic\_private](sns_set_topic_private)
+  - [sns\_topic\_delete](sns_topic_delete)
   - [ssm\_document\_set\_private](#ssm_document_set_private)
   - [s3\_allow\_ssl\_only](#s3_allow_ssl_only)
   - [s3\_block\_all\_public\_access](#s3_block_all_public_access)
@@ -321,6 +322,16 @@ policy\_arn=arn:aws:iam::621958466464:policy/sumo\_collection
  iam\_role\_attach\_policy
 policy\_arn=arn:aws:iam::$ACCOUNT\_ID:policy/sumo\_collection
 
+## iam\_role\_clone\_with\_non\_enumerable\_name
+What it does: Clones the IAM role and gives it a non-enumerable name. The new name is the original name +  20 length non-enumerable string, Example: MyRole -> MyRole-XaTrEiuNyHsRAqqC_rBW. </br>
+Usage: AUTO: iam_role_clone_non_enumerable_name </br>
+Limitations: The bot doesn't delete the original role, in order to avoid misconfigurations. After the role will be cloned, it's under your responsibility to delete the original role, after
+validating it (For example, it's important to make sure that you do not have any Amazon EC2 instances running with the role). If you're using the bot via CSPM, the rule will keep failing
+until the original role (with the enumerable name) will be deleted. In the response message of the bot, you'll get the information about the old and the new (cloned) role. </br>
+For more information see:
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage_delete.html
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html#replace-iam-role
+
 ## iam\_user\_attach\_policy
 
 What it does: Attaches a policy (passed in as a variable) to the user  
@@ -440,6 +451,13 @@ Limitations: none
 What it does: Enable lambda active tracing
 Usage: lambda_enable_active_tracing
 Limitations: none
+
+## lambda\_tag
+What it does: Tags a lambda function </br>
+Usage: AUTO: lambda_tag &lt;key> &lt;value> </br>
+Notes:
+value is an optional parameter. you can pass only key, without value. Usage: lambda_tag &lt;key> </br>
+Limitations: Tags/values with spaces are currently not supported. it will be added in the future.
 
 ## mark\_for\_stop\_ec2\_resource
 
@@ -721,8 +739,8 @@ sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if i
 Limitations: The KMS key MUST be in the same AWS account as the SQS.
 
 ## sns_topic_delete
-What it does: Deletes sns topic and all its subscriptions.
-Usage: AUTO: sns_topic_delete
+What it does: Deletes sns topic and all its subscriptions. </br>
+Usage: AUTO: sns_topic_delete </br>
 Limitations: None
 
 
