@@ -1,5 +1,5 @@
 """
-## s3_enforce_ssl_data_encryption
+## s3_allow_ssl_only
 What it does: force s3 bucket to accept only ssl requests
 Usage: AUTO: s3_enforce_ssl_data_encryption
 Limitations: none
