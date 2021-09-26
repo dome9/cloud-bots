@@ -200,6 +200,7 @@ Resources:
                 - sts:AssumeRole # For multi_account
                 - lambda:PutFunctionConcurrency # For lambda disable
                 - lambda:TagResource # For lambda_tag
+                - elasticloadbalancing:ModifyLoadBalancerAttributes # For load_balancer_enable_access_logs
 
               Resource: '*'
       Environment:

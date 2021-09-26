@@ -41,7 +41,8 @@
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [lambda\_disable](#lambda_disable)
   - [lambda\_enable\_active\_tracing](#lambda_enable_active_tracing)
-  - [lambda\_tag](#lambda_tag)  
+  - [lambda\_tag](#lambda_tag)
+  - [load\_balancer\_enable\_access\_logs](#load_balancer_enable_access_logs)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [sns\_set\_topic\_private](sns_set_topic_private)
@@ -459,6 +460,11 @@ Notes:
 value is an optional parameter. you can pass only key, without value. Usage: lambda_tag &lt;key> </br>
 Limitations: Tags/values with spaces are currently not supported. it will be added in the future.
 
+## load\_balancer\_enable\_access\_logs
+What it does: enables access logging for a load balancer (elb, alb) <br>
+Usage: AUTO: load_balancer_enable_access_logs <br>
+Limitations: None 
+
 ## mark\_for\_stop\_ec2\_resource
 
 What it does: Tags an ec2 resource with "marked\_for\_stop" and
@@ -500,9 +506,9 @@ it's in "backing up" state, this will fail
 (Might not work with Aurora since it's in a cluster)
 
 ## sns\_set\_topic\_private
-# What it does: set sns topic to private
-# Usage:sns_set_topic_private policy<class str>policy
-# Examples:
+What it does: set sns topic to private <br>
+Usage: sns_set_topic_private policy&lt;class str>policy
+
 
 ## ssm\_document\_set\_private
 What it does: removes all aws account that can access the file except of the one that pass as a param.
