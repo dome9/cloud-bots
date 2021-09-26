@@ -17,17 +17,20 @@ def run_action(boto_session, rule, entity, params):
     text_output = 'Start iam_user_disable_console_password; '
     username = entity['name']
     # Create an IAM resource
-    iam_res = boto3.resource('iam')
+    iam_client = boto3.client('iam')
 
     # ----------------------- Disable Console Password ----------------------------------#
     try:
-        # load the login profile of the username
-        login_profile = iam_res.LoginProfile(username)
-        # deletes the password for the specified IAM use
-        login_profile.delete()
-        text_output = text_output + f'Iam user: {username}\'s console password was removed; '
+        result = iam_client.delete_login_profile(UserName=username)
+
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            text_output = "Unexpected error: %s \n" % str(result)
+        else:
+            text_output = text_output + f'Iam user: {username}\'s console password was removed; '
 
     except ClientError as e:
         text_output = text_output + f'Unexpected error: {e}.'
 
     return text_output
+
