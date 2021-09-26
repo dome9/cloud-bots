@@ -201,6 +201,12 @@ Resources:
                 - lambda:PutFunctionConcurrency # For lambda disable
                 - lambda:TagResource # For lambda_tag
                 - elasticloadbalancing:ModifyLoadBalancerAttributes # For load_balancer_enable_access_logs
+                - network-firewall:UpdateLoggingConfiguration # For network_firewall_enable_logging
+                - logs:ListLogDeliveries # For network_firewall_enable_logging
+                - logs:CreateLogDelivery # For network_firewall_enable_logging
+                - logs:GetLogDelivery # For network_firewall_enable_logging
+                - iam:CreateServiceLinkedRole # For network_firewall_enable_logging
+                - firehose:TagDeliveryStream # For network_firewall_enable_logging (in order to send logs to a delivery stream)
 
               Resource: '*'
       Environment:

@@ -9,6 +9,7 @@ import json
 from botocore.exceptions import ClientError
 import string
 import secrets
+import bots_utils as utils
 
 LENGTH = 6
 allowed_characters = string.ascii_lowercase + string.digits
@@ -92,50 +93,6 @@ def generate_random_str(entity):
     bucket_name = f"{lb_type}-access-logs-{lb_name}-{region}-{random_str}"
     return bucket_name
 
-
-def create_bucket(boto_session, entity):
-    s3_client = boto_session.client('s3')
-    bucket_name = generate_random_str(entity)
-    print(f'{__file__} - Target bucket name: {bucket_name} \n')
-    try:
-        print(f'{__file__} - Checks whether the bucket with this name is already exists... \n')
-        s3_client.head_bucket(Bucket=bucket_name)
-    except ClientError:
-        print(f'{__file__} - Bucket doesnt exist. Creating bucket... \n')
-        # Creates the bucket:
-        try:
-            region = entity['region'].replace("_", "-")
-            if region == 'us-east-1':
-                result = s3_client.create_bucket(
-                    Bucket=bucket_name
-                )
-            elif region == 'eu-west-1':
-                result = s3_client.create_bucket(
-                    Bucket=bucket_name,
-                    CreateBucketConfiguration={
-                        'LocationConstraint': 'EU',
-                    },
-                )
-            else:
-                result = s3_client.create_bucket(
-                    Bucket=bucket_name,
-                    CreateBucketConfiguration={
-                        'LocationConstraint': entity['region'].replace("_", "-"),
-                    },
-                )
-            responseCode = result['ResponseMetadata']['HTTPStatusCode']
-            if responseCode >= 400:
-                return 0, f"Unexpected error: {str(result)} \n"
-        except ClientError as e:
-            text_output = f"Unexpected client error: {e} \n"
-            if 'AccessDenied' in e.response['Error']['Code']:
-                text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
-            return 0, text_output
-
-    print(f'{__file__} - Done. Target bucket for the access logs: {bucket_name}. \n')
-    return 1, bucket_name
-
-
 def put_relevant_permissions(bucket_name, elb_account_id, aws_account_id, boto_session):
     s3_client = boto_session.client('s3')
     policy = {
@@ -196,7 +153,8 @@ def put_relevant_permissions(bucket_name, elb_account_id, aws_account_id, boto_s
 def run_action(boto_session, rule, entity, params):
     text_output = ''
     s3_client = boto_session.client('s3')
-    success, msg = create_bucket(boto_session, entity)
+    bucket_name = generate_random_str(entity)
+    success, msg = utils.create_bucket(boto_session, entity, bucket_name)
     if success:
         bucket_name = msg
     else:
