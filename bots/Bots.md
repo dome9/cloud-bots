@@ -22,6 +22,7 @@
   - [ecs\_stop](#ecs_stop)
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
   - [iam\_detach\_policy](#iam_detach_policy)
+  - [iam\_generate\_credential\_report](#iam_generate_credential_report)  
   - [iam\_delete\_access\_key](#iam_delete_access_key)
   - [iam\_delete\_default\_policy\_version](#iam_delete_default_policy_version)
   - [iam\_group\_delete\_inline\_policy](#iam_group_delete_inline_policy)
@@ -305,6 +306,10 @@ Sample GSL: cloudtrail where event.name='CreateAccessKey' and identity.type='Roo
 What it does: Delete the default policy version and set the latest instead.  
 Usage: iam_delete_default_policy_version  
 Limitations: Most be at least more than one version to the policy.  
+
+## iam_generate_credential_report
+What it does: Generates a credential report for the account. <br>
+Usage: AUTO iam_generate_credential_report
 
 ## iam\_group\_delete\_inline\_policy
 What it does: Deletes a inline policy attached to iam group
