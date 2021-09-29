@@ -8,6 +8,10 @@ import ipaddress
 from datetime import datetime, timedelta
 import json
 
+from botocore.exceptions import ClientError
+
+permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
+relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
 PORT_TO = 'portTo'
 PORT_FROM = 'port'
 PROTOCOL = 'protocol'
@@ -224,3 +228,89 @@ def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
     except:
         print('Warning - No matching events were found in cloudtrail lookup')
         return None
+
+"""
+Creates an s3 bucket named bucket_name. if this bucket exists (and the user has permissions to access it) the function won't create it.
+The bucket will be created in the entity's region.
+return 2 values - the first is 0 or 1 and the second is message string. 0 is for a failure - the message will include the details. 1 is for success - the message is the bucket name.
+Usage in the bot:
+success, msg = utils.create_bucket(boto_session, entity, bucket_name)
+if success:
+    bucket_name = msg
+else:
+    return msg
+"""
+def create_bucket(boto_session, entity, bucket_name):
+    s3_client = boto_session.client('s3')
+    print(f'{__file__} - Target bucket name: {bucket_name} \n')
+    try:
+        print(f'{__file__} - Checks whether the bucket with this name is already exists... \n')
+        s3_client.head_bucket(Bucket=bucket_name)
+    except ClientError:
+        print(f'{__file__} - Bucket doesnt exist. Creating bucket... \n')
+        # Creates the bucket:
+        try:
+            region = entity['region'].replace("_", "-")
+            if region == 'us-east-1':
+                result = s3_client.create_bucket(
+                    Bucket=bucket_name
+                )
+            elif region == 'eu-west-1':
+                result = s3_client.create_bucket(
+                    Bucket=bucket_name,
+                    CreateBucketConfiguration={
+                        'LocationConstraint': 'EU',
+                    },
+                )
+            else:
+                result = s3_client.create_bucket(
+                    Bucket=bucket_name,
+                    CreateBucketConfiguration={
+                        'LocationConstraint': entity['region'].replace("_", "-"),
+                    },
+                )
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                return 0, f"Unexpected error: {str(result)} \n"
+        except ClientError as e:
+            text_output = f"Unexpected client error: {e} \n"
+            if 'AccessDenied' in e.response['Error']['Code']:
+                text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
+            return 0, text_output
+
+    print(f'{__file__} - Done. Target bucket for the access logs: {bucket_name}. \n')
+    return 1, bucket_name
+
+"""
+Creates a log group named log_group_name. if this log group exists (and the user has permissions to access it) the function won't create it.
+The log group will be created in the entity's region.
+return 2 values - the first is 0 or 1 and the second is message string. 0 is for a failure - the message will include the details. 1 is for success - the message is the log group name.
+Usage in the bot:
+success, msg = utils.create_log_group(boto_session, entity, bucket_name)
+if success:
+    bucket_name = msg
+else:
+    return msg
+"""
+def create_log_group(boto_session, entity, log_group_name):
+    region = entity['region'].replace("_","-")
+    logs_client = boto_session.client('logs', region_name=region)
+    print(f'{__file__} - Target log group name: {log_group_name} \n')
+    try:
+        print(f'{__file__} - Creating log group... \n')
+        result = logs_client.create_log_group(logGroupName=log_group_name,)
+        responseCode = result['ResponseMetadata']['HTTPStatusCode']
+        if responseCode >= 400:
+            return 0, f"Unexpected error: {str(result)} \n"
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'ResourceAlreadyExistsException':
+            print(f'{__file__} - Log group with name - {log_group_name} is already exists. Logs will be sent to the existing log group. \n')
+            return 1, log_group_name
+        else:
+            text_output = f"Unexpected client error: {e} \n"
+            if 'AccessDenied' in e.response['Error']['Code']:
+                text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
+        return 0, text_output
+
+    print(f'{__file__} - Successfully created log group named {log_group_name}. \n')
+    return 1, log_group_name

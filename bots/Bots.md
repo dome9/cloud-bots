@@ -44,6 +44,7 @@
   - [lambda\_tag](#lambda_tag)
   - [load\_balancer\_enable\_access\_logs](#load_balancer_enable_access_logs)
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
+  - [network\_firewall\_enable\_logging](#network_firewall_enable_logging)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [sns\_set\_topic\_private](sns_set_topic_private)
   - [sns\_topic\_delete](sns_topic_delete)
@@ -495,6 +496,21 @@ THIS WORKS ACROSS ALL EC2 RELATED SERVICES:
   - Volume
   - Vpc
   - VpcPeeringConnection
+
+## network_firewall_enable_logging
+What it does: Enable logging (Flow Logs or Alert) for a network firewall. The log destination type must be specified, the options are: S3, CloudWatchLogs, KinesisDataFirehose. <br>
+For S3 and CloudWatchLogs, the bot can create the log destination, by adding 'create' as a third parameter. For KinesisDataFirehose, the name of the delivery stream MUST be provided
+as a parameter. <br>
+Usage: AUTO network_firewall_enable_logging &lt;LoggingType> &lt;LogDestinationType> &lt;LogDestination> <br>
+&lt;LoggingType> can be: FLOW, ALERT <br>
+&lt;LogDestinationType> can be: S3, CloudWatchLogs, KinesisDataFirehose (Case-Sensitive!) <br>
+Examples: <br>
+network_firewall_enable_logging FLOW S3 create (the bot will create the bucket) <br>
+network_firewall_enable_logging ALERT CloudWatchLogs create (the bot will create the log group) <br>
+network_firewall_enable_logging FLOW S3 my-bucket (logs will be sent to my-bucket. if there is a prefix, please provide it like this: my-bucket/prefix) <br>
+network_firewall_enable_logging FLOW CloudWatchLogs my-log-group (logs will be sent to my-log-group) <br>
+network_firewall_enable_logging FLOW KinesisDataFirehose my-delivery-stream (logs will be sent to my-delivery-stream) <br>
+Limitations: None
 
 ## rds\_quarantine\_instance
 
