@@ -19,6 +19,7 @@
   - [ec2\_terminate\_instance](#ec2_terminate_instance)
   - [ec2\_update\_instance\_role](#ec2_update_instance_role)
   - [ecs\_reboot](#ecs_reboot)
+  - [ecs\_service\_role\_detach\_inline\_policy](#ecs_service_role_detach_inline_policy)  
   - [ecs\_stop](#ecs_stop)
   - [ecs\_delete\_repository\_image](#ecs_delete_repository_image)
   - [iam\_detach\_policy](#iam_detach_policy)
@@ -267,6 +268,10 @@ Usage: AUTO: ecs_reboot
 Sample GSL: cloudtrail where event.name='RegisterTaskDefinition' and event.status='Success'  
 Limitations: none  
 
+## ecs\_service\_role\_detach\_inline\_policy
+What it does: removes all inline policies from the role of the ECS <br>
+Usage: ecs_service_role_detach_inline_policy <br>
+Limitations: None
 
 ## ecs\_stop
 
