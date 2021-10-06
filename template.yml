@@ -209,6 +209,8 @@ Resources:
                 - iam:CreateServiceLinkedRole # For network_firewall_enable_logging
                 - firehose:TagDeliveryStream # For network_firewall_enable_logging (in order to send logs to a delivery stream)
                 - iam:DeleteRolePolicy # For ecs_role_detach_inline_policy
+                - kms:EnableKey # For kms_cmk_enable_key
+                - kms:CancelKeyDeletion # For kms_cmk_enable_key
 
               Resource: '*'
       Environment:
