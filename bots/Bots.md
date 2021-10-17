@@ -39,6 +39,7 @@
   - [iam\_user\_delete\_inline\_policies](#iam_user_delete_inline_policies)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
   - [igw\_delete](#igw_delete)
+  - [kms\_cmk\_enable\_key](#kms_cmk_enable_key)  
   - [kms\_enable\_rotation](#kms_enable_rotation)
   - [lambda\_detach\_blanket\_permissions](#lambda_detach_blanket_permissions)
   - [lambda\_disable](#lambda_disable)
@@ -436,6 +437,10 @@ from a VPC, and then deletes it.
 Limitations: VPCs have lots of interconnected services. This is
 currently just focused on EC2 but future enhancements will need to be
 made to turn off RDS, Redshift, etc.
+
+## kms_cmk_enable_key
+What it does: Enables a kms cmk (customer managed key) <br>
+Usage: kms_cmk_enable_key
 
 ## kms\_enable\_rotation
 
