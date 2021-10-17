@@ -22,6 +22,7 @@ def run_action(boto_session, rule, entity, params):
     text_output = ''
 
     try:
+        print(f'{__file__} - Trying to... \n') # logging to cloudwatch
         result = client.BOTO3_CLIENT_OPERATION(...)
 
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
