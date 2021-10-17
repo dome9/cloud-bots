@@ -197,6 +197,9 @@ Resources:
                 - sns:SetTopicAttributes # For sns_enforce_sse
                 - sns:ListSubscriptionsByTopic # For cloudwatch_create_metric_filter
                 - sqs:SetQueueAttributes # For sqs_enforce_sse
+                - sqs:CreateQueue # For sqs_configure_dlq
+                - sqs:GetQueueAttributes # For sqs_configure_dlq
+                - sqs:ListDeadLetterSourceQueues # For sqs_configure_dlq
                 - sts:GetCallerIdentity # For checking what account this is running in
                 - sts:AssumeRole # For multi_account
                 - lambda:PutFunctionConcurrency # For lambda disable

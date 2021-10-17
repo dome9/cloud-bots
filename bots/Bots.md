@@ -69,12 +69,14 @@
   - [sg\_single\_rule\_delete](#sg_single_rule_delete)
   - [sns\_topic\_delete](#sns_topic_delete)
   - [sns\_enforce\_sse](#sns_enforce_sse)
+  - [sqs\_configure\_dlq](#sqs_configure_dlq)
   - [sqs\_enforce\_sse](#sqs_enforce_sse)  
   - [tag\_ec2\_resource](#tag_ec2_resource)
   - [vpc\_delete](#vpc_delete)
   - [vpc\_isolate](#vpc_isolate)
   - [vpc\_turn\_on\_flow\_logs](#vpc_turn_on_flow_logs)
   - [sg\_rules\_delete\_by\_scope](#sg_rules_delete_by_scope)
+    
   
   
 ###[Optional Bots](#optional-bots)
@@ -774,6 +776,12 @@ sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee us-east-2 </br>
 sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key) </br>
 sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if it's in a different region) </br>
 Limitations: The KMS key MUST be in the same AWS account as the SQS.
+
+## sqs_configure_dlq
+What it does: Configures a Dead-Letter Queue (DLQ) for a source queue. <br>
+Usage: AUTO sqs_configure_dlq <br>
+Notes: A dead-Letter Queue is also a queue. The bot doesn't create a DLQ if the queue is a DLQ itself. <br>
+Limitations: None
 
 ## sns_topic_delete
 What it does: Deletes sns topic and all its subscriptions. </br>
