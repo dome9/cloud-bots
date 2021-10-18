@@ -41,25 +41,27 @@ def get_data_from_message(message):
 def get_bots_from_finding(compliance_tags, remediation_actions):
     bots = []
     # Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it.
-    auto_pattern = re.compile('AUTO:')
-    for tag in compliance_tags:
-        tag = tag.strip()  # Sometimes the tags come through with trailing or leading spaces.
-        # Check the tag to see if we have AUTO: in it
-        if auto_pattern.match(tag):
-            tag_pattern = tuple(tag.split(' '))
-            # The format is AUTO: bot_name param1 param2
-            if len(tag_pattern) < MININAL_TAG_LENGTH:
-                continue
-            tag, bot, *params = tag_pattern
-            bots.append([bot, params])
+    if compliance_tags is not None:
+        auto_pattern = re.compile('AUTO:')
+        for tag in compliance_tags:
+            tag = tag.strip()  # Sometimes the tags come through with trailing or leading spaces.
+            # Check the tag to see if we have AUTO: in it
+            if auto_pattern.match(tag):
+                tag_pattern = tuple(tag.split(' '))
+                # The format is AUTO: bot_name param1 param2
+                if len(tag_pattern) < MININAL_TAG_LENGTH:
+                    continue
+                tag, bot, *params = tag_pattern
+                bots.append([bot, params])
 
-    for action in remediation_actions:
-        action_pattern = tuple(action.split(' '))
-        # The format is bot_name param1 param2
-        if len(action_pattern) < MININAL_ACTION_LENGTH:
-            continue
-        bot, *params = action_pattern
-        bots.append((bot, params))
+    if remediation_actions is not None:
+        for action in remediation_actions:
+            action_pattern = tuple(action.split(' '))
+            # The format is bot_name param1 param2
+            if len(action_pattern) < MININAL_ACTION_LENGTH:
+                continue
+            bot, *params = action_pattern
+            bots.append((bot, params))
 
     return bots
 

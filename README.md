@@ -244,8 +244,7 @@ message should have the following format:
     {
       "reportTime": "2018-03-20T05:40:42.043Z",
       "rule": {
-        "name": "<name for rule>",
-        "complianceTags": "AUTO: <bot-name>"
+        "name": "<name for rule>"
       },
       "status": "Failed",
       "account": {
@@ -253,10 +252,11 @@ message should have the following format:
       },
       "entity": {
         "accountNumber": "************",
-        "id": "i-*****************",
+        "id": "*****************",
         "name": "************",
         "region": "us_west_2",
       }
+      "remediationActions":[<bot-name> <param1> <param2>]
     }
 
 where:
@@ -265,7 +265,9 @@ where:
 
 *status* is marked *Failed*
 
-*entity: id* is the id for the entity that failed the rule
+*entity: id* is the id (arn) for the entity that failed the rule
+
+NOTE: If the bot requires other properties of the entity, add them to the entity section.
 
 # Update CloudBots
 
