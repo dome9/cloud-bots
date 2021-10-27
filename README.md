@@ -277,8 +277,7 @@ Click
     [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/update?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
     and select the region in which the stack is currently deployed.
 
-This link will update your existing stack with the most updated cloudbots and their permissions.
-
+This link will update your existing stack with the most new cloudbots and the cloudbots remediation role.
 
 # Log Collection for Troubleshooting
 
