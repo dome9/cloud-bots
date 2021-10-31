@@ -271,12 +271,13 @@ NOTE: If the bot requires other properties of the entity, add them to the entity
 
 # Update CloudBots
 
-The CloudBots set of bots is continually being  updated with new bots. To update your deployment, re-launch the CFT stack.
+The CloudBots set of bots is continually being updated with new bots. To update your deployment, re-launch the CFT stack.
 
-1. Click
-    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
+Click 
+    [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/update?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
     and select the region in which the stack is currently deployed.
 
+This link will update your existing stack with the most new cloudbots and the cloudbots remediation role.
 
 # Log Collection for Troubleshooting
 
