@@ -46,7 +46,12 @@ def run_action(boto_session, rule, entity, params):
 
     bucket_name = entity['id']
     account_number = entity["accountNumber"]
-    policy_bucket = entity['policy']
+
+    try:
+        policy_bucket = s3_client.get_bucket_policy(Bucket=entity['name'])
+    except ClientError as e:
+        text_output = "Unexpected error: %s \n" % e
+        return text_output
 
     try:
         if policy_bucket == "null" or policy_bucket is None:  # s3 does not have a bucket policy
