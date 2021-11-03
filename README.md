@@ -273,7 +273,9 @@ NOTE: If the bot requires other properties of the entity, add them to the entity
 
 The CloudBots set of bots is continually being updated with new bots. To update your deployment, re-launch the CFT stack.
 
-Click 
+Via AWS console: Go to CloudFormation and choose the dome9CloudBots stack -> Update stack -> Replace current template -> Enter the following s3 url: https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml
+
+Or click 
     [<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/update?stackName=dome9CloudBots&templateURL=https://dome9cloudbotsemplatesuseast1.s3.amazonaws.com/template.yml),
     and select the region in which the stack is currently deployed.
 
