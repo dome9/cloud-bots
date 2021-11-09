@@ -9,7 +9,8 @@ from botocore.exceptions import ClientError
 
 MININAL_TAG_LENGTH = 2
 MININAL_ACTION_LENGTH = 1
-
+permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
+relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
 account_mode = os.getenv('ACCOUNT_MODE', '')
 cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
 
@@ -186,6 +187,11 @@ def handle_event(message, output_message):
 
             bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
             bot_data['Execution status'] = 'passed'
+
+        except ClientError as e:
+            bot_msg = f"Unexpected client error: {e} \n"
+            if 'AccessDenied' in e.response['Error']['Code']:
+                bot_msg += f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
 
         except Exception as e:
             exception_type, exception_object, exception_traceback = sys.exc_info()
