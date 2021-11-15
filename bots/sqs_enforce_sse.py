@@ -10,11 +10,6 @@ Examples:
 Limitations: The KMS key MUST be in the same AWS account as the SQS.
 """
 
-from botocore.exceptions import ClientError
-
-permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
-relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
-
 
 def get_kms_key(boto_session, key_id, region):
     kms_client = boto_session.client("kms", region_name=region)
@@ -36,24 +31,18 @@ def run_action(boto_session, rule, entity, params):
     queue_url = entity['queueUrl']
     text_output = ''
 
-    try:
-        kms_key_arn = get_kms_key(boto_session, key_id, region)
-        result = sqs_client.set_queue_attributes(
-            QueueUrl=queue_url,
-            Attributes={
-                'KmsMasterKeyId': kms_key_arn
-            }
-        )
+    kms_key_arn = get_kms_key(boto_session, key_id, region)
+    result = sqs_client.set_queue_attributes(
+        QueueUrl=queue_url,
+        Attributes={
+            'KmsMasterKeyId': kms_key_arn
+        }
+    )
 
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s \n" % str(result)
-        else:
-            text_output = text_output + f'Queue {queue_url} has successfully encrypted with KMS key: {kms_key_arn} \n'
-
-    except ClientError as e:
-        text_output = f"Unexpected client error: {e} \n"
-        if 'AccessDenied' in e.response['Error']['Code']:
-            text_output = text_output + f"Make sure your dome9CloudBots-RemediationFunctionRole is updated with the relevant permissions. The permissions can be found here: {permissions_link}. You can update them manually or relaunch the CFT stack as described here: {relaunch_stack} \n"
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        text_output = text_output + "Unexpected error: %s \n" % str(result)
+    else:
+        text_output = text_output + f'Queue {queue_url} has successfully encrypted with KMS key: {kms_key_arn} \n'
 
     return text_output
