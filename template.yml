@@ -214,6 +214,9 @@ Resources:
                 - iam:DeleteRolePolicy # For ecs_role_detach_inline_policy
                 - kms:EnableKey # For kms_cmk_enable_key
                 - kms:CancelKeyDeletion # For kms_cmk_enable_key
+                - secretsmanager:UpdateSecret # For secretsmanager_enable_encryption
+                - kms:GenerateDataKey # For secretsmanager_enable_encryption
+                - kms:Decrypt # For secretsmanager_enable_encryption
 
               Resource: '*'
       Environment:

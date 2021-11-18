@@ -62,6 +62,7 @@
   - [s3\_enable\_versioning](#s3_enable_versioning)
   - [s3\_limit\_access](#s3_limit_access)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
+  - [secretsmanager\_enable\_encryption](#secretsmanager_enable_encryption)
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
@@ -632,6 +633,16 @@ Note: The bot looks at the bucket policy and adds to the current policy the miss
       and the SSL statement.
       if no policy in the bucket, an SSL policy will add to the bucket
 Limitations: none
+
+## secretsmanager_enable_encryption
+What it does: Enables data-at-rest encryption using KMS CMK (Customer Master Key). <br>
+Usage: AUTO secretsmanager_enable_encryption <kms-key-id> <br>
+EXAMPLE: secretsmanager_enable_encryption aaaaaaaa-bbbb-cccc-dddd-eeeeeeee <br>
+Notes: <br>
+secretsmanagers can be encrypted by a symmetric key only. <br> 
+As a security best practice, we recommend to encrypt it with CMK. The bot will throw an error for aws-managed keys. <br>
+The provided key must be in the same region as the secret. <br>
+Required permissions: "secretsmanager:UpdateSecret", "kms:GenerateDataKey", "kms:Decrypt".
 
 ## sg\_delete
 
