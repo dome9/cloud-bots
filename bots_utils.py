@@ -61,7 +61,7 @@ def is_two_scopes_overlap_ipv4(scope1, scope2):
     if intersect:
         return True
     else:
-        return False # cidr if out of scope bounds
+        return False  # cidr if out of scope bounds
 
 
 """
@@ -155,11 +155,13 @@ The function looks up for events in cloud trail based on alert time and event na
 """
 
 
-def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key='EventName', is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF, resource_name_to_filter=''):
+def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key='EventName',
+                            is_return_single_event=True, time_diff=DEFAULT_CLOUDTRAIL_LOOKUP_TIME_DIFF,
+                            resource_name_to_filter=''):
     # Create Cloudtrail client
     cloudtrail_client = boto_session.client('cloudtrail')
     alert_time = datetime
-    
+
     # check if event time was given
     if entity.get('eventTime'):
         #  Parse given event time
@@ -196,7 +198,7 @@ def cloudtrail_event_lookup(boto_session, entity, attribute_value, attribute_key
     if not events.get('Events'):
         print('Warning - No matching events were found in cloudtrail lookup')
         return None
-    
+
     if is_return_single_event:
         # Return only one event - which is the closest to alert time
         return filter_events(events.get('Events'), alert_time, resource_name_to_filter)
@@ -212,6 +214,7 @@ the event closest to the given alert_time
   alert_time (datetime object): the time at which the event occurred. 
   resource_name_to_filter (String): string with resource name that helps to filter the events found.
 """
+
 
 def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
     # Make list of events related to the relevant resource, if additional resource_name_to_filter is given
@@ -229,6 +232,7 @@ def filter_events(cloudtrail_events, alert_time, resource_name_to_filter=''):
         print('Warning - No matching events were found in cloudtrail lookup')
         return None
 
+
 """
 Creates an s3 bucket named bucket_name. if this bucket exists (and the user has permissions to access it) the function won't create it.
 The bucket will be created in the entity's region.
@@ -240,6 +244,8 @@ if success:
 else:
     return msg
 """
+
+
 def create_bucket(boto_session, entity, bucket_name):
     s3_client = boto_session.client('s3')
     print(f'{__file__} - Target bucket name: {bucket_name} \n')
@@ -281,6 +287,7 @@ def create_bucket(boto_session, entity, bucket_name):
     print(f'{__file__} - Done. Target bucket for the access logs: {bucket_name}. \n')
     return 1, bucket_name
 
+
 """
 Creates a log group named log_group_name. if this log group exists (and the user has permissions to access it) the function won't create it.
 The log group will be created in the entity's region.
@@ -292,19 +299,22 @@ if success:
 else:
     return msg
 """
+
+
 def create_log_group(boto_session, entity, log_group_name):
-    region = entity['region'].replace("_","-")
+    region = entity['region'].replace("_", "-")
     logs_client = boto_session.client('logs', region_name=region)
     print(f'{__file__} - Target log group name: {log_group_name} \n')
     try:
         print(f'{__file__} - Creating log group... \n')
-        result = logs_client.create_log_group(logGroupName=log_group_name,)
+        result = logs_client.create_log_group(logGroupName=log_group_name, )
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
             return 0, f"Unexpected error: {str(result)} \n"
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceAlreadyExistsException':
-            print(f'{__file__} - Log group with name - {log_group_name} is already exists. Logs will be sent to the existing log group. \n')
+            print(
+                f'{__file__} - Log group with name - {log_group_name} is already exists. Logs will be sent to the existing log group. \n')
             return 1, log_group_name
         else:
             text_output = f"Unexpected client error: {e} \n"
@@ -314,3 +324,22 @@ def create_log_group(boto_session, entity, log_group_name):
 
     print(f'{__file__} - Successfully created log group named {log_group_name}. \n')
     return 1, log_group_name
+
+
+"""
+Checks whether the provided kms key is AWS-managed or Customer-managed (i.e CMK).
+return 'AWS' for AWS-managed key and 'CUSTOMER' for customer-managed key (CMK).
+"""
+
+
+def check_kms_type(boto_session, key_id):
+    client = boto_session.client('kms')
+    print(f'{__file__} - Checking kms type... \n')
+    result = client.describe_key(KeyId=key_id)
+    responseCode = result['ResponseMetadata']['HTTPStatusCode']
+    if responseCode >= 400:
+        raise Exception("Unexpected error: %s \n" % str(result))
+    else:
+        manager = result['KeyMetadata']['KeyManager']
+        print(f'{__file__} - Key is managed by {manager.lower()} \n')
+    return manager

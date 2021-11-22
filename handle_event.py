@@ -195,7 +195,7 @@ def handle_event(message, output_message):
 
         except Exception as e:
             exception_type, exception_object, exception_traceback = sys.exc_info()
-            bot_msg = f'Error while executing function {bot}. Error: {e}. For more details please see the CloudWatch logs. \n'
+            bot_msg = f'Error while executing function {bot}. Error: {e} \nFor more details please see the CloudWatch logs. \n'
             bot_data['Execution status'] = 'failed'
             print(
                 f'{__file__} Details: {" ".join(traceback.format_exception(exception_type, exception_object, exception_traceback))} \n')
