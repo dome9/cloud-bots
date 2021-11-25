@@ -49,6 +49,7 @@
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [network\_firewall\_enable\_logging](#network_firewall_enable_logging)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [route53domain\_enable\_auto\_renew](#route53domain_enable_auto_renew)  
   - [sns\_set\_topic\_private](sns_set_topic_private)
   - [sns\_topic\_delete](sns_topic_delete)
   - [ssm\_document\_set\_private](#ssm_document_set_private)
@@ -538,6 +539,11 @@ Usage:  rds\_quarantine\_instance
 Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
+
+## route53domain_enable_auto_renew
+What it does: Configures Amazon Route 53 to automatically renew the specified domain before the domain registration expires. <br>
+Usage: AUTO route53domain_enable_auto_renew <br>
+Permissions: route53domains:EnableDomainAutoRenew
 
 ## sns\_set\_topic\_private
 What it does: set sns topic to private <br>
