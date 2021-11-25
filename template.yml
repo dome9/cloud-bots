@@ -217,6 +217,7 @@ Resources:
                 - secretsmanager:UpdateSecret # For secretsmanager_enable_encryption
                 - kms:GenerateDataKey # For secretsmanager_enable_encryption
                 - kms:Decrypt # For secretsmanager_enable_encryption
+                - route53domains:EnableDomainTransferLock # For route53domain_enable_transfer_lock
 
               Resource: '*'
       Environment:
