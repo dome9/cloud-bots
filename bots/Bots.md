@@ -49,6 +49,7 @@
   - [mark\_for\_stop\_ec2\_resource](#mark_for_stop_ec2_resource)
   - [network\_firewall\_enable\_logging](#network_firewall_enable_logging)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
+  - [route53domain\_enable\_transfer\_lock](#route53domain_enable_transfer_lock)  
   - [sns\_set\_topic\_private](sns_set_topic_private)
   - [sns\_topic\_delete](sns_topic_delete)
   - [ssm\_document\_set\_private](#ssm_document_set_private)
@@ -538,6 +539,12 @@ Usage:  rds\_quarantine\_instance
 Limitations: Instance needs to be "Available" in order to update. If
 it's in "backing up" state, this will fail  
 (Might not work with Aurora since it's in a cluster)
+
+## route53domain_enable_transfer_lock
+What it does: Sets the transfer lock on the domain. The bot will return the operation ID of the request, which can be used in order to track the operation status
+by the GetOperationDetail. For more details: https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html <br>
+Usage: AUTO route53domain_enable_transfer_lock <br>
+Permissions: route53domains:EnableDomainTransferLock
 
 ## sns\_set\_topic\_private
 What it does: set sns topic to private <br>
