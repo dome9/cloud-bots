@@ -50,6 +50,7 @@
   - [network\_firewall\_enable\_logging](#network_firewall_enable_logging)
   - [rds\_quarantine\_instance](#rds_quarantine_instance)
   - [route53domain\_enable\_auto\_renew](#route53domain_enable_auto_renew)  
+  - [route53domain\_enable\_transfer\_lock](#route53domain_enable_transfer_lock)  
   - [sns\_set\_topic\_private](sns_set_topic_private)
   - [sns\_topic\_delete](sns_topic_delete)
   - [ssm\_document\_set\_private](#ssm_document_set_private)
@@ -544,6 +545,13 @@ it's in "backing up" state, this will fail
 What it does: Configures Amazon Route 53 to automatically renew the specified domain before the domain registration expires. <br>
 Usage: AUTO route53domain_enable_auto_renew <br>
 Permissions: route53domains:EnableDomainAutoRenew
+
+## route53domain_enable_transfer_lock
+What it does: Sets the transfer lock on the domain. The bot will return the operation ID of the request, which can be used in order to track the operation status
+by the GetOperationDetail. For more details: https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html <br>
+Usage: AUTO route53domain_enable_transfer_lock <br>
+Permissions: route53domains:EnableDomainTransferLock
+
 
 ## sns\_set\_topic\_private
 What it does: set sns topic to private <br>

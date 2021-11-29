@@ -218,6 +218,7 @@ Resources:
                 - kms:GenerateDataKey # For secretsmanager_enable_encryption
                 - kms:Decrypt # For secretsmanager_enable_encryption
                 - route53domains:EnableDomainAutoRenew # For route53domain_enable_auto_renew
+                - route53domains:EnableDomainTransferLock # For route53domain_enable_transfer_lock
 
               Resource: '*'
       Environment:
