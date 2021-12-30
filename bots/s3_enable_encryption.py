@@ -4,10 +4,12 @@ What it does: Turns on encryption on the target bucket.
 Usage: AUTO: s3_enable_encryption <encryption_type> <kms-key-arn> (<kms-key-arn> should be provided only if <encryption_type> is KMS)
 Note: <encryption_type> can be one of the following:
 1. sse-s3 (for s3-managed keys)
-2. kms (for customer managed keys) - for kms you MUST provide the <kms-key-arn>.
+2. kms (for customer managed keys - RECOMMENDED) - for kms you MUST provide the <kms-key-arn>.
 EXAMPLES:
 s3_enable_encryption s3
 s3_enable_encryption kms arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+
+As a security best practice, we recommend encrypting with kms. Please refer our rule: https://gsl.dome9.com/D9.AWS.CRY.03.html
 '''
 
 
