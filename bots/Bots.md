@@ -622,8 +622,9 @@ EXAMPLES:
 s3_enable_encryption s3
 s3_enable_encryption kms arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
 <br>
-As a security best practice, we recommend encrypting with kms. Please refer our rule: https://gsl.dome9.com/D9.AWS.CRY.03.html
-## s3\_enable\_logging
+As a security best practice, we recommend encrypting with kms. Please refer our rule: https://gsl.dome9.com/D9.AWS.CRY.03.html <br>
+
+  ## s3\_enable\_logging
 
 What it does: Turns on server access logging. The target bucket needs to
 be in the same region as the remediation bucket or it'll throw a
