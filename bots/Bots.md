@@ -614,17 +614,15 @@ Limitations: None
 ## s3\_enable\_encryption
 
 What it does: Turns on encryption on the target bucket. <br>
-Usage: AUTO: s3_enable_encryption <encryption_type> <kms-key-arn> (<kms-key-arn> should be provided only if <encryption_type> is KMS) <br>
-Note: <encryption_type> can be one of the following:
-1. sse-s3 (for s3-managed keys - RECOMMENDED)
-2. kms (for customer managed keys) - for kms you MUST provide the <kms-key-arn>.
-EXAMPLES:
-s3_enable_encryption s3
+Usage: AUTO: s3_enable_encryption &lt;encryption_type> &lt;kms-key-arn> (&lt;kms-key-arn> should be provided only if &lt;encryption_type> is KMS) <br>
+Note: &lt;encryption_type> can be one of the following: <br>
+1. s3 (for s3-managed keys) <br>
+2. kms (for customer managed keys - RECOMMENDED) - for kms you MUST provide the &lt;kms-key-arn>. <br>
+EXAMPLES: <br>
+s3_enable_encryption s3 <br>
 s3_enable_encryption kms arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
-<br>
-As a security best practice, we recommend encrypting with kms. Please refer our rule: https://gsl.dome9.com/D9.AWS.CRY.03.html <br>
 
-  ## s3\_enable\_logging
+ ## s3\_enable\_logging
 
 What it does: Turns on server access logging. The target bucket needs to
 be in the same region as the remediation bucket or it'll throw a
