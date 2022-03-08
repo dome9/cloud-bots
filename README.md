@@ -171,39 +171,49 @@ rulesets, and, optionally, for selected cloud accounts.
 
 ### Configure remediations
 
-Follow these steps in your CloudGuard account to create remediations.
+You can add a remediation for a specific rule in a ruleset or for all rules in a ruleset. You limit a remediation to specific environments, entities, or environments and entities.
 
-1.  In CloudGuard, navigate to the **Remediations** page in the **Posture
-    Management** menu.
+<b> To add a remediation for a specific rule: </b>
 
-2.  Click **CREATE NEW REMEDIATION** (on the right).
+1. Navigate to the Rulesets page in the Posture Management menu.
 
-3.  Select the ruleset, from the list. The new remediation will apply to
-    rules in this ruleset (as selected by the additional selection
-    options).
+2. Open the ruleset that contains the rule to which you want to apply a remediation.
 
-4.  Select from these options, to select the rules in the ruleset. You
-    can select more than one option. All selected options will be
-    applied.
-    
-    1.  **Remediate by Rule** - select the rule in the ruleset, from a
-        list;
-    2.  **Remediate by Cloud Account** - select a specific cloud
-        account; if selected, all rules in the selected ruleset, for the
-        selected account, will be selected.
-    3.  **Remediate by Entity** - select a specific entity; all rules in
-        the selected ruleset, that apply to this entity, will be
-        selected.
+3. Use the Filter and Search toolbar to find the rule.
 
-5.  Select a CloudBot, from the list. This is the remediation action
-    that will be applied to the cloud entities selected in the previous
-    step.
+4. Click Add to add a predefined CloudBot recommended by CloudGuard. If no recommendation exists, click Add CloudBot to create a new custom CloudBot and add it.
+The Edit Remediation window opens with the selected rule and ruleset.
 
-6.  Optionally, add a comment to the remediation (it will be visible to
-    other users who use this remediation), and then click **SAVE**.
+5. Select the remediation parameters. You can combine the options, so the remediation applies to the combination of all the selected options.
 
-The remediation will be applied to all entities selected, if compliance
-rules applied to them fail.
+	a. Environment that applies the remediation to rules in the selected ruleset only when the ruleset is applied to the selected environments.
+
+	b. Entity, by its entity ID (optional, if missing, all entities are implied); this selects all rules that contain the selected entities
+
+6. For rules with a recommended remediation, the CloudBot appears in the field. For rules without recommendations, select the CloudBot from the list. If the CloudBot is not in the list, select Custom, and then add the name of the CloudBot, along with the runtime arguments. The CloudBot must be deployed in the selected environment, in the same folder as the other bots.
+
+7. Add a comment (mandatory field) and click Save.
+
+<b> To add a remediation for all rules in a ruleset: </b>
+
+1. Navigate to the Remediation page in the Posture Management menu.
+
+2. Click Create New Remediation, in the upper right.
+
+3. Select the rules for which the remediation applies, from the given options. You can combine the options, so the remediation applies to the combination of all the selected options.
+
+	a. a Ruleset (mandatory)
+
+	b. a specific Rule in the ruleset (optional, if missing, all rules are implied)
+
+	c. a specific Environment that applies the remediation to rules in the selected ruleset only when the ruleset is applied to the selected environments.
+
+	d. a specific Entity, by its entity ID (optional, if missing, all entities are implied); this selects all rules involving the selected entities
+
+4. Select the CloudBot, from the list. If the CloudBot is not in the list, select Custom, and then add the name of the CloudBot, along with the runtime arguments. The CloudBot must be deployed in the selected environment, in the same folder as the other bots.
+
+5. Add a comment (mandatory) and click Save.
+
 
 ### Configure a CloudGuard Continuous Compliance policy
 
