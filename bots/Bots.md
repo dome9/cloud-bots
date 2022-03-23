@@ -798,14 +798,18 @@ Limitations: none
 
 
 ## sqs_enforce_sse
-What it does: Configures server-side encryption (SSE) for a queue </br>
-Usage:  sqs_enforce_sse <kmsKeyId> <kmsRegion> (<kmsRegion> is not required - provide it if the kms key is in a different region than the SQS). </br>
-Examples:
-sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee </br>
-sqs_enforce_sse aaaaaaaa-bbbb-cccc-dddd-eeeeeeee us-east-2 </br>
-sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key) </br>
-sqs_enforce_sse mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if it's in a different region) </br>
-Limitations: The KMS key MUST be in the same AWS account as the SQS.
+What it does: Configures server-side encryption (SSE) for a queue <br>
+Usage: sqs_enforce_sse &lt;kmsKeyId> &lt;kmsRegion> <br>
+Notes: <br>
+For encryption with SQS-owned encryption keys, use the bot without any parameters (i.e: sqs_enforce_sse) <br>
+For encryption using kms, provide &lt;kmsKeyId>. &lt;kmsRegion> is not required - provide it if the kms key is in a different region than the SQS. <br>
+Examples: <br>
+sqs_enforce_sse (for encryption using SQS-owned encryption keys) <br>
+sqs_enforce_sse kms aaaaaaaa-bbbb-cccc-dddd-eeeeeeee <br>
+sqs_enforce_sse kms aaaaaaaa-bbbb-cccc-dddd-eeeeeeee us-east-2 <br>
+sqs_enforce_sse kms mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key) <br>
+sqs_enforce_sse kms mrk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (for multi-region key, if it's in a different region) <br>
+Limitations: The KMS key MUST be in the same AWS account as the SQS. 
 
 ## sqs_configure_dlq
 What it does: Configures a Dead-Letter Queue (DLQ) for a source queue. <br>
