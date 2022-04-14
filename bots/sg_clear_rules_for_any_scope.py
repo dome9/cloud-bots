@@ -2,6 +2,7 @@
 ## sg_clear_rules_for_any_scope
 What it does:
 Usage: sg_clear_rules_for_any_scope <port> <protocol> <direction> <white-list> (<white-list> is not mandatory).
+Please provide the cidrs of the white list seperated by a comma, without spaces. for example: 10.0.0.1/32,10.0.0.2/32
 Permissions:
 - ec2:RevokeSecurityGroupEgress
 - ec2:RevokeSecurityGroupIngress
@@ -48,18 +49,19 @@ def run_action(boto_session, rule, entity, params):
     port = int(params[0])
     protocol = params[1]
     direction = (params[2]).lower()
-    text_output = ''
-
-    white_list = {'44.229.44.249/32', '44.229.40.33/32', '44.231.221.27/32'}
-    ### GET THE WHITE LIST
     print(f'{__file__} - Cloudbot will remove {direction} rules from security group with id: {sg_id}\n')
     print(f'{__file__} - port = {port}, protocol = {protocol}\n')
-    print(f'{__file__} - rules with the following cidrs were configured in the white list and will be ignored: {white_list}')
+    if len(params) == 4:
+        white_list = params[3].split(",")
+        print(f'{__file__} - rules with the following cidrs were configured in the white list and will be ignored: {white_list}')
+    text_output = ''
 
     ip_permissions_to_delete = update_permissions(sg, port, protocol, direction, white_list)
     if ip_permissions_to_delete == -1:
         raise ValueError(f"No {direction} rules in port {port} and protocol {protocol} were found on {sg_id}, or found but exist in the white list. Bot didnt execute.\n")
 
+    cidrs = [cidr['CidrIp'] for cidr in ip_permissions_to_delete['IpRanges']]
+    print(f'The following cidrs will be deleted: {cidrs}')
     print(f'{__file__} - Trying to remove rules... \n')
     if direction == 'inbound':
         result = sg.revoke_ingress(IpPermissions=[ip_permissions_to_delete])
