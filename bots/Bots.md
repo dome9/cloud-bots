@@ -65,6 +65,7 @@
   - [s3\_limit\_access](#s3_limit_access)
   - [s3\_only\_allow\_ssl](#s3_only_allow_ssl)
   - [secretsmanager\_enable\_encryption](#secretsmanager_enable_encryption)
+  - [sg\_clear\_rules\_for\_any\_scope](#sg_clear_rules_for_any_scope)
   - [sg\_delete](#sg_delete)
   - [sg\_delete\_not\_matching\_cidr](#sg_delete_not_matching_cidr)
   - [sg\_modify\_scope\_by\_port](#sg_modify_scope_by_port)
@@ -662,6 +663,15 @@ secretsmanagers can be encrypted by a symmetric key only. <br>
 As a security best practice, we recommend to encrypt it with CMK. The bot will throw an error for aws-managed keys. <br>
 The provided key must be in the same region as the secret. <br>
 Required permissions: "secretsmanager:UpdateSecret", "kms:GenerateDataKey", "kms:Decrypt".
+
+## sg_clear_rules_for_any_scope
+What it does: Removes rules from a security group by port, protocol and direction only (for any scope).<br>
+Usage: sg_clear_rules_for_any_scope <port> <protocol> <direction> <white-list> (<white-list> is not mandatory). <br>
+Please provide the cidrs of the white list seperated by a comma, without spaces. for example: 10.0.0.1/32,10.0.0.2/32 <br>
+Permissions:
+- ec2:RevokeSecurityGroupEgress
+- ec2:RevokeSecurityGroupIngress
+- ec2:DescribeSecurityGroups
 
 ## sg\_delete
 
