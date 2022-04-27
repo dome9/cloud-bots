@@ -424,10 +424,11 @@ Example: iam_user_inactivate_unused_access_key 90
 Limitations: default time is 90 days, if there are more then 200 access keys for user should increase maxItems
 
 ## iam_user_delete_inline_policies
-What it does: deleted all iam user inline policies and attach new maneged policies if pass as an argument
 
-Usage: AUTH: iam_user_delete_inline_policies (option)maneged_policies=policy1_arn,policy2_arn
-
+What it does: deleted all iam user inline policies and attach new managed policies if passed as an argument <br>
+Usage: iam_user_delete_inline_policies <managed_policies_arn> (<managed_policies_arn> is optional. For more than one policy, use a comma as a separator). <br>
+- iam_user_delete_inline_policies (only deletes)
+- iam_user_delete_inline_policies policy1_arn,policy2_arn
 
 ## iam\_user\_force\_password\_change
 
