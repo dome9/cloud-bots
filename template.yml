@@ -76,7 +76,7 @@ Resources:
       CodeUri:
         Bucket: !Join [ '' , [ 'dome9cloudbotsemplates' , !Join [ '', !Split [ "-" , !Ref "AWS::Region" ] ] ] ]
         Key: cloudbots.zip
-      Runtime: python3.6
+      Runtime: python3.9
       Timeout: 120 # Most will be under 8 seconds, but delete IGW needs to wait for the instances to be off before detaching from the VPC. This takes a bunch of time.
       Tracing: Active
       Handler: index.lambda_handler
