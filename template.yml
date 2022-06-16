@@ -109,6 +109,7 @@ Resources:
                 - ec2:DetachInternetGateway # For igw_delete
                 - ec2:DescribeAddresses # For ec2_release_eips
                 - ec2:DescribeSecurityGroups # For instance_quarantine
+                - ec2:DescribeSecurityGroupsRules # for intelligence_sg_rules_delete_by_scope
                 - ec2:DescribeInstances # For igw_delete
                 - ec2:DisassociateAddress # For ec2_release_eips
                 - ec2:ModifyImageAttribute # For ami_set_to_private
