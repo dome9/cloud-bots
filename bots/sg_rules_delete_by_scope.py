@@ -48,10 +48,11 @@ def run_action(boto_session, rule, entity, params):
     # Param retrieving
     try:
         scope, direction, port, protocol = params  # get params
+
     except Exception as e:
         text_output = text_output + f'Params handling error. Please check parameters and try again. Error: {e}'
         raise Exception(text_output)
-    # Create an ec2 resource
+
     ec2_resource = boto_session.resource('ec2')
     #
     sg = ec2_resource.SecurityGroup(sg_id)
