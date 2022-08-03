@@ -2,6 +2,17 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
+  DataCenter:
+    Description: The Data Center your CloudGuard account is being run on
+    Type: String
+    Default: 'USA'
+    AllowedValues:
+      - Australia
+      - Canada
+      - Europe
+      - India
+      - Singapore
+      - USA
   EmailAddress:
     Description: OPTIONAL - Email address to send output logs to
     Type: String
@@ -30,6 +41,24 @@ Parameters:
 
 Conditions:
   CreateSubscriber: !Not [!Equals [!Ref EmailAddress, ""]]
+  IsDcAustralia: !Equals
+    - !Ref DataCenter
+    - Australia
+  IsDcCanada: !Equals
+    - !Ref DataCenter
+    - Canada
+  IsDcEurope: !Equals
+    - !Ref DataCenter
+    - Europe
+  IsDcIndia: !Equals
+    - !Ref DataCenter
+    - India
+  IsDcSingapore: !Equals
+    - !Ref DataCenter
+    - Singapore
+  IsDcUsa: !Equals
+    - !Ref DataCenter
+    - USA
 
 Resources:
   InputTopic:
@@ -48,7 +77,13 @@ Resources:
           - Sid: D9DeliveryPolicy
             Effect: Allow
             Principal:
-              AWS: 'arn:aws:iam::634729597623:root'
+              AWS:
+                !If [ IsDcUsa, 'arn:aws:iam::634729597623:root',
+                !If [ IsDcIndia, 'arn:aws:iam::578204784313:root',
+                !If [ IsDcAustralia, 'arn:aws:iam::434316140879:root',
+                !If [ IsDcSingapore, 'arn:aws:iam::597850136722:root',
+                !If [ IsDcEurope, 'arn:aws:iam::723885542676:root',
+                !If [ IsDcCanada, 'arn:aws:iam::431603698195:root', !Ref "AWS::NoValue"]]]]]]
             Action: sns:Publish
             Resource: !Ref InputTopic
       Topics:
