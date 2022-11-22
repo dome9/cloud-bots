@@ -54,7 +54,7 @@ def run_action(boto_session, rule, entity, params):
             # calc how many days passed from access key's last use
             passed_days_from_last_use = get_passed_days_from_last_use(access_key, iam_client)
             # if the access key is not used for more than 90 days it will be turn inactive
-            if passed_days_from_last_use > max_days_unused_time:
+            if int(passed_days_from_last_use) > int(max_days_unused_time):
                 # make key inactive
                 iam_client.update_access_key(
                     UserName=username,
