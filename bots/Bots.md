@@ -38,6 +38,7 @@
   - [iam\_user\_deactivate\_unused\_access\_key](#iam_user_deactivate_unused_access_key)
   - [iam\_user\_delete\_inline\_policies](#iam_user_delete_inline_policies)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
+  - [iam\_entity\_create\_and\_attach\_permissions_boundary](#iam_entity_create_and_attach_permission_boundary)
   - [igw\_delete](#igw_delete)
   - [kms\_cmk\_enable\_key](#kms_cmk_enable_key)  
   - [kms\_enable\_rotation](#kms_enable_rotation)
@@ -436,6 +437,12 @@ What it does: Updates the setting for an IAM user so that they need to
 change their console password the next time they log in.  
 Usage:  iam\_user\_force\_password\_change  
 Limitations: none
+
+## iam\_entity\_create\_and\_attach\_permissions_boundary
+
+What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User) <br />
+Usage: iam_entity_create_and_attach_permission_boundary policy_name=<policy_name>, if policy name is not provided a default name will be set: CIEMSuggestion-IAM-ENTITY-NAME <br />
+Limitations: In case the iam entity (Role/User) already has an attached permission boundary the bot will override it. <br />
 
 ## igw\_delete
 

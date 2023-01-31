@@ -57,13 +57,19 @@ def get_bots_from_finding(compliance_tags, remediation_actions):
 
     if remediation_actions is not None:
         for action in remediation_actions:
-            action_pattern = tuple(action.split(' '))
-            # The format is bot_name param1 param2
-            if len(action_pattern) < MININAL_ACTION_LENGTH:
-                continue
-            bot, *params = action_pattern
-            bots.append((bot, params))
-
+            try:
+                remAction = json.loads(action)
+                if 'SuggestedRole' in remAction:
+                    policy = 'SuggestedPolicy:%s' % remAction['SuggestedRole']
+            except ValueError as e:
+                action_pattern = tuple(action.split(' '))
+                # The format is bot_name param1 param2
+                if len(action_pattern) < MININAL_ACTION_LENGTH:
+                    continue
+                bot, *params = action_pattern
+                if policy:
+                    params.append(policy)
+                bots.append((bot, params))
     return bots
 
 
@@ -115,7 +121,7 @@ def handle_event(message, output_message):
             # return False
 
         event_account_id = output_message['Account id']
-        # Account mode will be set in the lambda variables. We'll default to single mdoe
+        # Account mode will be set in the lambda variables. We'll default to single mode
         if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
             if account_mode == 'multi':  # multi or single account mode?
                 # If it's not the same account, try to assume role to the new one
@@ -184,8 +190,10 @@ def handle_event(message, output_message):
                                                       'alertWindowStartTime' in element.get('value'))
             except:
                 print(f'{__file__} - Warning - Adding Log.ic event time to entity failed')
-
-            bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
+            # Add CloudAccount ID to entity argument
+            entity = message['entity']
+            entity['cloud_account_id'] = output_message['Account id']
+            bot_msg = bot_module.run_action(boto_session, message['rule'], entity, params)
             bot_data['Execution status'] = 'passed'
 
         except ClientError as e:
