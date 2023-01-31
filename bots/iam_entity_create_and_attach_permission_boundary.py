@@ -1,7 +1,7 @@
 '''
 ## iam_entity_create_and_attach_permission_boundary
-What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User)
-Usage: iam_entity_create_and_attach_permission_boundary [policy_name=<policy_name>], General policy name: CIEMSuggestion-<IAM-ENTITY-NAME>
+What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User), in case dryRun flag is set no action will be taken.
+Usage: iam_entity_create_and_attach_permission_boundary [policy_name=<policy_name>] [--dryRun], General policy name: CIEMSuggestion-<IAM-ENTITY-NAME>
 Limitations: In case the iam entity (Role/User) already has an attached permission boundary the bot will fail.
 Examples:  
     iam_entity_create_and_attach_permission_boundary policy_name=CIEMSuggestion
@@ -133,7 +133,7 @@ def get_bot_spesific_configuration(params):
             policy_name_idx = idx
         if 'SuggestedPolicy' in param:
             _, policy_doc = param.split('SuggestedPolicy:')
-        if 'dryRun' in param:
+        if '--dryRun' in param:
             dry_run = True
     return policy_name_idx, policy_doc, dry_run
 
