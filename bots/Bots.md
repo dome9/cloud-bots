@@ -38,7 +38,7 @@
   - [iam\_user\_deactivate\_unused\_access\_key](#iam_user_deactivate_unused_access_key)
   - [iam\_user\_delete\_inline\_policies](#iam_user_delete_inline_policies)
   - [iam\_user\_force\_password\_change](#iam_user_force_password_change)
-  - [iam\_entity\_create\_and\_attach\_permissions_boundary](#iam_entity_create_and_attach_permission_boundary)
+  - [iam\_entity\_create\_and\_attach\_permissions\_boundary](#iam_entity_create_and_attach_permission_boundary)
   - [igw\_delete](#igw_delete)
   - [kms\_cmk\_enable\_key](#kms_cmk_enable_key)  
   - [kms\_enable\_rotation](#kms_enable_rotation)
