@@ -87,7 +87,8 @@ def delete_policy_version(iam_client, policy_arn, version_id):
             PolicyArn=policy_arn,
             VersionId=version_id
         )
-        text_output = 'Delete policy version - %s for permission boundary done. Policy Name: %s\n' % (version_id, policy_arn)
+        text_output = 'Delete policy version - %s for permission boundary done. Policy Name: %s\n' % (
+        version_id, policy_arn)
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
 
@@ -123,33 +124,47 @@ def attach_user_permission_boundary(iam_client, user_name, policy_arn):
 
     return text_output
 
-
-### Update role - core method
-def run_action(boto_session, rule, entity, params):
-    text_output = ''
-    cloud_account_id = entity['cloud_account_id']
-    entity_type = entity['type']
-
-    iam_client = boto_session.client('iam')
-
-    #Was policy name provided as part of the bot configuration
+def get_bot_spesific_configuration(params):
     policy_name_idx = None
+    policy_doc = None
+    dry_run = None
     for idx, param in enumerate(params):
         if 'policy_name=' in param:
             policy_name_idx = idx
         if 'SuggestedPolicy' in param:
             _, policy_doc = param.split('SuggestedPolicy:')
+        if 'dryRun' in param:
+            dry_run = True
+    return policy_name_idx, policy_doc, dry_run
 
+def set_policy_name(policy_name_idx, entity_name, cloud_account_id,params):
     # Get the policy_arn from the params
     if policy_name_idx is not None:
         _, name = params[policy_name_idx].split('=')
-        policy_name = '%s-%s' % (name, entity['name'])
     else:
-        policy_name = '%s-%s' % (CG_POLICY_NAME, entity['name'])
-
+        name = CG_POLICY_NAME
+    policy_name = '%s-%s' % (name, entity_name)
     policy_arn = "arn:aws:iam::%s:policy/%s" % (cloud_account_id, policy_name)
 
-    ## Check and add the policy to the role
+    return policy_name, policy_arn
+
+def run_action(boto_session, rule, entity, params):
+    text_output = ''
+    cloud_account_id = entity['cloud_account_id']
+    entity_type = entity['type']
+    entity_name = entity['name']
+    dry_run = False
+
+    iam_client = boto_session.client('iam')
+
+    policy_name_idx, policy_doc, dry_run = get_bot_spesific_configuration(params)
+    policy_name, policy_arn = set_policy_name(policy_name_idx, entity_name, cloud_account_id, params)
+
+    if dry_run:
+        return f'The bot configuration is set to dry run once enabled the next actions will be conducted:\n' \
+               f'1. Create a new policy version for policy arn: {policy_arn}\n' \
+               f'2. Set the permission boundary of: {entity_name}, {entity_type} entity.\n'
+
     try:
         function_output, found_version = check_for_policy(iam_client, policy_arn)
         text_output = text_output + function_output
@@ -163,9 +178,9 @@ def run_action(boto_session, rule, entity, params):
             text_output = text_output + create_policy(iam_client, policy_name, policy_doc)
 
         if 'User' in entity_type:
-            text_output = text_output + attach_user_permission_boundary(iam_client, entity['name'], policy_arn)
+            text_output = text_output + attach_user_permission_boundary(iam_client, entity_name, policy_arn)
         else:
-            text_output = text_output + attach_role_permission_boundary(iam_client, entity['name'], policy_arn)
+            text_output = text_output + attach_role_permission_boundary(iam_client, entity_name, policy_arn)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
