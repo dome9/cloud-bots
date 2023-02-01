@@ -134,14 +134,21 @@ def get_bot_spesific_configuration(params):
     policy_name_idx = None
     policy_doc = None
     dry_run = None
+    exec_func_arn = None
+    assumed_role_arn = None
     for idx, param in enumerate(params):
         if 'policy_name=' in param:
             policy_name_idx = idx
-        if 'SuggestedPolicy' in param:
+        elif 'SuggestedPolicy' in param:
             _, policy_doc = param.split('SuggestedPolicy:')
-        if '--dryRun' in param:
+        elif '--dryRun' in param:
             dry_run = True
-    return policy_name_idx, policy_doc, dry_run
+        elif 'exec_function_arn=' in param:
+            _, exec_func_arn = param.split('exec_function_arn=')
+        elif 'assumed_role_arn=' in param:
+            _, assumed_role_arn = param.split('assumed_role_arn=')
+
+    return policy_name_idx, policy_doc, dry_run, exec_func_arn, assumed_role_arn
 
 def set_policy_name(policy_name_idx, entity_name, cloud_account_id,params):
     # Get the policy_arn from the params
@@ -160,16 +167,23 @@ def run_action(boto_session, rule, entity, params):
     entity_type = entity['type']
     entity_name = entity['name']
     dry_run = False
+    exec_lambda_role = None
 
     iam_client = boto_session.client('iam')
 
-    policy_name_idx, policy_doc, dry_run = get_bot_spesific_configuration(params)
+    policy_name_idx, policy_doc, dry_run, exec_func_arn, assumed_role_arn = get_bot_spesific_configuration(params)
     policy_name, policy_arn = set_policy_name(policy_name_idx, entity_name, cloud_account_id, params)
+
 
     if dry_run:
         return f'The bot configuration is set to dry run once enabled the next actions will be conducted:\n' \
                f'1. Create a new policy version for policy arn: {policy_arn}\n' \
                f'2. Set the permission boundary of: {entity_name}, {entity_type} entity.\n'
+
+    if exec_func_arn is not None:
+        lambda_client = boto3.client("lambda")
+        result = lambda_client.get_function(FunctionName=exec_func_arn)
+        exec_lambda_role_arn = result["Configuration"]["Role"]
 
     try:
         function_output, found_version = check_for_policy(iam_client, policy_arn)
@@ -185,8 +199,10 @@ def run_action(boto_session, rule, entity, params):
 
         if 'User' in entity_type:
             text_output = text_output + attach_user_permission_boundary(iam_client, entity_name, policy_arn)
-        else:
+        elif entity['id'] not in (assumed_role_arn, exec_lambda_role_arn):
             text_output = text_output + attach_role_permission_boundary(iam_client, entity_name, policy_arn)
+        else:
+            text_output = 'Not attaching the policy to bot infra role: %s.\n' % entity['id']
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e

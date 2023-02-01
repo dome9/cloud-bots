@@ -193,6 +193,11 @@ def handle_event(message, output_message):
             # Add CloudAccount ID to entity argument
             entity = message['entity']
             entity['cloud_account_id'] = output_message['Account id']
+            # Add executer arn, add assumed role arn to params in case they will be used by the bot.
+            if 'function_arn' in message:
+                params.append('exec_function_arn=%s' % message['function_arn'])
+            if role_arn is not None:
+                params.append('assumed_role_arn=%s' % role_arn)
             bot_msg = bot_module.run_action(boto_session, message['rule'], entity, params)
             bot_data['Execution status'] = 'passed'
 
