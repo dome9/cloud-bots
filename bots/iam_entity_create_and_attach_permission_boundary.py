@@ -9,7 +9,9 @@ Examples:
 '''
 
 import boto3
+import json
 from botocore.exceptions import ClientError
+
 
 CG_POLICY_NAME = "CIEMSuggestion"
 
@@ -57,7 +59,9 @@ def create_policy(iam_client, policy_name, policy_doc):
                 },
             ]
         )
-        text_output = 'Policy for permission boundary was created. Policy Name: %s\n' % policy_name
+        policy_json = json.loads(policy_doc)
+        policy_json = json.dumps(policy_json, indent=4)
+        text_output = 'Policy for permission boundary was created. Policy Name: %s\nPolicy Content:\n%s\n' % (policy_name, policy_json)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
@@ -72,8 +76,10 @@ def create_policy_version(iam_client, policy_arn, policy_doc):
             PolicyDocument=policy_doc,
             SetAsDefault=True
         )
-        text_output = 'New policy version - %s for permission boundary was created and set as default. Policy Name:  %s\n' \
-                      % (create_policy_response['PolicyVersion']['VersionId'], policy_arn)
+        policy_json = json.loads(policy_doc)
+        policy_json = json.dumps(policy_json, indent=4)
+        text_output = 'New policy version - %s for permission boundary was created and set as default. Policy Name: %s\nPolicy Content:\n%s\n'\
+                      % (create_policy_response['PolicyVersion']['VersionId'], policy_arn, policy_json)
 
     except ClientError as e:
         text_output = 'Unexpected error: %s \n' % e
