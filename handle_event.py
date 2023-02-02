@@ -76,6 +76,7 @@ def get_bots_from_finding(compliance_tags, remediation_actions):
 def handle_event(message, output_message):
     post_to_sns = True
     message_data = get_data_from_message(message)
+    role_arn = None
 
     # evaluate the event and tags and decide is there's something to do with them.
     if message_data.get('status') == 'Passed':
