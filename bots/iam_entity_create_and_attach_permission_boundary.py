@@ -2,7 +2,7 @@
 ## iam_entity_create_and_attach_permission_boundary
 What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User), in case dryRun flag is set no action will be taken.
 Usage: iam_entity_create_and_attach_permission_boundary [policy_name=<policy_name>] [--dryRun], General policy name: CIEMSuggestion-<IAM-ENTITY-NAME>
-Limitations: In case the iam entity (Role/User) already has an attached permission boundary the bot will fail.
+Limitations: None.
 Examples:  
     iam_entity_create_and_attach_permission_boundary policy_name=CIEMSuggestion
     iam_entity_create_and_attach_permission_boundary
@@ -130,7 +130,7 @@ def attach_user_permission_boundary(iam_client, user_name, policy_arn):
 
     return text_output
 
-def get_bot_spesific_configuration(params):
+def get_bot_specific_configuration(params):
     policy_name_idx = None
     policy_doc = None
     dry_run = None
@@ -171,7 +171,7 @@ def run_action(boto_session, rule, entity, params):
 
     iam_client = boto_session.client('iam')
 
-    policy_name_idx, policy_doc, dry_run, exec_func_arn, assumed_role_arn = get_bot_spesific_configuration(params)
+    policy_name_idx, policy_doc, dry_run, exec_func_arn, assumed_role_arn = get_bot_specific_configuration(params)
     policy_name, policy_arn = set_policy_name(policy_name_idx, entity_name, cloud_account_id, params)
 
 
@@ -199,7 +199,8 @@ def run_action(boto_session, rule, entity, params):
 
         if 'User' in entity_type:
             text_output = text_output + attach_user_permission_boundary(iam_client, entity_name, policy_arn)
-        elif entity['id'] not in (assumed_role_arn, exec_lambda_role_arn):
+        elif (entity['id'] not in (assumed_role_arn, exec_lambda_role_arn)
+              and entity['arn'] not in (assumed_role_arn, exec_lambda_role_arn)):
             text_output = text_output + attach_role_permission_boundary(iam_client, entity_name, policy_arn)
         else:
             text_output = 'Not attaching the policy to bot infra role: %s.\n' % entity['id']

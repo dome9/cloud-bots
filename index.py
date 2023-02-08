@@ -33,7 +33,7 @@ def lambda_handler(event, context):
     output_message['findingKey'] = source_message.get('findingKey', 'N.A')
     try:
         #Add Lambda ARN to source message
-        if context is not "":
+        if context != "":
             source_message['function_arn'] = context.invoked_function_arn
         post_to_sns = handle_event(source_message, output_message)
     except Exception as e:
