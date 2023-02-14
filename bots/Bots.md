@@ -440,9 +440,15 @@ Limitations: none
 
 ## iam\_entity\_create\_and\_attach\_permissions\_boundary
 
-What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User), in case dryRun flag is set no action will be taken. <br />
-Usage: iam_entity_create_and_attach_permission_boundary policy_name=<policy_name>, if policy name is not provided a default name will be set: CIEMSuggestion-IAM-ENTITY-NAME <br />
-Limitations: In case the iam entity (Role/User) already has an attached permission boundary the bot will override it. <br />
+What it does: Creates/Updates policy based on provided input, and attaches it as permission boundary to an iam entity (Role/User), in case dryRun flag is set no action will be taken.
+Usage: iam_entity_create_and_attach_permission_boundary policy_name=<policy_name>, if policy name is not provided a default name will be set: CIEMSuggestion-IAM-ENTITY-NAME.
+Limitations: none
+
+## iam\_entity\_remove\_and\_permission\_boundary
+
+What it does: Removes an attached permissions boundary from iam entity (Role/User).
+Usage: iam_entity_remove_permission_boundary entity_arn=<name|all> [cloud_account_id=<123456789>] [--dryRun]
+Limitations: none
 
 ## igw\_delete
 
