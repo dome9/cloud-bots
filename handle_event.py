@@ -11,7 +11,7 @@ MININAL_TAG_LENGTH = 2
 MININAL_ACTION_LENGTH = 1
 permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
 relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
-account_mode = os.getenv('ACCOUNT_MODE', 'multi')
+account_mode = os.getenv('ACCOUNT_MODE', '')
 cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
 
 
