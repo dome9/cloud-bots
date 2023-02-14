@@ -37,7 +37,7 @@ def check_for_policy(iam_client, policy_arn):
             else:
                 keep_looking = False
                 if not delete_version:
-                    text_output = 'Non default policy version to delete was not found.\n'
+                    text_output = 'Policy has only default version, no delete version action will be conducted.\n'
     except ClientError as e:
         error = e.response['Error']['Code']
         if error != 'NoSuchEntity':
@@ -192,7 +192,7 @@ def run_action(boto_session, rule, entity, params):
         if found_version:
             text_output = text_output + delete_policy_version(iam_client, policy_arn, found_version)
             text_output = text_output + create_policy_version(iam_client, policy_arn, policy_doc)
-        elif 'Non default policy version to delete was not found' in text_output:
+        elif 'Policy has only default version, no delete version action will be conducted.' in text_output:
             text_output = text_output + create_policy_version(iam_client, policy_arn, policy_doc)
         else:
             text_output = text_output + create_policy(iam_client, policy_name, policy_doc)
