@@ -11,7 +11,7 @@ MININAL_TAG_LENGTH = 2
 MININAL_ACTION_LENGTH = 1
 permissions_link = 'https://github.com/dome9/cloud-bots/blob/master/template.yml'
 relaunch_stack = 'https://github.com/dome9/cloud-bots#update-cloudbots'
-account_mode = os.getenv('ACCOUNT_MODE', '')
+account_mode = os.getenv('ACCOUNT_MODE', 'multi')
 cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
 
 
@@ -41,6 +41,7 @@ def get_data_from_message(message):
 
 def get_bots_from_finding(compliance_tags, remediation_actions):
     bots = []
+    policy = None
     # Check if any of the tags have AUTO: in them. If there's nothing to do at all, skip it.
     if compliance_tags is not None:
         auto_pattern = re.compile('AUTO:')
@@ -57,19 +58,26 @@ def get_bots_from_finding(compliance_tags, remediation_actions):
 
     if remediation_actions is not None:
         for action in remediation_actions:
-            action_pattern = tuple(action.split(' '))
-            # The format is bot_name param1 param2
-            if len(action_pattern) < MININAL_ACTION_LENGTH:
-                continue
-            bot, *params = action_pattern
-            bots.append((bot, params))
-
+            try:
+                remAction = json.loads(action)
+                if 'SuggestedRole' in remAction:
+                    policy = 'SuggestedPolicy:%s' % remAction['SuggestedRole']
+            except ValueError as e:
+                action_pattern = tuple(action.split(' '))
+                # The format is bot_name param1 param2
+                if len(action_pattern) < MININAL_ACTION_LENGTH:
+                    continue
+                bot, *params = action_pattern
+                if policy:
+                    params.append(policy)
+                bots.append((bot, params))
     return bots
 
 
 def handle_event(message, output_message):
     post_to_sns = True
     message_data = get_data_from_message(message)
+    role_arn = None
 
     # evaluate the event and tags and decide is there's something to do with them.
     if message_data.get('status') == 'Passed':
@@ -115,7 +123,7 @@ def handle_event(message, output_message):
             # return False
 
         event_account_id = output_message['Account id']
-        # Account mode will be set in the lambda variables. We'll default to single mdoe
+        # Account mode will be set in the lambda variables. We'll default to single mode
         if lambda_account_id != event_account_id:  # The remediation needs to be done outside of this account
             if account_mode == 'multi':  # multi or single account mode?
                 # If it's not the same account, try to assume role to the new one
@@ -184,8 +192,15 @@ def handle_event(message, output_message):
                                                       'alertWindowStartTime' in element.get('value'))
             except:
                 print(f'{__file__} - Warning - Adding Log.ic event time to entity failed')
-
-            bot_msg = bot_module.run_action(boto_session, message['rule'], message['entity'], params)
+            # Add CloudAccount ID to entity argument
+            entity = message['entity']
+            entity['cloud_account_id'] = output_message['Account id']
+            # Add executer arn, add assumed role arn to params in case they will be used by the bot.
+            if 'function_arn' in message:
+                params.append('exec_function_arn=%s' % message['function_arn'])
+            if role_arn is not None:
+                params.append('assumed_role_arn=%s' % role_arn)
+            bot_msg = bot_module.run_action(boto_session, message['rule'], entity, params)
             bot_data['Execution status'] = 'passed'
 
         except ClientError as e:
