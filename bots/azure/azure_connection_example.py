@@ -44,11 +44,6 @@ if valid_url:
     # get storage keys
     keys = azure_cli.result.result['properties']['outputs']['storagesAccountKeys']['value']
 
-    # post storage key to api
-    # params = {
-    #     "StorageDetails": ["storagename=cgseastus202229757;key=a+VTZU4toXKDrMRoy8Vp/aKnxzIN2N6fTVlBlfS924830iBOgi8F6OotkULFXn9EDbe3XFLqGDvW+AStkZmVdg==;subscription=ce129ad4-2ccc-40d0-94b8-758d81db468d;rg=rotem20211115;nsg=rotem20211115vm-nsg","storagename=goodstoragename;key=4ELCVoY5mzqGMlCR1Gv9iTKuS45/n5MfsQKIa3zKNJ0k1FB09WiqeQb3c2aRNROU6RrMvUo58QcL+AStC0YX1A==;subscription=ce129ad4-2ccc-40d0-94b8-758d81db468d;rg=rotem6;nsg=test-storage-name-2"],
-    #     "SubscriptionId": subscriptionId
-    # }
 
     params = {
         "StorageDetails": keys,
