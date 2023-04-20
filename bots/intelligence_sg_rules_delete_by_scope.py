@@ -46,7 +46,7 @@ def run_action(boto_session, rule, entity, params):
     sg_id = entity['id']
     # Param retrieving
     try:
-        scope, direction, port, protocol = params  # get params
+        scope, direction, port, protocol = params[0,4]  # get params
 
     except Exception as e:
         text_output = text_output + f'Params handling error. Please check parameters and try again. Error: {e}'

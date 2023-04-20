@@ -42,7 +42,7 @@ def run_action(boto_session, rule, entity, params):
 
     # param retrieving
     try:
-        port, scope, direction, = params  # get params
+        port, scope, direction, = params[0,3]  # get params
     except Exception as e:
         text_output = text_output + f'Params handling error. Please check parameters and try again. Error: {e}'
         raise Exception(text_output)
