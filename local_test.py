@@ -31,8 +31,8 @@ message = r'''
 		"arn": "arn:aws:iam::941298424820:role/AwsInternetGateway-metric-role-qa"
 	},
 	"remediationActions": ["ec2_stop_instance"],
-	"logsHttpEndpoint": "https://pd3xz887wl.execute-api.us-east-1.amazonaws.com/remediation/feedback",
-	"logsHttpEndpointKey": "DJE7kD8a5U8bTwSocifLf6OhqW7Q4PuEa2ZoGADc",
+	"logsHttpEndpoint": "https://03nlnc41gk.execute-api.us-east-1.amazonaws.com/remediation/feedback",
+	"logsHttpEndpointKey": "V274YHPSVG9gr3BxsHoN6IwEQ06ZloS6lxOX2hc3",
 	"logsHttpEndpointStreamName": "remediation_feedback",
 	"logsHttpEndpointStreamPartitionKey": "1",
 	"executionId": "2914b53f-f785-4a7a-b616-32fe9326d39b",
