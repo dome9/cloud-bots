@@ -1,5 +1,4 @@
 import json
-import requests
 import base64
 from botocore.exceptions import ClientError
 from datetime import datetime
