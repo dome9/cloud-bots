@@ -2,6 +2,7 @@ import json
 from handle_event import *
 from send_events_and_errors import *
 from send_logs import *
+from send_logs_api_gateway import *
 import time
 
 
@@ -26,6 +27,13 @@ def lambda_handler(event, context):
     print(f'{__file__} - Source message - {source_message}')
 
     output_message['ReportTime'] = source_message.get('reportTime', 'N.A')
+    output_message['logsHttpEndpoint']= source_message.get('logsHttpEndpoint')
+    output_message['logsHttpEndpointKey'] = source_message.get('logsHttpEndpointKey')
+    output_message['logsHttpEndpointStreamName'] = source_message.get('logsHttpEndpointStreamName')
+    output_message['logsHttpEndpointStreamPartitionKey'] = source_message.get('logsHttpEndpointStreamPartitionKey')
+    output_message['dome9AccountId'] = source_message.get('dome9AccountId')
+    output_message['executionId'] = source_message.get('executionId')
+    output_message['vendor'] = source_message.get('account').get('vendor')
 
     if (source_message.get('account')):
         output_message['Account id'] = source_message['account'].get('id', 'N.A')
@@ -48,6 +56,8 @@ def lambda_handler(event, context):
 
     if not SNS_TOPIC_ARN:
         print(f'{__file__} - SNS topic out was not defined!')
+
+    send_logs_api_gateway(output_message);
 
     send_logs_to_dome9 = os.getenv('SEND_LOGS_TO_DOME9', '')
     print(f'{__file__} - send_logs_to_dome9 {send_logs_to_dome9}')

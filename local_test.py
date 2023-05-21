@@ -9,7 +9,6 @@ from index import *
 """
 
 message = r'''
-
 '''
 
 
