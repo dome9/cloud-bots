@@ -5,6 +5,8 @@ from botocore.exceptions import ClientError
 from datetime import datetime
 
 http = urllib3.PoolManager()
+
+
 def send_logs_api_gateway(message):
     url = message.get('logsHttpEndpoint')
     apiKey = message.get('logsHttpEndpointKey')
@@ -51,11 +53,13 @@ def send_logs_api_gateway(message):
                     "PartitionKey": streamPartitionKey,
                     "StreamName": streamName}
             try:
-                response = http.request("POST", url, headers=headers, data=json.dumps(data))
+                response = http.request("POST", url, headers=headers, body=json.dumps(data))
             except ClientError as e:
                 print(f'bot feedback Failed set post request-' + e)
 
-            if (response.status_code == 200 and "SequenceNumber" in response.text and "ShardId" in response.text):
+            resp = json.loads(response.data.decode('utf-8'))
+
+            if (response.status == 200 and "SequenceNumber" in resp and "ShardId" in resp):
                 print(f'{findingKey} - bot feedback was reported successfully')
             else:
                 print(f'{findingKey} bot feedback Failed {response.text}')
