@@ -42,7 +42,6 @@ def send_logs_api_gateway(message):
             # Convert the base64-encoded bytes to a string
             base64_string = base64_bytes.decode('utf-8')
 
-            session = requests.Session()
             for bot in message.get('Rules violations found', []):
                 del bot['ID']
                 del bot['Name']
@@ -51,7 +50,7 @@ def send_logs_api_gateway(message):
                     "PartitionKey": streamPartitionKey,
                     "StreamName": streamName}
             try:
-                response = session.post(url, headers=headers, data=json.dumps(data))
+                response = requests.post(url, headers=headers, data=json.dumps(data))
             except ClientError as e:
                 print(f'bot feedback Failed set post request-' + e)
 
