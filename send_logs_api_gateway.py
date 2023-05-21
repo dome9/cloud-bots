@@ -1,9 +1,10 @@
 import json
-from botocore.vendored import requests
+import urllib3
 import base64
 from botocore.exceptions import ClientError
 from datetime import datetime
 
+http = urllib3.PoolManager()
 def send_logs_api_gateway(message):
     url = message.get('logsHttpEndpoint')
     apiKey = message.get('logsHttpEndpointKey')
@@ -50,7 +51,7 @@ def send_logs_api_gateway(message):
                     "PartitionKey": streamPartitionKey,
                     "StreamName": streamName}
             try:
-                response = requests.post(url, headers=headers, data=json.dumps(data))
+                response = http.request("POST", url, headers=headers, data=json.dumps(data))
             except ClientError as e:
                 print(f'bot feedback Failed set post request-' + e)
 
