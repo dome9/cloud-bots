@@ -41,7 +41,7 @@ def run_action(boto_session,rule,entity,params):
             text_output = "Existing security group ID: %s \n" % sg_group_id
 
         else:
-            text_output = text_output + "ERROR: Security group '" + param_group + "' does not exist!" 
+            text_output = "ERROR: Security group '" + param_group + "' does not exist!"
             return text_output
 
     except ClientError as e:
