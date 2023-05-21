@@ -1,5 +1,5 @@
 import json
-import requests
+from botocore.vendored import requests
 import base64
 from botocore.exceptions import ClientError
 from datetime import datetime
