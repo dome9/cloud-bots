@@ -42,7 +42,7 @@ def run_action(boto_session,rule,entity,params):
 
         else:
             text_output = "ERROR: Security group '" + param_group + "' does not exist!"
-            return text_output
+            raise Exception(text_output)
 
     except ClientError as e:
         text_output = "Unexpected error: %s \n" % e
@@ -55,6 +55,7 @@ def run_action(boto_session,rule,entity,params):
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
             text_output = text_output + "Unexpected error: %s \n" % str(result)
+            raise Exception(text_output)
         else:
             text_output = text_output + "SG attached: %s \n" % instance_id
 
