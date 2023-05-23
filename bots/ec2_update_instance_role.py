@@ -31,14 +31,14 @@ def run_action(boto_session, rule, entity, params):
 
             else:
                 text_output = text_output + 'Params do not match expected values. Exiting.\n' + usage
-                return text_output
+                raise Exception("ERROR!" + text_output)
         except:
             text_output = text_output + 'Params handling error. Please check params and try again.\n' + usage
-            return text_output
+            raise Exception("ERROR!" + text_output)
 
     else:
         text_output = 'Wrong amount of params inputs detected. Exiting.\n' + usage
-        return text_output
+        raise Exception("ERROR!" + text_output)
 
     # If the instance has an instance profile, try to update the role to have the new policy attached. It it's already attached, it'll still return a 200 so no need to worry about too much error handling. 
     if len(entity['roles']) > 0:
@@ -50,13 +50,15 @@ def run_action(boto_session, rule, entity, params):
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
                 text_output = text_output + 'Unexpected error: %s \n' % str(result)
+                raise Exception("ERROR!" + text_output)
             else:
                 text_output = text_output + 'Policy successfully attached to instance role\n'
 
         except ClientError as e:
-            text_output = text_output + 'Unexpected error: %s \n' % e
+            text_output = text_output + 'Client error code:' + e['Error']['Code']+' error: %s \n' % e
+            raise Exception("ERROR!" + text_output)
 
     else:
-        text_output = 'No existing role found to attach the policy to. Please use ec2_attach_instance_role to do the initial attachment.\nExiting\n'
+        raise Exception('No existing role found to attach the policy to. Please use ec2_attach_instance_role to do the initial attachment.\nExiting\n')
 
     return text_output
