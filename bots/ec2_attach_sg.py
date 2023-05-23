@@ -1,29 +1,31 @@
-'''
+"""
 ## ec2_attach_sg
 What it does: Replaces any existing security groups with
  the specified security group to an EC2 instance.
 Usage: 'AUTO: ec2_attach_sg name_of_sg_to_attach
 Limitations: None
 23/9/20
-'''
+"""
 
-import boto3
 from botocore.exceptions import ClientError
 
-def run_action(boto_session,rule,entity,params):
+
+def run_action(boto_session, rule, entity, params):
     instance_id = entity['id']
     vpc_id = entity['vpc']['id']
     ec2_resource = boto_session.resource('ec2')
     ec2_client = boto_session.client('ec2')
-    
+    text_output = ''
+    sg_group_id = 'Mor'
+
     # Retrieve params, throw exception if not present
     try:
         param_group = params[0]
-    except Exception as e:
-        return (e)
+    except Exception:
+        raise Exception('Error! Invalid parameters. usage AUTO: ec2_attach_sg <name_of_sg_to_attach>')
 
-    #Check the specified SG name exists
-    try:    
+    # Check the specified SG name exists
+    try:
         result = ec2_client.describe_security_groups(
             Filters=[
                     {
@@ -36,30 +38,27 @@ def run_action(boto_session,rule,entity,params):
                     }
                 ]
             )
-        if result['SecurityGroups']: 
+        if result['SecurityGroups']:
             sg_group_id = result['SecurityGroups'][0]['GroupId']
             text_output = "Existing security group ID: %s \n" % sg_group_id
 
         else:
-            text_output = "ERROR: Security group '" + param_group + "' does not exist!"
-            raise Exception(text_output)
+            raise Exception("Security group '" + param_group + "' does not exist!")
 
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
+        raise Exception(e.response['Error']['Message'])
 
     text_output = text_output + "Updating the instance SG attachments to contain the noted SG\n"
 
-    #Attach the specified security group to the instance, remove others.
+    # Attach the specified security group to the instance, remove others.
     try:
-        result = ec2_resource.Instance(instance_id).modify_attribute(Groups=[sg_group_id])  
-        responseCode = result['ResponseMetadata']['HTTPStatusCode']
-        if responseCode >= 400:
+        result = ec2_resource.Instance(instance_id).modify_attribute(Groups=[sg_group_id])
+        response_code = result['ResponseMetadata']['HTTPStatusCode']
+        if response_code >= 400:
             text_output = text_output + "Unexpected error: %s \n" % str(result)
             raise Exception(text_output)
         else:
             text_output = text_output + "SG attached: %s \n" % instance_id
-
+        return text_output
     except ClientError as e:
-        text_output = text_output + "Unexpected error: %s \n" % e
-
-    return text_output 
+        raise Exception(e.response['Error']['Message'])
