@@ -26,27 +26,20 @@ def run_action(boto_session,rule,entity,params):
             else:
                 key = 'role_arn'
                 value = params[0]
-
             if key == 'role_arn':     
                 # Look for '$ACCOUNT_ID' and replace it with the current account number
                 account_id = entity['accountNumber']
                 role_arn = value.replace('$ACCOUNT_ID', account_id)
                 text_output = text_output + 'Role ARN that we are attaching to the instance: %s \n' % role_arn
-
             else:
-                text_output = text_output + 'Params do not match expected values. Exiting.\n' + usage
-                return text_output  
-
+                raise Exception('ERROR! Params do not match expected values. Exiting.')
         except:
-            text_output = text_output + 'Params handling error. Please check params and try again.\n' + usage
-            return text_output
-
+            raise Exception('ERROR! Params handling error. Please check params and try again.\n' + usage)
     else:
-        text_output = 'Wrong amount of params inputs detected. Exiting.\n' + usage
-        return text_output
+        raise Exception('ERROR! Wrong amount of params inputs detected. Exiting.\n' + usage)
 
     # If the instance has an instance profile, try to update the role to have the new policy attached. It it's already attached, it'll still return a 200 so no need to worry about too much error handling. 
-    if len(entity['roles']) == 0 :  
+    if len(entity['roles']) == 0:
         try:
             result = ec2_client.associate_iam_instance_profile(
                 IamInstanceProfile={
@@ -59,14 +52,16 @@ def run_action(boto_session,rule,entity,params):
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
             if responseCode >= 400:
                 text_output = text_output + 'Unexpected error: %s \n' % str(result)
+                raise Exception('ERROR!' + text_output)
             else:
                 text_output = text_output + 'Role successfully attached to instance\n'
 
         except ClientError as e:
             text_output = text_output + 'Unexpected error: %s \n' % e
+            raise Exception('ERROR!' + text_output)
 
     else:
-        text_output = 'Instance already has an instance role attached.\nExiting\n'
+        raise Exception('ERROR! Instance already has an instance role attached.\nExiting\n')
 
     return text_output
 
