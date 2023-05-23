@@ -55,7 +55,7 @@ def run_action(boto_session, rule, entity, params):
                 text_output = text_output + 'Policy successfully attached to instance role\n'
 
         except ClientError as e:
-            text_output = text_output + 'Client error code:' + e['Error']['Code']+' error: %s \n' % e
+            text_output = text_output + 'Client error code:' + e.response['Error']['Code']+' error: %s \n' % e
             raise Exception("ERROR!" + text_output)
 
     else:
