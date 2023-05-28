@@ -8,23 +8,25 @@ Limitations: none
 import boto3
 from botocore.exceptions import ClientError
 
-def run_action(boto_session,rule,entity,params):
+
+def run_action(boto_session, rule, entity, params):
     # Create an S3 client
     s3_client = boto_session.client('s3')
     bucket = entity['id']
 
-    ##### Remove Bucket policy #####
+    # Remove Bucket policy
     try:
-        #sendEvent out the S3 permissions first so we can reference them later
+        # sendEvent out the S3 permissions first so we can reference them later
         bucket_policy = s3_client.get_bucket_policy(Bucket=bucket)['Policy']
         text_output = "Bucket policy that will be deleted: \n " + str(bucket_policy) + "\n"
-                
-        #Call S3 to delete the bucket policy for the given bucket
+
+        # Call S3 to delete the bucket policy for the given bucket
         result = s3_client.delete_bucket_policy(Bucket=bucket)
-        
+
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
             text_output = text_output + "Unexpected error: %s \n" % str(result)
+            raise Exception(text_output)
         else:
             text_output = text_output + "Bucket policy deleted: %s \n" % bucket
 
@@ -34,13 +36,13 @@ def run_action(boto_session,rule,entity,params):
         if error == 'NoSuchBucketPolicy':
             text_output = "Bucket %s does not have a bucket policy. Checking ACLs next.\n" % bucket
         else:
-            text_output = "Unexpected error: %s \n" % e
+            raise Exception("Unexpected error: %s \n" % e)
 
-    #### Remove Bucket ACLs #####
+    # Remove Bucket ACLs
     try:
-        #list bucket ACLs
+        # list bucket ACLs
         bucket_acls = s3_client.get_bucket_acl(Bucket=bucket)['Grants']
-        
+
         if len(bucket_acls) == 1:
             text_output = text_output + "Only the CanonicalUser ACL found. Skipping.\n"
             return text_output
@@ -49,14 +51,15 @@ def run_action(boto_session,rule,entity,params):
 
         # Unset the bucket ACLs
         result = s3_client.put_bucket_acl(Bucket=bucket,ACL='private')
-    
+
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
-            text_output = text_output + "Unexpected error: %s \n" % str(result) 
+            text_output = text_output + "Unexpected error: %s \n" % str(result)
+            raise Exception(text_output)
         else:
             text_output = text_output + "Bucket ACL deleted: %s \n" % bucket
-    
+        return text_output
+
     except ClientError as e:
         text_output = text_output + "Unexpected error: %s \n" % e
-
-    return text_output
+        raise Exception(text_output)

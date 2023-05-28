@@ -36,9 +36,8 @@ def run_action(boto_session,rule,entity,params):
         #Bring the params together to parse and look for quotes
         both_tags = " ".join(params)
 
-        if "\"" not in both_tags: 
-            text_output = ("Tag \"%s\" does not follow formatting - skipping\n" % both_tags) # String is formatted wrong. Fail/exit
-            return text_output
+        if "\"" not in both_tags:
+            raise Exception("Tag \"%s\" does not follow formatting - skipping\n" % both_tags) # String is formatted wrong. Fail/exit
 
         #Capture text blocks in quotes or standalones
         pattern = re.compile("[(A-Za-z0-9_\.,\s-]*")
@@ -63,9 +62,9 @@ def run_action(boto_session,rule,entity,params):
     
     responseCode = result['ResponseMetadata']['HTTPStatusCode']
     if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
+        raise Exception("Unexpected error: %s \n" % str(result))
     else:
-        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,key,value)
+        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance, key, value)
 
     return text_output
 

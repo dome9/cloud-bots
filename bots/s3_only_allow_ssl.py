@@ -53,8 +53,7 @@ def run_action(boto_session, rule, entity, params):
         if e.response['Error']['Code'] == 'NoSuchBucketPolicy':
             policy_bucket = None
         else:
-            text_output = "Unexpected error: %s \n" % e
-            return text_output
+            raise Exception("Unexpected error: %s \n" % e)
 
     try:
         if policy_bucket == "null" or policy_bucket is None:  # s3 does not have a bucket policy
@@ -88,12 +87,9 @@ def run_action(boto_session, rule, entity, params):
             Policy=policy
         )
 
-        text_output = "SSL policy added to bucket: %s" % bucket_name
-
+        return "SSL policy added to bucket: %s" % bucket_name
     except ClientError as e:
-        text_output = "Unexpected error: %s \n" % e
-
-    return text_output
+        raise Exception("Unexpected error: %s \n" % e)
 
 
 # This Function find which actions in the bucket policy that relevant to the SSL(options list)

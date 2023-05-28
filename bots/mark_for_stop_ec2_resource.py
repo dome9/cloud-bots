@@ -1,4 +1,4 @@
-'''
+"""
 ## mark_for_stop_ec2_resource
 What it does: Tags an ec2 resource with "marked_for_stop" and <current epoch time>.
 Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>
@@ -21,13 +21,15 @@ Limitations: none
 * Volume
 * Vpc
 * VpcPeeringConnection
-'''
+"""
 
-import boto3
 import time
 import re
 
-def run_action(boto_session,rule,entity,params):
+from botocore.exceptions import ClientError
+
+
+def run_action(boto_session, rule, entity, params):
     instance = entity['id']
 
     print(f'{__file__} - mark_for_stop_ec2_resource.py - Start execute Instance mark for stope for instance - {instance}')
@@ -51,28 +53,34 @@ def run_action(boto_session,rule,entity,params):
         mark_for_stop_time = current_time + total_seconds
 
     except IndexError:
-        text_output = "Mark for stop time not properly formatted in input params. Please check and try again\nUsage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>\nExample: AUTO: mark_for_stop_ec2_resource 3h\n"
-        return text_output
-
+        raise Exception("Mark for stop time not properly formatted in input params. Please check and try again\n"
+                        "Usage: AUTO: mark_for_stop_ec2_resource <time><unit(m,h,d)>\n"
+                        "Example: AUTO: mark_for_stop_ec2_resource 3h\n")
 
     ec2_client = boto_session.client('ec2')
-    result = ec2_client.create_tags(
-        Resources=[instance],
-        Tags=[
-            {
-                'Key': "marked_for_stop",
-                'Value': str(mark_for_stop_time)
-            }
-        ]
-    )
+    try:
+        result = ec2_client.create_tags(
+            Resources=[instance],
+            Tags=[
+                {
+                    'Key': "marked_for_stop",
+                    'Value': str(mark_for_stop_time)
+                }
+            ]
+        )
 
-    responseCode = result['ResponseMetadata']['HTTPStatusCode']
-    if responseCode >= 400:
-        text_output = "Unexpected error: %s \n" % str(result)
-    else:
-        text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance,"marked_for_stop",str(mark_for_stop_time))
+        response_code = result['ResponseMetadata']['HTTPStatusCode']
+        if response_code >= 400:
+            raise Exception("Unexpected error: %s \n" % str(result))
+        else:
+            text_output = "Instance tagged: %s \nKey: %s | Value: %s \n" % (instance, "marked_for_stop", str(mark_for_stop_time))
 
-    return text_output
+        return text_output
+    except ClientError as e:
+        if 'InvalidId' in e.response['Error']['Code']:
+            raise Exception('The provided instance id is not valid')
+        else:
+            raise e
 
 
 
