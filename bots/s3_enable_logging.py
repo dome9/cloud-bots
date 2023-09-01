@@ -31,21 +31,18 @@ def run_action(boto_session,rule,entity,params):
         try:
             if region == "us-east-1":
                 result = s3_client.create_bucket(
-                    Bucket=target_bucket_name,
-                    ACL='log-delivery-write'
+                    Bucket=target_bucket_name
                     )
             elif region == "eu-west-1":
                 region = "EU"
                 result = s3_client.create_bucket(
                     Bucket=target_bucket_name,
-                    CreateBucketConfiguration={'LocationConstraint': region},
-                    ACL='log-delivery-write'
+                    CreateBucketConfiguration={'LocationConstraint': region}
                     )
             else:
                 result = s3_client.create_bucket(
                     Bucket=target_bucket_name,
-                    CreateBucketConfiguration={'LocationConstraint': region},
-                    ACL='log-delivery-write'
+                    CreateBucketConfiguration={'LocationConstraint': region}
                     )
             
             responseCode = result['ResponseMetadata']['HTTPStatusCode']
@@ -53,7 +50,17 @@ def run_action(boto_session,rule,entity,params):
                 text_output = "Unexpected error: %s \n" % str(result)
             else:
                 text_output = "Logging bucket created %s \n" % target_bucket_name
-       
+            try:
+                    result = s3_client.put_bucket_policy(Bucket=target_bucket_name,Policy=bucket_policy)
+            except ClientError as e:
+                text_output = text_output + "Unexpected error: %s \n" % e
+
+            responseCode = result['ResponseMetadata']['HTTPStatusCode']
+            if responseCode >= 400:
+                text_output = text_output + "Unexpected error: %s \n" % str(result)
+            else:
+                text_output = text_output + "bucket policy created %s \n" % target_bucket_name
+
         except ClientError as e:
             text_output = "Unexpected error: %s \n" % e
 
