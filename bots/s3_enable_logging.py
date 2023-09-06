@@ -20,7 +20,10 @@ def run_action(boto_session,rule,entity,params):
     bucket_logging = s3_resource.BucketLogging(bucket_name)
 
     target_bucket_name = accountNumber + "s3accesslogs" + region
-
+    bucket_policy = '{"Version": "2012-10-17", \
+    "Statement": [ {"Sid": "S3ServerAccessLogsPolicy", \
+    "Effect": "Allow", "Principal": {"Service": "logging.s3.amazonaws.com"},\
+    "Action": "s3:PutObject", "Resource": "arn:aws:s3:::'+target_bucket_name+'/*"}]}'
     #The target bucket needs to be in the same region as the remediation bucket or it'll throw a CrossLocationLoggingProhibitted error.
     try:
         #Check if the bucket exists. If not, create one
