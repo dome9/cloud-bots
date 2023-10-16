@@ -95,7 +95,7 @@ def run_action(boto_session, rule, entity, params):
                 text_output = text_output + "Unexpected error Update Policy: %s \n" % str(result)
                 raise Exception(text_output)
 
-        except s3_client.exceptions.from_code('NoSuchBucketPolicy'):
+        except s3_client.exceptions.NoSuchBucketPolicy:
             policy = {
                 "Version": "2012-10-17",
                 "Statement": [loggingPolicy]}
