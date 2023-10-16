@@ -72,51 +72,44 @@ def run_action(boto_session, rule, entity, params):
             return;
 
         loggingPolicy = {
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": "logging.s3.amazonaws.com"
-                    },
-                    "Action": "s3:PutObject",
-                    "Resource": "arn:aws:s3:::" + target_bucket_name + "/*",
-                    "Condition": {
-                        "ArnLike": {
-                            "aws:SourceArn": "arn:aws:s3:::" + bucket_name}
-                    }
-                }
-
-        existing_policy = s3_resource.Bucket(target_bucket_name).Policy()
-
-        if existing_policy.meta.data is None:
-
-            policy = {
-                "Version": "2012-10-17",
-                "Statement": [loggingPolicy]}
-
-            resultUpdatePolicy = s3_resource.Bucket(target_bucket_name).Policy().put(
-                Policy=json.dumps(policy))
-
-            responseCodeUpdatePolicy = resultUpdatePolicy['ResponseMetadata']['HTTPStatusCode']
-            if responseCodeUpdatePolicy >= 400:
-                text_output = text_output + "Unexpected error Update Policy: %s \n" % str(result)
-                raise Exception(text_output);
-
-        else:
-            existing_policy_json = json.loads(existing_policy.policy)
-
-            existing_policy_json['Statement'].append(
-                loggingPolicy
-            )
-
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "logging.s3.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::" + target_bucket_name + "/*",
+            "Condition": {
+                "ArnLike": {
+                    "aws:SourceArn": "arn:aws:s3:::" + bucket_name}
+            }
+        }
+        try:
+            existing_policy = s3_client.get_bucket_policy(Bucket=target_bucket_name)
+            existing_policy_json = json.loads(existing_policy['Policy'])
+            existing_policy_json['Statement'].append(loggingPolicy)
             resultUpdatePolicy = s3_resource.Bucket(target_bucket_name).Policy().put(
                 Policy=json.dumps(existing_policy_json))
 
             responseCodeUpdatePolicy = resultUpdatePolicy['ResponseMetadata']['HTTPStatusCode']
             if responseCodeUpdatePolicy >= 400:
                 text_output = text_output + "Unexpected error Update Policy: %s \n" % str(result)
-                raise Exception(text_output);
+                raise Exception(text_output)
 
-            text_output = text_output + "Bucket logging enabled from bucket: %s to bucket: %s \n" % (
-                bucket_name, target_bucket_name)
+        except s3_client.exceptions.from_code('NoSuchBucketPolicy'):
+            policy = {
+                "Version": "2012-10-17",
+                "Statement": [loggingPolicy]}
+            resultUpdatePolicy = s3_resource.Bucket(target_bucket_name).Policy().put(
+                Policy=json.dumps(policy))
+
+            responseCodeUpdatePolicy = resultUpdatePolicy['ResponseMetadata']['HTTPStatusCode']
+            if responseCodeUpdatePolicy >= 400:
+                text_output = text_output + "Unexpected error Update Policy: %s \n" % str(result)
+                raise Exception(text_output)
+
+
+        text_output = text_output + "Bucket logging enabled from bucket: %s to bucket: %s \n" % (
+            bucket_name, target_bucket_name)
 
     except ClientError as e:
         text_output = text_output + "Unexpected error: %s \n" % e
