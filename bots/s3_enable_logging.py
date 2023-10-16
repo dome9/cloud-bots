@@ -69,7 +69,7 @@ def run_action(boto_session, rule, entity, params):
         responseCode = result['ResponseMetadata']['HTTPStatusCode']
         if responseCode >= 400:
             text_output = text_output + "Unexpected error enable logging: %s \n" % str(result)
-            return;
+            raise Exception(text_output);
 
         loggingPolicy = {
             "Effect": "Allow",
