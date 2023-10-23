@@ -15,6 +15,24 @@ account_mode = os.getenv('ACCOUNT_MODE', '')
 cross_account_role_name = os.getenv('CROSS_ACCOUNT_ROLE_NAME', '')
 
 
+def get_aws_region_code(region):
+    ec2 = boto3.client('ec2')
+    ssm_client = boto3.client('ssm', region_name='us-east-1')
+    regions = ec2.describe_regions()
+
+    region_names = [region['RegionName'] for region in regions['Regions']]
+
+    if region in region_names:
+        return region
+    else:
+        for region_id in region_names:
+            tmp = '/aws/service/global-infrastructure/regions/%s/longName' % region_id
+            ssm_response = ssm_client.get_parameter(Name=tmp)
+            if region in ssm_response['Parameter']['Value']:
+                return region_id
+        raise Exception('not valid region:'+region)
+
+
 def get_data_from_message(message):
     data = {}
     if 'rule' in message:
@@ -36,6 +54,7 @@ def get_data_from_message(message):
         data['region'] = data['region'].replace('_', '-')
     if 'remediationActions' in message:
         data['remediationActions'] = message['remediationActions']
+    data['region_code'] = get_aws_region_code(data['region'])
     return data
 
 
@@ -166,7 +185,7 @@ def handle_event(message, output_message):
                         continue
 
                 boto_session = boto3.Session(
-                    region_name=message_data.get('region'),
+                    region_name=message_data.get('region_code'),
                     aws_access_key_id=credentials_for_event['AccessKeyId'],
                     aws_secret_access_key=credentials_for_event['SecretAccessKey'],
                     aws_session_token=credentials_for_event['SessionToken']
@@ -180,7 +199,7 @@ def handle_event(message, output_message):
                 continue
 
         else:  # Boto will default to default session if we don't need assume_role credentials
-            boto_session = boto3.Session(region_name=message_data.get('region'))
+            boto_session = boto3.Session(region_name=message_data.get('region_code'))
 
         try:  ## Run the bot
 
