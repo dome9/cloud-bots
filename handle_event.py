@@ -28,7 +28,7 @@ def get_aws_region_code(region):
         for region_id in region_names:
             ssm_name = '/aws/service/global-infrastructure/regions/%s/longName' % region_id
             ssm_response = ssm_client.get_parameter(Name=ssm_name)
-            if region in ssm_response['Parameter']['Value']:
+            if region.lower() in ssm_response['Parameter']['Value'].lower():
                 return region_id
         raise Exception('not valid region:'+region)
 
