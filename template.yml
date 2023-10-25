@@ -166,6 +166,7 @@ Resources:
                 - ec2:RevokeSecurityGroupIngress # For sg_rules_delete
                 - ec2:StopInstances # For ec2_stop_instance
                 - ec2:TerminateInstances # For ec2_terminate_instance
+                - ec2:DescribeRegions # To get all regions
                 - ecs:UpdateContainerInstancesState #For Ecs stop bot and reboot bot
                 - ecs:DescribeTaskDefinition #For Ecs stop bot and reboot bot
                 - ecs:ListTasks #For Ecs stop bot and reboot bot
@@ -257,6 +258,9 @@ Resources:
                 - route53domains:EnableDomainTransferLock # For route53domain_enable_transfer_lock
 
               Resource: '*'
+            - Effect: Allow
+              Action: 'ssm:GetParameter'
+              Resource: 'arn:aws:ssm:us-east-1:${AWS::AccountId}:parameter/aws/service/global-infrastructure/regions/*'
       Environment:
         Variables:
           SNS_TOPIC_ARN: !Ref OutputTopic
