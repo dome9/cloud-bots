@@ -30,6 +30,8 @@ def get_aws_region_code(region):
             ssm_response = ssm_client.get_parameter(Name=ssm_name)
             if region.lower() in ssm_response['Parameter']['Value'].lower():
                 return region_id
+        if region.lowen() == 'global':
+            return 'us-east-1'  # todo - ask omer if this is the wanted behavior
         raise Exception('not valid region:'+region)
 
 
