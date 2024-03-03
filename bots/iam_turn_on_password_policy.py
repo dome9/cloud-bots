@@ -29,9 +29,8 @@ PROPERTIES = ['MinimumPasswordLength', 'RequireSymbols', 'RequireNumbers', 'Requ
 def run_action(boto_session, rule, entity, params):
     # Create IAM client
     iam_client = boto_session.client('iam')
-
-    if len(params) != 9:  # We need to make sure we have the exact amount of values for all of these properties.
-        text_output = "Array length is not equal to 9. Are you sure ALL password policy properties were set? \n " \
+    if len(params) < 9:
+        text_output = "Are you sure ALL password policy properties were set? \n " \
                       "MinimumPasswordLength=int, \n RequireSymbols=True|False, \n RequireNumbers=True|False, " \
                       "\n RequireUppercaseCharacters=True|False, \n RequireLowercaseCharacters=True|False, " \
                       "\n AllowUsersToChangePassword=True|False, \n MaxPasswordAge=int, \n PasswordReusePrevention=int, " \
@@ -42,13 +41,14 @@ def run_action(boto_session, rule, entity, params):
 
     try:
         # Parse all the values from the params and match them to their values
-        for index, policy_config in enumerate(params):
+        for index, policy_config in enumerate(params[:9]):
             property_to_update = PROPERTIES[index]
-            if ':' in policy_config:  # if params if from auto
+            if ':' in policy_config:  # if params is from auto
                 value = policy_config.split(":")[1]
             else:
                 value = policy_config
             password_config[property_to_update] = classify_property_value(property_to_update, value)
+
 
         iam_client.update_account_password_policy(
             MinimumPasswordLength=password_config["MinimumPasswordLength"],
