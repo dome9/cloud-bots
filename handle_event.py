@@ -24,15 +24,15 @@ def get_aws_region_code(region):
 
     if region in region_names:
         return region
+    elif region.lower() == 'global':
+        return 'us-east-1'
     else:
         for region_id in region_names:
             ssm_name = '/aws/service/global-infrastructure/regions/%s/longName' % region_id
             ssm_response = ssm_client.get_parameter(Name=ssm_name)
             if region.lower() in ssm_response['Parameter']['Value'].lower():
                 return region_id
-        if region.lower() == 'global':
-            return 'us-east-1'
-        raise Exception('not valid region:'+region)
+    raise Exception('not valid region:'+region)
 
 
 def get_data_from_message(message):
